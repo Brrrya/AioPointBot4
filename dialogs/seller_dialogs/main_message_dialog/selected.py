@@ -10,6 +10,28 @@ from dialogs.seller_dialogs.close_shop_dialog import states as states_close_dial
 from database.seller_requests import SellerRequests
 
 
+async def checker_command(m: Message, widget: MessageInput, manager: DialogManager):
+    if m.text == '/open':
+        data = await SellerRequests.checker_all_photo_open(int(m.from_user.id))
+    else:
+        data = await SellerRequests.checker_all_photo_rotate(int(m.from_user.id))
+
+    for photo in data['all_photo']:
+        await m.answer_photo(photo=photo[0], caption=photo[1])
+
+    if data['all_make_action'] is True:
+        if m.text == '/open':
+            await m.answer('Все магазины закрепленные за вами открыты!')
+        elif m.text == '/rotate':
+            await m.answer('Все магазины закрепленные за вами сделали ротации!')
+    else:
+        text = 'Ещё не открылись:\n' if m.text == '/open' else 'Ещё не сделали ротации:\n'
+        for shop_name in data['who_not_do']:
+            text += f'{shop_name[0]}\n'
+        await m.answer(text)
+
+    # await m.answer(m.text[1::])
+
 async def to_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.switch_to(states_main_message.MainMessageUser.main_message)
 

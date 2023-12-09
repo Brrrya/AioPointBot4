@@ -35,6 +35,7 @@ async def main_message():
         Format("Управляющий - {supervisor}"),
         Format("Магазин - {open_or_not}"),
         Format("Ротации - {rotate_or_not}"),
+        MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate'})),
         keyboards.main_message_kb(
             open_shop=selected.open_button,
             rotate_shop=selected.rotate_button,

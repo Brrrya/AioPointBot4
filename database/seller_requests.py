@@ -3,6 +3,9 @@ import datetime
 
 from sqlalchemy import select
 
+from sqlalchemy.orm import selectinload
+
+
 from database.connect import session_maker
 from database.models import Registers, Sellers, Shops, Supervisors, Directors, Photos, Reports
 
@@ -70,3 +73,104 @@ class SellerRequests:
             ))
             await session.commit()
 
+
+    @staticmethod
+    async def checker_all_photo_open(
+            checker_tgid: int,
+    ):
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(Shops.open_checker == checker_tgid)
+            )
+            shops = shops.scalars().all()
+
+            all_make_action = True
+            all_photos = []
+            who_not_do = []
+            for shop in shops:
+                if shop.state is False:
+                    all_make_action = False
+                    who_not_do.append((shop.title, shop.tgid))
+                else:
+                    photo = await session.execute(
+                        select(Photos).
+                        where(
+                            Photos.shop_tgid == shop.tgid
+                            and Photos.p_date == datetime.date.today()
+                            and Photos.action == 'open'
+                        ),
+                    )
+                    photo = photo.scalar()
+                    all_photos.append((photo.photo_tgid, shop.title))
+
+            res = {
+                'all_photo': (
+                    (ph[0], ph[1]) for ph in all_photos
+                ),
+                'all_make_action': all_make_action,
+                'who_not_do': (
+                    (i[0], i[1]) for i in who_not_do
+                )
+            }
+            return res
+
+
+    @staticmethod
+    async def checker_all_photo_rotate(
+            checker_tgid: int,
+    ):
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(Shops.rotate_checker == checker_tgid)
+            )
+            shops = shops.scalars().all()
+
+            all_make_action = True
+            all_photos = []
+            who_not_do = []
+            for shop in shops:
+                if shop.rotate is False:
+                    all_make_action = False
+                    who_not_do.append((shop.title, shop.tgid))
+                else:
+                    photo = await session.execute(
+                        select(Photos).
+                        where(
+                            Photos.shop_tgid == shop.tgid
+                            and Photos.p_date == datetime.date.today()
+                            and Photos.action == 'rotate'
+                        ),
+                    )
+                    photo = photo.scalar()
+                    all_photos.append((photo.photo_tgid, shop.title))
+
+            res = {
+                'all_photo': (
+                    (ph[0], ph[1]) for ph in all_photos
+                ),
+                'all_make_action': all_make_action,
+                'who_not_do': (
+                    (i[0], i[1]) for i in who_not_do
+                )
+            }
+            return res
+
+
+
+
+
+
+# async def test():
+#     res = await SellerRequests.checker_all_photo_open(799609102)
+#     print('all_photo')
+#     for photo in res['all_photo']:
+#         print(photo[0], photo[1])
+#     print(res['all_make_action'])
+#     print('who_not_do')
+#     for who in res['who_not_do']:
+#         print(who[0], who[1])
+#
+# if __name__ == '__main__':
+#     asyncio.run(test())

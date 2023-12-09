@@ -24,4 +24,4 @@ async def register_command_check_reg_code(message: Message, state: FSMContext) -
 
 async def my_state(message: Message, state: FSMContext) -> None:
     print(await state.get_state())
-
+    await message.answer('Test answer')
