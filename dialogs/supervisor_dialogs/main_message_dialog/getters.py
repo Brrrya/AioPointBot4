@@ -21,3 +21,10 @@ async def rotate_photos(dialog_manager: DialogManager, **kwargs):
     return result
 
 
+async def close_reports(dialog_manager: DialogManager, **kwargs):
+    result = await SupervisorRequests.close_report_for_dialog(dialog_manager.event.from_user.id)
+    return result
+
+async def checkers(dialog_manager: DialogManager, **kwargs):
+    result = await SupervisorRequests.take_checkers_data(dialog_manager.event.from_user.id)
+    return result

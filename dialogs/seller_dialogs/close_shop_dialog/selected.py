@@ -62,7 +62,8 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
         ckp=int(ctx.dialog_data.get('close_ckp')),
         check=int(ctx.dialog_data.get('close_check')),
         dcart=int(ctx.dialog_data.get('close_dcart')),
-        shop_tgid=int(shop['shop_tgid'])
+        shop_tgid=int(shop['shop_tgid']),
+        seller_tgid=int(callback.from_user.id)
     )
 
     await dialog_manager.bg(shop['shop_tgid'], shop['shop_tgid']).update(data=dialog_manager.start_data)

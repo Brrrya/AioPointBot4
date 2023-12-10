@@ -6,7 +6,7 @@ from sqlalchemy import select, asc
 from sqlalchemy.orm import selectinload
 
 from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors, Photos
+from database.models import Registers, Sellers, Shops, Supervisors, Directors, Photos, Reports
 
 
 class SupervisorRequests:
@@ -33,6 +33,7 @@ class SupervisorRequests:
             }
         return result
 
+
     @staticmethod
     async def take_all_photo_rotate_or_state(sv_tgid: int, action: str):
         async with session_maker() as session:
@@ -44,13 +45,13 @@ class SupervisorRequests:
             supervisor = supervisor.scalar()
             res = []
             for shop in supervisor.shops:
-                if shop.rotate if action == 'rotate' else shop.state is True:
+                if (shop.rotate if action == 'rotate' else shop.state) is True:
                     photo = await session.execute(
                         select(Photos)
                         .where(
-                            Photos.shop_tgid == shop.tgid
-                            and Photos.p_date == datetime.date.today()
-                            and Photos.action == action
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.p_date == datetime.date.today())
+                            & (Photos.action == action)
                         )
                     )
                     photo = photo.scalar()
@@ -225,7 +226,7 @@ class SupervisorRequests:
             )
             seller = seller.scalar()
             return {
-                'full_name': f"{seller.first_name} {seller.last_name}",
+                'full_name': f"{seller.last_name} {seller.first_name}",
                 'tgid': seller.tgid,
                 'sv': seller.supervisor
             }
@@ -256,5 +257,168 @@ class SupervisorRequests:
         }
 
 
-if __name__ == '__main__':
-    asyncio.run(SupervisorRequests.take_all_open_shops(5968177812))
+    @staticmethod
+    async def take_checkers_data(sv_tgid: int):
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(Shops.supervisor == sv_tgid)
+            )
+            shops = shops.scalars().all()
+
+            some_shops = False
+            checker_data = []
+            for shop in shops:
+                some_shops = True
+
+                if shop.open_checker:
+                    open_checker = await session.get(Sellers, shop.open_checker)
+                    open_checker_name = f'{open_checker.last_name} {open_checker.first_name}'
+                else:
+                    open_checker_name = 'отсутствует'
+
+                if shop.rotate_checker:
+                    rotate_checker = await session.get(Sellers, shop.rotate_checker)
+                    rotate_checker_name = f'{rotate_checker.last_name} {rotate_checker.first_name}'
+                else:
+                    rotate_checker_name = 'отсутствует'
+
+                checker_data.append((shop.title,
+                                     open_checker_name,
+                                     rotate_checker_name))
+
+            res = {
+                'some_shops': some_shops,
+                'checkers': (
+                    (checker[0], checker[1], checker[2]) for checker in checker_data
+                )
+            }
+            return res
+
+
+    @staticmethod
+    async def take_shop_name(shop_tgid: int):
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+
+            return {
+                'shop_title': shop.title
+            }
+
+    @staticmethod
+    async def update_checker(
+            role: str,
+            shop_tgid: int,
+            seller_tgid: int | None,
+    ):
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+
+            if role == 'open':
+                shop.open_checker = seller_tgid
+            elif role == 'rotate':
+                shop.rotate_checker = seller_tgid
+
+            await session.commit()
+
+
+    @staticmethod
+    async def close_report_for_dialog(sv_tgid: int):
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(Shops.supervisor == sv_tgid)
+            )
+            shops = shops.scalars().all()
+
+            close_report_or_not = True
+            without_report = []
+            for shop in shops:
+                report = await session.execute(
+                    select(Reports)
+                    .where(
+                        (Reports.report_date == datetime.date.today())
+                        & (Reports.shop_tgid == shop.tgid)
+                    )
+                )
+                report = report.scalar()
+                if report is None:
+                    close_report_or_not = False
+                    without_report.append(shop.title)
+
+            res = {
+                'all_not_close_report': (
+                    (shop_name,) for shop_name in without_report  # Список ещё не отправивших отчёт закрытия
+                ),
+                'close_report_or_not': close_report_or_not  #  Если все отправили отчёт закрытия то True
+            }
+            return res
+
+
+
+    @staticmethod
+    async def take_all_close_report_data(sv_tgid: int):
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.supervisor == sv_tgid)
+                )
+            )
+            shops = shops.scalars().all()
+
+            result = {}
+            counter = 0
+            for shop in shops:
+                report = await session.execute(
+                    select(Reports)
+                    .where(
+                        (Reports.report_date == datetime.date.today())
+                        & (Reports.shop_tgid == shop.tgid)
+                    )
+                )
+                report = report.scalar()
+                if report:
+                    photo_list = []
+                    photos = await session.execute(
+                        select(Photos)
+                        .where(
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.action == 'close')
+                            & (Photos.p_date == datetime.date.today())
+                        )
+                    )
+                    photos = photos.scalars().all()
+
+                    for photo in photos:
+                        photo_list.append(photo.photo_tgid)
+
+                    report_seller = await session.get(Sellers, report.seller_tgid)
+                    result.update(
+                        {
+                            counter: {
+                                'shop_name': shop.title,
+                                'seller_name': f'{report_seller.last_name} {report_seller.first_name}',
+                                'rto': report.rto,
+                                'ckp': report.ckp,
+                                'check': report.check,
+                                'dcart': report.dcart,
+                                'photos': photo_list
+                            }
+                        }
+                    )
+                    counter += 1
+        return result
+
+
+
+# async def test():
+#     res = await SupervisorRequests.take_all_close_report_data(5968177812)
+#     keys = res.keys()
+#     for key in keys:
+#         print(res[key]['shop_name'])
+#         print(res[key]['seller_name'])
+#         print(res[key]['photos'])
+#
+# if __name__ == '__main__':
+#     asyncio.run(test())

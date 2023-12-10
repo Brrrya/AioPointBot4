@@ -1,5 +1,7 @@
 import asyncio
 
+from aiogram.utils.media_group import MediaGroupBuilder, InputMediaPhoto
+
 from aiogram.types import CallbackQuery, Message
 
 from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
@@ -10,6 +12,7 @@ from dialogs.supervisor_dialogs.main_message_dialog import states as states_main
 from dialogs.supervisor_dialogs.seller_transfer_dialog import states as states_transfer_seller
 from dialogs.supervisor_dialogs.shop_transfer_dialog import states as states_transfer_shop
 from dialogs.supervisor_dialogs.fire_seller_dialog import states as states_fire_seller
+from dialogs.supervisor_dialogs.change_checker_dialog import states as states_change_open_checker
 
 
 from database.supervisor_requests import SupervisorRequests
@@ -32,11 +35,35 @@ async def open_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
 
 
 async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
-    all_photos = await SupervisorRequests.take_all_photo_rotate_or_state(int(c.from_user.id), 'rotate')
+    all_photos = await SupervisorRequests.take_all_photo_rotate_or_state(sv_tgid=int(c.from_user.id),
+                                                                         action='rotate')
     for photo in all_photos:
         await c.message.answer_photo(photo=photo[0], caption=photo[1])
     await manager.reset_stack()
     await manager.start(mode=StartMode.RESET_STACK, state=states_main_message.MainMessageSupervisor.rotate_photos)
+
+
+async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager):
+    all_data = await SupervisorRequests.take_all_close_report_data(int(c.from_user.id))
+    keys = all_data.keys()
+    for key in keys:
+        text = ''
+        text += f'Магазин - {all_data[key]["shop_name"]}\n'
+        text += f'Сотрудник - {all_data[key]["seller_name"]}\n'
+        text += f'РТО - {all_data[key]["rto"]}\n'
+        text += f'ЦКП - {all_data[key]["ckp"]}\n'
+        text += f'Чеки - {all_data[key]["check"]}\n'
+        text += f'Дисконт. карты - {all_data[key]["dcart"]}\n'
+
+        media = MediaGroupBuilder()
+        for photo in all_data[key]['photos']:
+            media.add_photo(photo)
+
+        await c.message.answer(text)
+        await c.message.answer_media_group(media.build())
+
+    await manager.reset_stack()
+    await manager.start(mode=StartMode.RESET_STACK, state=states_main_message.MainMessageSupervisor.close_reports)
 
 
 async def change_structure(c: CallbackQuery, widget: Button, manager: DialogManager):
@@ -53,6 +80,10 @@ async def transfer_seller(c: CallbackQuery, widget: Button, manager: DialogManag
 
 async def transfer_shop(c: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.start(states_transfer_shop.ShopTransferSupervisor.who_will_transfer_shop)
+
+
+async def change_checker(c: CallbackQuery, widget: Button, manager: DialogManager):
+    await manager.start(states_change_open_checker.ChangeCheckerSupervisor.select_role)
 
 
 async def fire_seller(c: CallbackQuery, widget: Button, manager: DialogManager):

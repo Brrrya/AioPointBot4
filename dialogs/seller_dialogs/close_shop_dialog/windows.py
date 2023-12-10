@@ -2,7 +2,7 @@ from aiogram.enums import ContentType
 from aiogram_dialog import Window, DialogManager
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Format, Const
-from aiogram_dialog.widgets.kbd import Back, StubScroll, Group
+from aiogram_dialog.widgets.kbd import Back, StubScroll, Group, Row
 from aiogram_dialog.widgets.input import MessageInput
 
 from aiogram_dialog.widgets.kbd import Cancel
@@ -34,8 +34,10 @@ async def close_take_ckp():
         Const('Создано дисконт. карт - ❌'),
         Const(' '),
         Const('Введите выручку ЦКП'),
-        Back(Const('⬅️ Назад')),
-        Cancel(Const('❌ Отмена')),
+        Row(
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад')),
+        ),
         MessageInput(selected.close_take_ckp),
         getter=getters.close_take_ckp,
         state=states.MainMessageUserClose.close_take_ckp
@@ -50,8 +52,10 @@ async def close_take_check():
         Const('Создано дисконт. карт - ❌'),
         Const(' '),
         Const('Введите количество чеков за сегодня'),
-        Back(Const('⬅️ Назад')),
-        Cancel(Const('❌ Отмена')),
+        Row(
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад')),
+        ),
         MessageInput(selected.close_take_check),
         getter=getters.close_take_check,
         state=states.MainMessageUserClose.close_take_check
@@ -66,8 +70,10 @@ async def close_take_dcart():
         Const('Создано дисконт. карт - ❌'),
         Const(' '),
         Const('Введите количество созданных дисконтных карт за сегодня'),
-        Back(Const('⬅️ Назад')),
-        Cancel(Const('️❌ Отмена')),
+        Row(
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад')),
+        ),
         MessageInput(selected.close_take_dcart),
         getter=getters.close_take_dcart,
         state=states.MainMessageUserClose.close_take_dcart

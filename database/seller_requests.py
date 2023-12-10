@@ -59,17 +59,19 @@ class SellerRequests:
             ckp: int,
             check: int,
             dcart: int,
-            shop_tgid: int
+            shop_tgid: int,
+            seller_tgid: int
     ):
         """Сохраняет вечерний отчет в БД"""
         async with session_maker() as session:
             session.add(Reports(
                 report_date=datetime.date.today(),
                 shop_tgid=shop_tgid,
+                seller_tgid=seller_tgid,
                 rto=rto,
                 ckp=ckp,
                 check=check,
-                dcart=dcart
+                dcart=dcart,
             ))
             await session.commit()
 

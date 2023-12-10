@@ -1,8 +1,7 @@
 from aiogram_dialog import Dialog
 
 from dialogs.supervisor_dialogs.main_message_dialog import windows as main_windows
-# from dialogs.supervisor_dialogs.change_open_checker_dialog import windows as change_open_windows
-# from dialogs.supervisor_dialogs.change_rotate_checker_dialog import windows as change_rotate_windows
+from dialogs.supervisor_dialogs.change_checker_dialog import windows as change_checker_window
 from dialogs.supervisor_dialogs.seller_transfer_dialog import windows as seller_transfer_windows
 from dialogs.supervisor_dialogs.shop_transfer_dialog import windows as shop_transfer_windows
 from dialogs.supervisor_dialogs.fire_seller_dialog import windows as fire_seller_windows
@@ -15,6 +14,8 @@ async def all_supervisor_dialogs():
             await main_windows.open_photos(),
             await main_windows.rotate_photos(),
             await main_windows.structure_changes(),
+            await main_windows.checkers(),
+            await main_windows.close_reports(),
 
             on_process_result=main_windows.on_process_result,
         ),
@@ -31,5 +32,11 @@ async def all_supervisor_dialogs():
         Dialog(
             await fire_seller_windows.who_will_deleted(),
             await fire_seller_windows.confirm(),
+        ),
+        Dialog(
+            await change_checker_window.select_role_checker(),
+            await change_checker_window.select_shop_checker(),
+            await change_checker_window.select_seller_checker(),
+            await change_checker_window.confirm(),
         ),
     ]

@@ -8,6 +8,8 @@ class MainMessageSupervisor(StatesGroup):
     open_photos = State()
     rotate_photos = State()
 
+    close_reports = State()
+
     checkers = State()
 
     # transfer_seller = State()

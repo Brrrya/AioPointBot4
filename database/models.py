@@ -66,6 +66,7 @@ class Reports(Base):
 
     id = Column(BigInteger, primary_key=True)
     report_date = Column(Date(), nullable=False)
+    seller_tgid = Column(BigInteger, nullable=False)
     shop_tgid = Column(ForeignKey('shops.tgid'), nullable=False)
     rto = Column(Integer, nullable=False)
     ckp = Column(Integer, nullable=False)
