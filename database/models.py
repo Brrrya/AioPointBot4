@@ -6,6 +6,13 @@ from sqlalchemy.orm import relationship
 
 from database.connect import Base
 
+class Admins(Base):
+    __tablename__ = 'admins'
+
+    id = Column(Integer, Sequence('directors_id', start=1))
+    nick = Column(String, nullable=False)
+    tgid = Column(BigInteger, primary_key=True)
+
 
 class Directors(Base):
     __tablename__ = 'directors'

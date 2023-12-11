@@ -1,7 +1,9 @@
-from sqlalchemy import select
+import asyncio
 
-from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors
+from sqlalchemy import select, delete, insert, text
+
+from database.connect import session_maker, engine
+from database.models import Registers, Sellers, Shops, Supervisors, Directors, Coefs, Admins
 
 
 class UnknownRequests:
@@ -36,6 +38,8 @@ class UnknownRequests:
                 return 'supervisor'
             elif await session.get(Directors, user_id):
                 return 'director'
+            elif await session.get(Admins, user_id):
+                return 'admin'
 
     @staticmethod
     async def user_check_auth(seller_tgid: int):
@@ -47,4 +51,23 @@ class UnknownRequests:
                 return True
             return False
 
+
+    @staticmethod
+    async def recreate_coefs(
+            coefficients: list[int],
+            full_coeff: int
+    ):
+        async with session_maker() as session:
+            await session.execute(
+                delete(Coefs)
+            )
+            await session.flush()
+
+            for coef in coefficients:
+                await session.execute(
+                    insert(Coefs)
+                    .values(coef=coef, full_coef=full_coeff)
+                )
+
+            await session.commit()
 

@@ -5,7 +5,7 @@ from aiogram_dialog import DialogManager
 from dialogs.shop_dialogs.main_message_dialog.states import MainMessage as ShopMainMessage
 from dialogs.seller_dialogs.main_message_dialog.states import MainMessageUser as UserMainMessage
 from dialogs.supervisor_dialogs.main_message_dialog.states import MainMessageSupervisor as SupervisorMainMessage
-
+# from dialogs.admin_dialogs.main_message.states import MainMessage as AdminMainMessage
 
 from database.unknown_requests import UnknownRequests
 
@@ -22,5 +22,7 @@ async def start(message: Message, dialog_manager: DialogManager):
             await dialog_manager.start(UserMainMessage.plug)
     elif res == 'supervisor':
         await dialog_manager.start(SupervisorMainMessage.main_message)
+    # elif res == 'admin':
+    #     await dialog_manager.start(AdminMainMessage.main_message)
     else:
         await message.answer('Пук среньк')

@@ -9,6 +9,6 @@ async def register_all_dialogs(dp: Dispatcher):
     for dialog in [
         *await shop_dialogs.all_shop_dialogs(),
         *await seller_dialogs.all_shop_dialogs(),
-        *await supervisor_dialogs.all_supervisor_dialogs()
+        *await supervisor_dialogs.all_supervisor_dialogs(),
     ]:
         dp.include_router(dialog)

@@ -1,11 +1,14 @@
+import datetime
+import calendar
+
 import asyncio
 
-from sqlalchemy import select
+from sqlalchemy import select, func, text, Table
 
 from sqlalchemy.orm import selectinload
 
 from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors
+from database.models import Registers, Sellers, Shops, Supervisors, Directors, Coefs
 
 
 class ShopRequests:
@@ -108,6 +111,7 @@ class ShopRequests:
 
 
 # async def main():
-#     await ShopRequests.take_all_supervisors()
+#     await ShopRequests.update_month_plan(5809674485)
 #
-# asyncio.run(main())
+# if __name__ == '__main__':
+#     asyncio.run(main())
