@@ -20,7 +20,8 @@ async def main_message():
         keyboards.main_message_kb(
             auth=selected.go_to_authorization,
             register=selected.go_to_registration,
-            update_plan=selected.go_to_update_plan
+            update_plan=selected.go_to_update_plan,
+            get_plan=selected.get_plan
         ),
         getter=getters.main_message,
         state=states.MainMessage.main_message,

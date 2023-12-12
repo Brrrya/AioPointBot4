@@ -17,7 +17,7 @@ async def update_plan_take_rto():
         Format('Чеки - '),
         Const(' '),
         Const('Введите план РТО на месяц'),
-        MessageInput(selected.take_rto),
+        MessageInput(selected.take_rto, filter=lambda message: message.text.isdigit()),
         Cancel(Const('❌ Отмена')),
         state=states.MainMessageUpdatePlan.take_rto
     )
@@ -32,7 +32,7 @@ async def update_plan_take_ckp():
         Const('Введите план ЦКП на месяц'),
         Back(Const("⬅️ Назад")),
         Cancel(Const('❌ Отмена')),
-        MessageInput(selected.take_ckp),
+        MessageInput(selected.take_ckp, filter=lambda message: message.text.isdigit()),
         getter=getters.take_ckp,
         state=states.MainMessageUpdatePlan.take_ckp
     )
@@ -47,7 +47,7 @@ async def update_plan_take_check():
         Const('Введите план чеков на месяц'),
         Back(Const("⬅️ Назад")),
         Cancel(Const('️❌ Отмена')),
-        MessageInput(selected.take_check),
+        MessageInput(selected.take_check, filter=lambda message: message.text.isdigit()),
         getter=getters.take_check,
         state=states.MainMessageUpdatePlan.take_check
     )

@@ -13,6 +13,37 @@ from database.models import *
 
 class PlanRequests:
     @staticmethod
+    async def take_plan_data(
+            shop_tgid: int
+    ):
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+
+            shop_plan = await session.execute(
+                text(
+                    f"SELECT "
+                    f"(date_, plan_rto, fact_rto, plan_ckp, fact_ckp, plan_check, fact_check,"
+                    f"fact_dcart, sum_plan_rto, sum_plan_ckp, sum_plan_check) "
+                    f"FROM {shop.bd_title} ORDER BY date_ ASC"
+                )
+            )
+            shop_plan = shop_plan.scalars().all()
+            print(shop_plan)
+            res = {
+                'shop_data': {
+                    'shop_title': shop.title
+                },
+                'shop_plan': (
+                    (plan[0], plan[1], plan[2], plan[3], plan[4],
+                     plan[5], plan[6], plan[7],
+                     plan[8], plan[9], plan[10])
+                    for plan in shop_plan
+                )
+            }
+            return res
+
+
+    @staticmethod
     async def update_plan(
             rto: int,
             ckp: int,
@@ -60,6 +91,7 @@ class PlanRequests:
             )
             some_row = some_row.scalar()
 
+
             if some_row is not None and some_row.month != current_month:
                 # Если прошлого месяца, надо отправить таблицу пользователю, а затем очистить
                 await session.execute(
@@ -89,11 +121,34 @@ class PlanRequests:
                     await session.execute(
                         update(tables)
                         .values(date_=datetime.date(current_date.year, current_month, i + 1),
-                               plan_rto=pc, plan_ckp=pckp, plan_check=pch,
-                               sum_plan_rto=rto, sum_plan_ckp=ckp, sum_plan_check=check)
+                                plan_rto=pc, plan_ckp=pckp, plan_check=pch,
+                                sum_plan_rto=rto, sum_plan_ckp=ckp, sum_plan_check=check)
+                        .where(tables.columns.date_ == datetime.date(current_date.year, current_month, i + 1))
                     )
 
             await session.commit()
+
+
+    @staticmethod
+    async def recreate_coefs(
+            coefficients: list[int],
+            full_coeff: int
+    ):
+        async with session_maker() as session:
+            await session.execute(
+                delete(Coefs)
+            )
+            await session.flush()
+
+            for coef in coefficients:
+                await session.execute(
+                    insert(Coefs)
+                    .values(coef=coef, full_coef=full_coeff)
+                )
+
+            await session.commit()
+
+
 
 
 if __name__ == '__main__':

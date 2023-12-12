@@ -1,4 +1,4 @@
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, FSInputFile
 
 from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button, Select
@@ -33,7 +33,7 @@ async def take_check(m: Message, widget: MessageInput, manager: DialogManager):
 async def confirm(call: CallbackQuery, widget: Button, manager: DialogManager):
     ctx = manager.current_context()
 
-    await PlanRequests.update_plan(
+    point_name = await PlanRequests.update_plan(
         rto=int(ctx.dialog_data.get('rto')),
         ckp=int(ctx.dialog_data.get('ckp')),
         check=int(ctx.dialog_data.get('check')),

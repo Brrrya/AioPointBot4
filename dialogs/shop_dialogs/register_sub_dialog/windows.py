@@ -13,7 +13,7 @@ from dialogs.shop_dialogs.register_sub_dialog import (
 async def scan_new_worker_badge():
     return Window(
         Const('Сканируйте бейджик нового сотрудника'),
-        MessageInput(selected.take_register_badge),
+        MessageInput(selected.take_register_badge, filter=lambda message: message.text.isdigit()),
         Cancel(Const('❌️ Отмена')),
         state=states.MainMessageRegistration.badge_scan
     )

@@ -1,7 +1,7 @@
 import aiogram_dialog.api.exceptions
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, FSInputFile
 
-from aiogram_dialog import DialogManager, BaseDialogManager, BgManagerFactory
+from aiogram_dialog import DialogManager, BaseDialogManager, BgManagerFactory, StartMode
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
@@ -12,7 +12,7 @@ from dialogs.shop_dialogs.plan_update_dialog import states as states_update_plan
 from dialogs.seller_dialogs.main_message_dialog import states as states_seller
 
 from database.shop_requests import ShopRequests
-
+from service import plan
 
 async def go_to_authorization(c: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.switch_to(states.MainMessage.auth_wait_badge)
@@ -42,4 +42,14 @@ async def go_to_registration(c: CallbackQuery, widget: Button, manager: DialogMa
 
 async def go_to_update_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.start(states_update_plan.MainMessageUpdatePlan.take_rto)
+
+
+async def get_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
+    await plan.create_plan(c.from_user.id)
+    data = await ShopRequests.take_info_about_shop(c.from_user.id)
+    await c.message.answer_document(document=FSInputFile(path=f"../service/plans/{data['title']}.ods"))
+
+    await manager.reset_stack()
+    await manager.start(mode=StartMode.RESET_STACK, state=states.MainMessage.main_message)
+
 

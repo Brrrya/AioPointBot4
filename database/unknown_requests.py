@@ -51,23 +51,3 @@ class UnknownRequests:
                 return True
             return False
 
-
-    @staticmethod
-    async def recreate_coefs(
-            coefficients: list[int],
-            full_coeff: int
-    ):
-        async with session_maker() as session:
-            await session.execute(
-                delete(Coefs)
-            )
-            await session.flush()
-
-            for coef in coefficients:
-                await session.execute(
-                    insert(Coefs)
-                    .values(coef=coef, full_coef=full_coeff)
-                )
-
-            await session.commit()
-

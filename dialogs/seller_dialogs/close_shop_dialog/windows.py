@@ -21,7 +21,7 @@ async def close_take_rto():
         Const(' '),
         Const('Введите выручку РТО'),
         Cancel(Const('❌ Отмена')),
-        MessageInput(selected.close_take_rto),
+        MessageInput(selected.close_take_rto, filter=lambda message: message.text.isdigit()),
         state=states.MainMessageUserClose.close_take_rto
     )
 
@@ -38,7 +38,7 @@ async def close_take_ckp():
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_ckp),
+        MessageInput(selected.close_take_ckp, filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_ckp,
         state=states.MainMessageUserClose.close_take_ckp
     )
@@ -56,7 +56,7 @@ async def close_take_check():
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_check),
+        MessageInput(selected.close_take_check, filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_check,
         state=states.MainMessageUserClose.close_take_check
     )
@@ -74,7 +74,7 @@ async def close_take_dcart():
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_dcart),
+        MessageInput(selected.close_take_dcart, filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_dcart,
         state=states.MainMessageUserClose.close_take_dcart
     )
