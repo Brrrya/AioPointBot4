@@ -80,10 +80,14 @@ class SellerRequests:
     async def checker_all_photo_open(
             checker_tgid: int,
     ):
+        """Для проверяющих достаёт все фотки чеков открытия с их магазина"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
-                .where(Shops.open_checker == checker_tgid)
+                .where(
+                    (Shops.open_checker == checker_tgid)
+                )
+                .order_by(Shops.title)
             )
             shops = shops.scalars().all()
 
@@ -98,9 +102,9 @@ class SellerRequests:
                     photo = await session.execute(
                         select(Photos).
                         where(
-                            Photos.shop_tgid == shop.tgid
-                            and Photos.p_date == datetime.date.today()
-                            and Photos.action == 'open'
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.p_date == datetime.date.today())
+                            & (Photos.action == 'open')
                         ),
                     )
                     photo = photo.scalar()
@@ -122,10 +126,12 @@ class SellerRequests:
     async def checker_all_photo_rotate(
             checker_tgid: int,
     ):
+        """Для проверяющих достаёт все фотки ротаций с их магазина"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
                 .where(Shops.rotate_checker == checker_tgid)
+                .order_by(Shops.title)
             )
             shops = shops.scalars().all()
 
@@ -140,9 +146,9 @@ class SellerRequests:
                     photo = await session.execute(
                         select(Photos).
                         where(
-                            Photos.shop_tgid == shop.tgid
-                            and Photos.p_date == datetime.date.today()
-                            and Photos.action == 'rotate'
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.p_date == datetime.date.today())
+                            & (Photos.action == 'rotate')
                         ),
                     )
                     photo = photo.scalar()

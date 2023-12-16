@@ -2,7 +2,7 @@ from aiogram_dialog.widgets.kbd import Group, Button, Row
 from aiogram_dialog.widgets.text import Const
 
 
-def main_message_kb(open_shop, close_shop, rotate_shop, change_plan):
+def main_message_kb(open_shop, close_shop, rotate_shop):
     return Group(
         Row(
             Button(Const('🔑 Открыть'), on_click=open_shop, id='open_shop'),
@@ -10,7 +10,6 @@ def main_message_kb(open_shop, close_shop, rotate_shop, change_plan):
             ),
         Row(
             Button(Const('🔒 Закрыть'), on_click=close_shop, id='close_shop'),
-            Button(Const('📑 Изменить план'), on_click=change_plan, id='change_plan'),
         ),
 
         id='seller_main_message_group',

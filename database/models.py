@@ -33,7 +33,7 @@ class Supervisors(Base):
     tgid = Column(BigInteger, primary_key=True)
     badge = Column(BigInteger, unique=True, nullable=False)
 
-    sellers = relationship('Sellers', back_populates='sv')
+    sellers = relationship('Sellers', back_populates='sv', order_by='Sellers.last_name')
     shops = relationship('Shops', back_populates='sv', order_by='Shops.title')
 
 

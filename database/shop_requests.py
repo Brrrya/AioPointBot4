@@ -82,10 +82,13 @@ class ShopRequests:
     async def take_all_supervisors():
         """Возвращает список кортежей всех управляющих"""
         async with session_maker() as session:
-            data = await session.execute(select(Supervisors))
+            data = await session.execute(
+                select(Supervisors)
+                .order_by(Supervisors.last_name)
+            )
             data = data.scalars().all()
             res = [
-                (f'{i.first_name} {i.last_name}', i.tgid)
+                (f'{i.last_name} {i.first_name}', i.tgid)
                 for i in data
             ]
         return res
@@ -99,6 +102,7 @@ class ShopRequests:
             badge: int,
             reg_code: int
     ):
+        """Вставляет нового пользователя в БД в регистрацию."""
         async with session_maker() as session:
             session.add(Registers(
                 first_name=first_name,

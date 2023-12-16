@@ -1,3 +1,5 @@
+import logging
+
 from aiogram.types import CallbackQuery, Message
 
 from aiogram_dialog import DialogManager, BaseDialogManager
@@ -11,23 +13,29 @@ from dialogs.seller_dialogs.close_shop_dialog.states import MainMessageUserClose
 
 
 async def close_take_rto(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Ввел выручку РТО - {m.text} id={m.from_user.id} username={m.from_user.username}')
     ctx = manager.current_context()
     ctx.dialog_data.update(close_rto=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_ckp)
 
 async def close_take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Ввел выручку ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
     ctx = manager.current_context()
     ctx.dialog_data.update(close_ckp=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_check)
 
 
 async def close_take_check(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Ввел количество чеков - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(close_check=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_dcart)
 
 
 async def close_take_dcart(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Ввел количество дисконт. карт - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(close_dcart=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_photos)
@@ -43,12 +51,16 @@ async def on_delete_close_photo(callback: CallbackQuery, widget: Button, dialog_
 
 
 async def on_input_photo(message: Message, widget: MessageInput, dialog_manager: DialogManager):
+    logging.info(f'Вставил фотографию id={message.from_user.id} username={message.from_user.username}')
+
     dialog_manager.dialog_data.setdefault("photos", []).append(
         (message.photo[-1].file_id, message.photo[-1].file_unique_id),
     )
 
 
 async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Отправил вечерний отчет id={callback.from_user.id} username={callback.from_user.username}')
+
     ctx = dialog_manager.current_context()
     photos = ctx.dialog_data.get('photos')
     photos_to_send = []

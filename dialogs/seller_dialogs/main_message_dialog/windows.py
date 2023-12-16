@@ -40,7 +40,6 @@ async def main_message():
             open_shop=selected.open_button,
             rotate_shop=selected.rotate_button,
             close_shop=selected.close_button,
-            change_plan=selected.change_plan_button,
         ),
         getter=getters.main_message,
         state=states.MainMessageUser.main_message,

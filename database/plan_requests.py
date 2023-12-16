@@ -2,7 +2,7 @@ import asyncio
 import calendar
 import datetime
 
-from sqlalchemy import update, select, insert, text, MetaData, Table, Column, Integer, String, Date
+from sqlalchemy import update, select, insert, text, MetaData, Table, Column, Integer, String, Date, delete
 from sqlalchemy.schema import CreateTable
 from sqlalchemy.orm import selectinload
 
@@ -19,29 +19,37 @@ class PlanRequests:
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
 
-            shop_plan = await session.execute(
-                text(
-                    f"SELECT "
-                    f"(date_, plan_rto, fact_rto, plan_ckp, fact_ckp, plan_check, fact_check,"
-                    f"fact_dcart, sum_plan_rto, sum_plan_ckp, sum_plan_check) "
-                    f"FROM {shop.bd_title} ORDER BY date_ ASC"
+            try:
+                # Проверяем обновлен ли план у магазина
+                shop_plan = await session.execute(
+                    text(
+                        f"SELECT "
+                        f"(date_, plan_rto, fact_rto, plan_ckp, fact_ckp, plan_check, fact_check,"
+                        f"fact_dcart, sum_plan_rto, sum_plan_ckp, sum_plan_check) "
+                        f"FROM {shop.bd_title} ORDER BY date_ ASC"
+                    )
                 )
-            )
-            shop_plan = shop_plan.scalars().all()
-            print(shop_plan)
-            res = {
-                'shop_data': {
-                    'shop_title': shop.title
-                },
-                'shop_plan': (
-                    (plan[0], plan[1], plan[2], plan[3], plan[4],
-                     plan[5], plan[6], plan[7],
-                     plan[8], plan[9], plan[10])
-                    for plan in shop_plan
-                )
-            }
-            return res
+                shop_plan = shop_plan.scalars().all()
+                res = {
+                    'shop_data': {
+                        'shop_title': shop.title
+                    },
+                    'shop_plan': (
+                        (plan[0], plan[1], plan[2], plan[3], plan[4],
+                         plan[5], plan[6], plan[7],
+                         plan[8], plan[9], plan[10])
+                        for plan in shop_plan
+                    )
+                }
+                return res
+            except:
+                # Если нет, то завершаем сессию и будет выполнен код, что внизу функции
+                await session.rollback()
 
+        # Если у магазина не создан план, то выполниться эта часть кода и создаст план со стандартными знач.
+        await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
+        # А затем вернет эту же функцию, что по итогу всё же выполнит её
+        return await PlanRequests.take_plan_data(shop_tgid)
 
     @staticmethod
     async def update_plan(
@@ -152,9 +160,12 @@ class PlanRequests:
 
 
 if __name__ == '__main__':
-    asyncio.run(PlanRequests.update_plan(
-        shop_tgid=5809674485,
-        rto=2000000,
-        ckp=200000,
-        check=1500,
-        ))
+    asyncio.run(PlanRequests.recreate_coefs(coefficients=[30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25],
+                                            full_coeff=842))
+
+#     asyncio.run(PlanRequests.update_plan(
+#         shop_tgid=5809674485,
+#         rto=2000000,
+#         ckp=200000,
+#         check=1500,
+#         ))

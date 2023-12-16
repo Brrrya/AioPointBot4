@@ -1,3 +1,4 @@
+import logging
 import random
 
 from aiogram.types import CallbackQuery, Message
@@ -14,6 +15,8 @@ from database.shop_requests import ShopRequests
 
 
 async def take_register_badge(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Ввел бейдж нового сотрудника {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     data = await ShopRequests.badge_check(int(m.text))
     if data is False:
         await manager.event.answer("Данный бейджик уже зарегистрирован!")
@@ -24,6 +27,8 @@ async def take_register_badge(m: Message, widget: MessageInput, manager: DialogM
 
 
 async def take_first_name(m: Message, widget: MessageInput, dialog_manager: DialogManager):
+    logging.info(f'Магазин | Ввел имя нового сотрудника - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = dialog_manager.current_context()
     ctx.dialog_data.update(first_name=m.text)
     await dialog_manager.switch_to(states.MainMessageRegistration.enter_l_name)
@@ -36,12 +41,16 @@ async def take_last_name(m: Message, widget: MessageInput, dialog_manager: Dialo
 
 
 async def take_supervisor(call: CallbackQuery, widget: Select, dialog_manager: DialogManager, item_id: str):
+    logging.info(f'Магазин | Выбрал супервайзера - {item_id} id={call.from_user.id} username={call.from_user.username}')
+
     ctx = dialog_manager.current_context()
     ctx.dialog_data.update(supervisor=int(item_id))
     await dialog_manager.switch_to(states.MainMessageRegistration.confirm)
 
 
 async def confirm_data(call: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Магазин | Подтвердил верность данных нового сотрудника id={call.from_user.id} username={call.from_user.username}')
+
     ctx = dialog_manager.current_context()
     reg_code = random.randint(100000, 999999)
     ctx.dialog_data.update(reg_code=reg_code)
@@ -56,6 +65,8 @@ async def confirm_data(call: CallbackQuery, widget: Button, dialog_manager: Dial
 
 
 async def coplete_register(call: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Магазин | Нажал кнопку завершения регистрации нового сотрудника id={call.from_user.id} username={call.from_user.username}')
+
     await dialog_manager.reset_stack()
     await dialog_manager.start(mode=StartMode.RESET_STACK, state=main_dialog_states.MainMessage.main_message)
 

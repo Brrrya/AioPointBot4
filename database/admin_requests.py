@@ -36,8 +36,8 @@ class AdminRequests:
                     Column('fact_check', Integer, nullable=True),
                     Column('fact_dcart', Integer, nullable=True),
                     Column('sum_plan_rto', Integer, nullable=False),
-                    Column('sum_plan_ckp', Integer, nullable=False),
                     Column('sum_plan_check', Integer, nullable=False),
+                    Column('sum_plan_ckp', Integer, nullable=False)
                 )
                 await session.execute(CreateTable(tables, if_not_exists=True))
             await session.commit()

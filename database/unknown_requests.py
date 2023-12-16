@@ -18,7 +18,7 @@ class UnknownRequests:
             if user:
                 session.add(
                     Sellers(first_name=user.first_name, last_name=user.last_name,
-                            tgid=user_tgid, supervisor=user.supervisor)
+                            tgid=user_tgid, supervisor=user.supervisor, badge=user.badge)
                 )
                 await session.delete(user)
                 await session.commit()

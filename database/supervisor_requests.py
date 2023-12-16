@@ -12,6 +12,7 @@ from database.models import Registers, Sellers, Shops, Supervisors, Directors, P
 class SupervisorRequests:
     @staticmethod
     async def get_main_window_info(sv_tgid: int):
+        """Достает основную инфу по всем магазинам супервизора"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -59,7 +60,7 @@ class SupervisorRequests:
             return res
 
     @staticmethod
-    async def take_all_open_shops(sv_tgid:int):
+    async def take_all_open_shops(sv_tgid: int):
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -127,6 +128,7 @@ class SupervisorRequests:
         async with session_maker() as session:
             supervisors = await session.execute(
                 select(Supervisors)
+                .order_by(Supervisors.last_name)
             )
             supervisors = supervisors.scalars().all()
             return {
@@ -328,6 +330,7 @@ class SupervisorRequests:
             shops = await session.execute(
                 select(Shops)
                 .where(Shops.supervisor == sv_tgid)
+                .order_by(Shops.title)
             )
             shops = shops.scalars().all()
 
@@ -364,6 +367,7 @@ class SupervisorRequests:
                 .where(
                     (Shops.supervisor == sv_tgid)
                 )
+                .order_by(Shops.title)
             )
             shops = shops.scalars().all()
 

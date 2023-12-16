@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram.types import CallbackQuery, Message
 
@@ -13,12 +14,16 @@ from database.supervisor_requests import SupervisorRequests
 
 
 async def seller_choice(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
+    logging.info(f'СВ | Выбрал сотрудника для удаления - {item_id} id={c.from_user.id} username={c.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(fire_seller_tgid=int(item_id))
     await manager.switch_to(states.SellerFireSupervisor.confirm)
 
 
 async def confirm(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Подтвердил удаление сотрудника id={c.from_user.id} username={c.from_user.username}')
+
     ctx = manager.current_context()
     seller_tgid = ctx.dialog_data.get('fire_seller_tgid')
     res = await SupervisorRequests.delete_seller(

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram.utils.media_group import MediaGroupBuilder, InputMediaPhoto
 
@@ -19,14 +20,20 @@ from database.supervisor_requests import SupervisorRequests
 
 
 async def refresh_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Обновил главное сообщение id={c.from_user.id} username={c.from_user.username}')
+
     await manager.bg(c.from_user.id, c.from_user.id).update(data=manager.start_data)
 
 
 async def back_to_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Вернулся к главному сообщению по кнопке id={c.from_user.id} username={c.from_user.username}')
+
     await manager.switch_to(states_main_message.MainMessageSupervisor.main_message)
 
 
 async def open_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку получения фото открытия id={c.from_user.id} username={c.from_user.username}')
+
     all_photos = await SupervisorRequests.take_all_photo_rotate_or_state(int(c.from_user.id), 'open')
     for photo in all_photos:
         await c.message.answer_photo(photo=photo[0], caption=photo[1])
@@ -35,6 +42,8 @@ async def open_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
 
 
 async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку получения фото ротаций id={c.from_user.id} username={c.from_user.username}')
+
     all_photos = await SupervisorRequests.take_all_photo_rotate_or_state(sv_tgid=int(c.from_user.id),
                                                                          action='rotate')
     for photo in all_photos:
@@ -44,6 +53,8 @@ async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager
 
 
 async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку получения отчетов закрытия id={c.from_user.id} username={c.from_user.username}')
+
     all_data = await SupervisorRequests.take_all_close_report_data(int(c.from_user.id))
     keys = all_data.keys()
     for key in keys:
@@ -67,25 +78,37 @@ async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager
 
 
 async def change_structure(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку изменения структуры куста id={c.from_user.id} username={c.from_user.username}')
+
     await manager.switch_to(states_main_message.MainMessageSupervisor.structure_changes)
 
 
 async def checkers(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку проверяющие id={c.from_user.id} username={c.from_user.username}')
+
     await manager.switch_to(states_main_message.MainMessageSupervisor.checkers)
 
 
 async def transfer_seller(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку передачи сотрудника id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_transfer_seller.SellerTransferSupervisor.who_will_transfer)
 
 
 async def transfer_shop(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку передачи магазина id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_transfer_shop.ShopTransferSupervisor.who_will_transfer_shop)
 
 
 async def change_checker(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку проверяющих id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_change_open_checker.ChangeCheckerSupervisor.select_role)
 
 
 async def fire_seller(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку удаления сотрудника id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_fire_seller.SellerFireSupervisor.who_will_fired)
 

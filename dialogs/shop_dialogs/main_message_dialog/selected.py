@@ -1,3 +1,5 @@
+import logging
+
 import aiogram_dialog.api.exceptions
 from aiogram.types import CallbackQuery, Message, FSInputFile
 
@@ -15,10 +17,14 @@ from database.shop_requests import ShopRequests
 from service import plan
 
 async def go_to_authorization(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Магазин | Нажата кнопка авторизации id={c.from_user.id} username={c.from_user.username}')
+
     await manager.switch_to(states.MainMessage.auth_wait_badge)
 
 
 async def take_auth_badge(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Отправили бейдж - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     shop = await ShopRequests.take_info_about_shop(m.from_user.id)
     worker = await ShopRequests.worker_authorization_on_shop(int(m.text), m.from_user.id)
 
@@ -37,14 +43,20 @@ async def take_auth_badge(m: Message, widget: MessageInput, manager: DialogManag
 
 
 async def go_to_registration(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Магазин | Нажал кнопку регистрации id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_register.MainMessageRegistration.badge_scan)
 
 
 async def go_to_update_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Магазин | Нажал кнопку обновления плана id={c.from_user.id} username={c.from_user.username}')
+
     await manager.start(states_update_plan.MainMessageUpdatePlan.take_rto)
 
 
 async def get_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Магазин | Нажал кнопку получения плана id={c.from_user.id} username={c.from_user.username}')
+
     await plan.create_plan(c.from_user.id)
     data = await ShopRequests.take_info_about_shop(c.from_user.id)
     await c.message.answer_document(document=FSInputFile(path=f"../service/plans/{data['title']}.ods"))
@@ -52,4 +64,8 @@ async def get_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.reset_stack()
     await manager.start(mode=StartMode.RESET_STACK, state=states.MainMessage.main_message)
 
+
+async def change_plan_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Нажал кнопку изменить план id={c.from_user.id} username={c.from_user.username}')
+    print('change plan button')
 

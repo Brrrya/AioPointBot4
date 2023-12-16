@@ -1,3 +1,5 @@
+import logging
+
 from aiogram.types import CallbackQuery, Message, FSInputFile
 
 from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
@@ -13,24 +15,32 @@ from database.plan_requests import PlanRequests
 
 
 async def take_rto(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Ввел план по РТО - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(rto=m.text)
     await manager.switch_to(states.MainMessageUpdatePlan.take_ckp)
 
 
 async def take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Ввел план по ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(ckp=m.text)
     await manager.switch_to(states.MainMessageUpdatePlan.take_check)
 
 
 async def take_check(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Магазин | Ввел план по чекам - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(check=m.text)
     await manager.switch_to(states.MainMessageUpdatePlan.confirm)
 
 
 async def confirm(call: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Магазин | Подтвердил ввод плана id={call.from_user.id} username={call.from_user.username}')
+
     ctx = manager.current_context()
 
     point_name = await PlanRequests.update_plan(
