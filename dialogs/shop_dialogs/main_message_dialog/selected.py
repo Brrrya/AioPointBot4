@@ -10,8 +10,9 @@ from aiogram_dialog.widgets.input import MessageInput
 from dialogs.shop_dialogs.main_message_dialog import states
 from dialogs.shop_dialogs.register_sub_dialog import states as states_register
 from dialogs.shop_dialogs.plan_update_dialog import states as states_update_plan
-
 from dialogs.seller_dialogs.main_message_dialog import states as states_seller
+from dialogs.shop_dialogs.plan_change_dialog import states as states_change_plan
+
 
 from database.shop_requests import ShopRequests
 from service import plan
@@ -67,5 +68,5 @@ async def get_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
 
 async def change_plan_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
     logging.info(f'Магазин | Нажал кнопку изменить план id={c.from_user.id} username={c.from_user.username}')
-    print('change plan button')
 
+    await manager.start(states_change_plan.MainMessageChangePlan.take_date_for_change)

@@ -156,9 +156,44 @@ class PlanRequests:
 
             await session.commit()
 
+    @staticmethod
+    async def data_for_that_day(
+            date_for_data: datetime.date,
+            shop_tgid: int
+    ):
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+            day_data = await session.execute(
+                text(f"SELECT (fact_rto, fact_ckp, fact_check, fact_dcart) "
+                     f"FROM {shop.bd_title} WHERE date_ = '{date_for_data}'")
+            )
+            day_data = day_data.scalars().all()
 
+            return {
+                'rto_old_data': day_data[0][0] if day_data[0][0] else 0,
+                'ckp_old_data': day_data[0][1] if day_data[0][1] else 0,
+                'check_old_data': day_data[0][2] if day_data[0][2] else 0,
+                'dcart_old_data': day_data[0][3] if day_data[0][3] else 0,
+            }
 
-
+    @staticmethod
+    async def change_data_in_plan(
+        date_for_change: str,
+        rto_new_data: int,
+        ckp_new_data: int,
+        check_new_data: int,
+        dcart_new_data: int,
+        shop_tgid: int
+    ):
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+            await session.execute(
+                text(f"UPDATE {shop.bd_title} SET "
+                     f"fact_rto = {rto_new_data}, fact_ckp = {ckp_new_data}, "
+                     f"fact_check = {check_new_data}, fact_dcart = {dcart_new_data} "
+                     f"WHERE date_ = '{str(date_for_change)}'")
+            )
+            await session.commit()
 if __name__ == '__main__':
     asyncio.run(PlanRequests.recreate_coefs(coefficients=[30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25],
                                             full_coeff=842))

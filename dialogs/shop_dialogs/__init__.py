@@ -3,6 +3,7 @@ from aiogram_dialog import Dialog, DialogManager
 from dialogs.shop_dialogs.main_message_dialog import windows as main_windows
 from dialogs.shop_dialogs.register_sub_dialog import windows as reg_windows
 from dialogs.shop_dialogs.plan_update_dialog import windows as new_plan_windows
+from dialogs.shop_dialogs.plan_change_dialog import windows as change_plan_windows
 
 
 async def all_shop_dialogs():
@@ -24,5 +25,13 @@ async def all_shop_dialogs():
             await new_plan_windows.update_plan_take_ckp(),
             await new_plan_windows.update_plan_take_check(),
             await new_plan_windows.update_plan_confirm(),
+        ),
+        Dialog(
+            await change_plan_windows.take_date_for_change(),
+            await change_plan_windows.change_take_rto(),
+            await change_plan_windows.change_take_ckp(),
+            await change_plan_windows.change_take_check(),
+            await change_plan_windows.change_take_dcart(),
+            await change_plan_windows.confirm()
         ),
     ]
