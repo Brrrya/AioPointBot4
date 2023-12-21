@@ -11,6 +11,7 @@ from states.states import UnknownFSM
 
 
 def register_user_commands(router: Router) -> None:
+    """Регистрация всех команд вне диалога"""
     router.message.register(start, Command(commands=['start']))
     router.message.register(help_command, Command(commands=['help']))
     router.message.register(register_command, Command(commands=['register']))

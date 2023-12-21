@@ -1,7 +1,8 @@
 import asyncio
 import calendar
-from datetime import datetime
 import datetime
+from datetime import datetime
+
 import ezodf
 
 from database.plan_requests import PlanRequests
@@ -16,7 +17,7 @@ async def update_coefficients(
         saturday: int = 35,
         sunday: int = 25
 ):
-    # Обновляем коэффициенты под каждый месяц, так как разная их длина епта
+    """Обновляем коэффициенты под каждый месяц, так как разная их длина епта"""
 
     # Получаем текущую дату и определяем количество дней в месяце
     now = datetime.datetime.now()

@@ -1,16 +1,15 @@
-from loguru import logger
-
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
 from aiogram import Bot
 from aiogram_dialog import setup_dialogs
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from service import every_day_events
 
 
 async def create_tasks(bot: Bot, setups: setup_dialogs):
+    # Временную зону устанавливаем
     scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
 
+    # Список всех запланированных задач
     scheduler.add_job(every_day_events.not_open_shop_warning, trigger='cron',
                       hour='08', minute='50', kwargs={'bot': bot})  # предупреждение о не открытых
     scheduler.add_job(every_day_events.who_not_close_shops, trigger='cron',
@@ -21,7 +20,6 @@ async def create_tasks(bot: Bot, setups: setup_dialogs):
                       hour='00', minute='05', kwargs={'setups': setups, 'bot': bot})  # обнуление всех магазинов
     scheduler.add_job(every_day_events.update_all_plans, trigger='cron',
                       day='01', hour='00', minute='05', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
-
 
     scheduler.start()
 

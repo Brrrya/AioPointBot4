@@ -1,14 +1,8 @@
-import datetime
-import calendar
-
-import asyncio
-
-from sqlalchemy import select, func, text, Table
-
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors, Coefs
+from database.models import Registers, Sellers, Shops, Supervisors, Directors
 
 
 class ShopRequests:

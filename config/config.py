@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 
 from environs import Env
@@ -19,7 +20,7 @@ def load_config() -> Config:
     env: Env = Env()   # Создаем экземпляр класса Env
     env.read_env('.env')   # Добавляем в переменные окружения данные, прочитанные из файла .env
 
-    print("Config was loaded")
+    logging.info('Конфиг загруужен')
 
     return Config(tgbot=TgBot(token=env('BOT_TOKEN')),
                   database=Database(

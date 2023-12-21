@@ -1,21 +1,17 @@
-import asyncio
-
-import aiogram_dialog.api.exceptions
 from aiogram import Bot
 from aiogram.types import FSInputFile
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import StartMode
+from aiogram_dialog import setup_dialogs
 
 from database.apscheduler_requests import APScgedulerRequests
 from database.plan_requests import PlanRequests
-
-from aiogram_dialog import setup_dialogs
-
 from dialogs.seller_dialogs.main_message_dialog.states import MainMessageUser
 from dialogs.shop_dialogs.main_message_dialog.states import MainMessage as MainMessageShop
+from service.plan import create_plan, update_coefficients
 
-from service.plan import create_plan
 
 async def not_open_shop_warning(bot: Bot):
+    """Рассылает предупреждение всем управляющим и проверяющим о не открытых магазинах"""
     data = await APScgedulerRequests.not_open_shop_warning()
 
     for sv in data['sv']:
@@ -30,7 +26,9 @@ async def not_open_shop_warning(bot: Bot):
             text += shop + '\n'
         await bot.send_message(checker, str(text))
 
+
 async def who_not_close_shops(bot: Bot):
+    """Рассылает предупреждение всем управляющим о не закрытых магазинах"""
     data = await APScgedulerRequests.who_not_close_shops()
 
     for sv in data:
@@ -42,6 +40,7 @@ async def who_not_close_shops(bot: Bot):
 
 
 async def who_not_make_rotate(bot: Bot):
+    """Рассылает предупреждение всем управляющим и проверяющим о не сделавших ротации магазинах"""
     data = await APScgedulerRequests.who_not_make_rotate()
 
     for sv in data['sv']:
@@ -58,6 +57,7 @@ async def who_not_make_rotate(bot: Bot):
 
 
 async def reset_all_shops(setups: setup_dialogs, bot: Bot):
+    """Обнуляет все магазины и обновляет диалог у каждого пользователя (чтобы отобразить новые данные)"""
     data = await APScgedulerRequests.reset_all_shops()
 
     for shop in data['shops']:
@@ -81,8 +81,13 @@ async def reset_all_shops(setups: setup_dialogs, bot: Bot):
 
 
 async def update_all_plans(bot: Bot, setups: setup_dialogs):
+    """Обновляет коеффициенты и все планы магазинов в первый день месяца"""
     all_shop_data = await APScgedulerRequests.take_all_shop()
 
+    # Сперва обновляем коеффициенты
+    await update_coefficients()
+
+    # Отпарвляем старые планы и обновляем их
     for shop in all_shop_data['all_shops']:
         # формируем старый план для каждого магазина и отправляем его ему
         await create_plan(shop[1])

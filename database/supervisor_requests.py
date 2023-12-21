@@ -1,12 +1,10 @@
-import asyncio
 import datetime
 
-from sqlalchemy import select, asc
-
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors, Photos, Reports
+from database.models import Sellers, Shops, Supervisors, Photos, Reports
 
 
 class SupervisorRequests:
@@ -37,6 +35,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_photo_rotate_or_state(sv_tgid: int, action: str):
+        """Возвращает список всех фотографий ротаций или чеков открытия определенного управляющего"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -61,6 +60,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_open_shops(sv_tgid: int):
+        """Возвращает список не открытых магазинов определенного управляющего"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -85,6 +85,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_rotate_shops(sv_tgid: int):
+        """Возвращает список не сделавших ротации магазинов определенного управляющего"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -109,6 +110,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_sellers(sv_tgid: int):
+        """Возвращает список всех продавцов определенного управляющего"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -125,6 +127,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_sv():
+        """Возвращает список всех управляющих"""
         async with session_maker() as session:
             supervisors = await session.execute(
                 select(Supervisors)
@@ -138,6 +141,7 @@ class SupervisorRequests:
             }
     @staticmethod
     async def take_data_for_seller_transfer(sv_tgid: int, seller_tgid: int | None):
+        """Возвращает информацию о выбранных управляющем и продавце"""
         async with session_maker() as session:
             if seller_tgid:
                 seller = await session.get(Sellers, seller_tgid)
@@ -155,6 +159,7 @@ class SupervisorRequests:
             new_sv_tgid: int,
             seller_tgid: int | None
     ):
+        """Перемещает сотрудника или всех сотрудников к другому управляющему"""
         async with session_maker() as session:
             if seller_tgid:
                 seller = await session.get(Sellers, seller_tgid)
@@ -172,6 +177,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_shops(sv_tgid: int):
+        """Возвращает список всех магазинов определенного управляющего"""
         async with session_maker() as session:
             supervisor = await session.execute(
                 select(Supervisors)
@@ -192,6 +198,7 @@ class SupervisorRequests:
             new_sv_tgid: int,
             shop_tgid: int | None
     ):
+        """Перемещает магазин или все магазины к другому управляющему"""
         async with session_maker() as session:
             if shop_tgid:
                 shop = await session.get(Shops, shop_tgid)
@@ -209,6 +216,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_data_for_shop_transfer(sv_tgid: int, shop_tgid: int | None):
+        """Возвращает информацию о выбранном магазине и управляющем"""
         async with session_maker() as session:
             if shop_tgid:
                 shop = await session.get(Shops, shop_tgid)
@@ -221,6 +229,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_data_about_seller_by_tgid(seller_tgid: int):
+        """Возвращает информацию о сотруднике по тг айди"""
         async with session_maker() as session:
             seller = await session.execute(
                 select(Sellers)
@@ -235,6 +244,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def delete_seller(seller_tgid: int):
+        """Удаляет сотрудника из БД"""
         async with session_maker() as session:
             shop_with_seller = await session.execute(
                 select(Shops)
@@ -261,6 +271,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_checkers_data(sv_tgid: int):
+        """Возвращает список проверяющих магазинов определнного управляющего"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
@@ -300,6 +311,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_shop_name(shop_tgid: int):
+        """Возвращает название магазина"""
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
 
@@ -313,6 +325,7 @@ class SupervisorRequests:
             shop_tgid: int,
             seller_tgid: int | None,
     ):
+        """Меняет проверяющего у магазина"""
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
 
@@ -326,6 +339,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def close_report_for_dialog(sv_tgid: int):
+        """Возвращает тех, кто ещё не скинул отчет закрытия за ткущий день"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
@@ -361,6 +375,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def take_all_close_report_data(sv_tgid: int):
+        """Возвращает вечерние отчеты тех кто их отправил"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)

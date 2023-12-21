@@ -15,11 +15,13 @@ from database.unknown_requests import UnknownRequests
 
 
 async def start(message: Message, dialog_manager: DialogManager):
+    """Определяет в какой диалог отправить пользователя"""
     logging.info(f'Ввел команду /start id={message.from_user.id} username={message.from_user.username}')
     res = await UnknownRequests.user_first_auth(message.from_user.id)
     if res == 'shop':
         await dialog_manager.start(ShopMainMessage.main_message)
     elif res == 'seller':
+        # Проверяет если продавец авторизирован на магазине, выводит основное окно, иначе заглушку
         auth_or_not = await UnknownRequests.user_check_auth(message.from_user.id)
         if auth_or_not is True:
             await dialog_manager.start(UserMainMessage.main_message)

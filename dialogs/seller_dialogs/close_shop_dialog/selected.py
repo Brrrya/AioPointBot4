@@ -1,14 +1,12 @@
 import logging
 
 from aiogram.types import CallbackQuery, Message
-
-from aiogram_dialog import DialogManager, BaseDialogManager
-from aiogram_dialog.widgets.kbd import Button
-from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.common import ManagedScroll
+from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Button
 
 from database.seller_requests import SellerRequests
-
 from dialogs.seller_dialogs.close_shop_dialog.states import MainMessageUserClose
 
 

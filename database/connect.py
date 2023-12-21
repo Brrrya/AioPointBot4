@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
@@ -20,14 +22,16 @@ engine = create_async_engine(
     ),
     echo=False
 )
-print('Engine was created')
 
+logging.info('Engine was created')
 
 session_maker = async_sessionmaker(engine)
-print('Session was created')
+logging.info('Session was created')
 
 
 class Base(DeclarativeBase):
     pass
-print('Base class was created')
+
+
+logging.info('Base class was created')
 

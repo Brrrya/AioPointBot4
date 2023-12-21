@@ -1,17 +1,16 @@
 import asyncio
-import datetime
 
-from sqlalchemy import select, MetaData, Table, Column, Integer, String, Date
-from sqlalchemy.schema import CreateTable
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-
 
 from database.connect import session_maker
 from database.models import *
 
+
 class APScgedulerRequests:
     @staticmethod
     async def not_open_shop_warning():
+        """Собирает список неоткрытых магазинов для управляющего и проверяющего"""
         async with session_maker() as session:
             sv_all = await session.execute(
                 select(Supervisors)
@@ -33,8 +32,9 @@ class APScgedulerRequests:
                 select(Shops)
                 .where(
                     (Shops.open_checker != None)
-                    &(Shops.state == False)
+                    & (Shops.state == False)
                 )
+                .order_by(Shops.title)
             )
             all_shop = all_shop.scalars().all()
             res_for_checker = {}
@@ -50,8 +50,10 @@ class APScgedulerRequests:
                 'checker': res_for_checker
             }
             return res
+
     @staticmethod
     async def who_not_close_shops():
+        """Собирает список не закрытых магазинов для управляющего"""
         async with session_maker() as session:
             all_sv = await session.execute(
                 select(Supervisors)
@@ -72,9 +74,9 @@ class APScgedulerRequests:
                 )
             return res
 
-
     @staticmethod
     async def who_not_make_rotate():
+        """Собирает список тех, кто ещё не сделал ротации для управляющего и проверяюшего"""
         async with session_maker() as session:
             sv_all = await session.execute(
                 select(Supervisors)
@@ -96,8 +98,9 @@ class APScgedulerRequests:
                 select(Shops)
                 .where(
                     (Shops.rotate_checker != None)
-                    &(Shops.rotate == False)
+                    & (Shops.rotate == False)
                 )
+                .order_by(Shops.title)
             )
             all_shop = all_shop.scalars().all()
 
@@ -115,12 +118,13 @@ class APScgedulerRequests:
             }
             return res
 
-
     @staticmethod
     async def reset_all_shops():
+        """Обнуляет все магазины, и возвращает списки всех сотрудников и магазинов"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
+                .order_by(Shops.title)
             )
             shops = shops.scalars().all()
             res_shop = []
@@ -158,6 +162,7 @@ class APScgedulerRequests:
 
     @staticmethod
     async def take_all_shop():
+        """Возвращает название и тг айди всех магазинов"""
         async with session_maker() as session:
             all_shops = await session.execute(
                 select(Shops)

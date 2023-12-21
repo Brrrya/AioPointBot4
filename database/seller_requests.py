@@ -1,13 +1,9 @@
-import asyncio
 import datetime
 
 from sqlalchemy import select
 
-from sqlalchemy.orm import selectinload
-
-
 from database.connect import session_maker
-from database.models import Registers, Sellers, Shops, Supervisors, Directors, Photos, Reports
+from database.models import Sellers, Shops, Supervisors, Photos, Reports
 
 
 class SellerRequests:

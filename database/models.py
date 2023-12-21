@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 from database.connect import Base
 
+
 class Admins(Base):
     __tablename__ = 'admins'
 

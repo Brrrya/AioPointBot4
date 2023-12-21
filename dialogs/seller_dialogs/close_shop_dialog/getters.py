@@ -1,12 +1,8 @@
-from aiogram.types import CallbackQuery
 from aiogram.enums import ContentType
 
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.common import ManagedScroll
-
-
-from database.seller_requests import SellerRequests
 
 
 async def close_take_ckp(dialog_manager: DialogManager, **kwargs):

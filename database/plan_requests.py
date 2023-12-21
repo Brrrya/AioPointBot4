@@ -2,10 +2,8 @@ import asyncio
 import calendar
 import datetime
 
-from sqlalchemy import update, select, insert, text, MetaData, Table, Column, Integer, String, Date, delete
+from sqlalchemy import update, select, insert, text, MetaData, Table, delete
 from sqlalchemy.schema import CreateTable
-from sqlalchemy.orm import selectinload
-
 
 from database.connect import session_maker
 from database.models import *
@@ -17,6 +15,7 @@ class PlanRequests:
             shop_tgid: int
     ):
         async with session_maker() as session:
+            """Возвращает данные плана из БД и создает план если такового нет"""
             shop = await session.get(Shops, shop_tgid)
 
             try:
@@ -58,6 +57,7 @@ class PlanRequests:
             check: int,
             shop_tgid: int
     ):
+        """Создает таблицу в БД если нет, и обнавляет её внося данные"""
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
 
@@ -142,6 +142,7 @@ class PlanRequests:
             coefficients: list[int],
             full_coeff: int
     ):
+        """Пересоздает коеффициенты для подсчета планов"""
         async with session_maker() as session:
             await session.execute(
                 delete(Coefs)
@@ -161,6 +162,7 @@ class PlanRequests:
             date_for_data: datetime.date,
             shop_tgid: int
     ):
+        """Возвращает данные выручки за определенный день"""
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
             day_data = await session.execute(
@@ -185,6 +187,7 @@ class PlanRequests:
         dcart_new_data: int,
         shop_tgid: int
     ):
+        """Меняет данные выручки за определенный день"""
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
             await session.execute(
@@ -194,6 +197,7 @@ class PlanRequests:
                      f"WHERE date_ = '{str(date_for_change)}'")
             )
             await session.commit()
+
 if __name__ == '__main__':
     asyncio.run(PlanRequests.recreate_coefs(coefficients=[30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25],
                                             full_coeff=842))
