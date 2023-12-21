@@ -7,6 +7,10 @@ __pycache__/
 *.ods
 *.ods.bak
 
+# Логи
+*.log
+
+
 -A
 # C extensions
 *.so
