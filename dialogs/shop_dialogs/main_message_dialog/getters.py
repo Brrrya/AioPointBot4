@@ -1,7 +1,6 @@
-from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 
-from database.shop_requests import ShopRequests
+from database.requests.shop_requests import ShopRequests
 
 
 async def main_message(dialog_manager: DialogManager, **kwargs):

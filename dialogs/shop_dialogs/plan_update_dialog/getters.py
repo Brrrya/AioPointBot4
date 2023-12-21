@@ -1,7 +1,5 @@
 from aiogram_dialog import DialogManager
 
-from database.shop_requests import ShopRequests
-
 
 async def take_ckp(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()

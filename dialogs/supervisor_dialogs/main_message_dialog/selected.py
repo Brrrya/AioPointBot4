@@ -1,13 +1,11 @@
-import asyncio
 import logging
 
-from aiogram.utils.media_group import MediaGroupBuilder, InputMediaPhoto
+from aiogram.utils.media_group import MediaGroupBuilder
 
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 
-from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
+from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button
-from aiogram_dialog.widgets.input import MessageInput
 
 from dialogs.supervisor_dialogs.main_message_dialog import states as states_main_message
 from dialogs.supervisor_dialogs.seller_transfer_dialog import states as states_transfer_seller
@@ -16,7 +14,7 @@ from dialogs.supervisor_dialogs.fire_seller_dialog import states as states_fire_
 from dialogs.supervisor_dialogs.change_checker_dialog import states as states_change_open_checker
 
 
-from database.supervisor_requests import SupervisorRequests
+from database.requests.supervisor_requests import SupervisorRequests
 
 
 async def refresh_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):

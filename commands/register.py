@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 
 from states.states import UnknownFSM
 
-from database.unknown_requests import UnknownRequests
+from database.requests.unknown_requests import UnknownRequests
 
 async def register_command(message: Message, state: FSMContext) -> None:
     """Срабатывает на команду /register"""

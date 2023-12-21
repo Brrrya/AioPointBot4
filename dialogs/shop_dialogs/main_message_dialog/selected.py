@@ -1,9 +1,8 @@
 import logging
 
-import aiogram_dialog.api.exceptions
 from aiogram.types import CallbackQuery, Message, FSInputFile
 
-from aiogram_dialog import DialogManager, BaseDialogManager, BgManagerFactory, StartMode
+from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
@@ -14,7 +13,7 @@ from dialogs.seller_dialogs.main_message_dialog import states as states_seller
 from dialogs.shop_dialogs.plan_change_dialog import states as states_change_plan
 
 
-from database.shop_requests import ShopRequests
+from database.requests.shop_requests import ShopRequests
 from service import plan
 
 async def go_to_authorization(c: CallbackQuery, widget: Button, manager: DialogManager):

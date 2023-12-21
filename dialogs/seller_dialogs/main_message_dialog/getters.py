@@ -1,10 +1,9 @@
 from aiogram.enums import ContentType
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 
-from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 
-from database.seller_requests import SellerRequests
+from database.requests.seller_requests import SellerRequests
 
 
 async def main_message(dialog_manager: DialogManager, **kwargs):

@@ -1,7 +1,5 @@
 from aiogram_dialog import DialogManager
 
-from database.shop_requests import ShopRequests
-
 
 async def change_take_rto(dialog_manager: DialogManager, **kwargs):
     ctx = dialog_manager.current_context()

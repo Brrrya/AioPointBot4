@@ -1,6 +1,6 @@
 from aiogram_dialog import DialogManager
 
-from database.shop_requests import ShopRequests
+from database.requests.shop_requests import ShopRequests
 
 
 async def take_last_name(dialog_manager: DialogManager, **kwargs):

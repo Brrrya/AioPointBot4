@@ -5,7 +5,7 @@ from datetime import datetime
 
 import ezodf
 
-from database.plan_requests import PlanRequests
+from database.requests.plan_requests import PlanRequests
 
 
 async def update_coefficients(

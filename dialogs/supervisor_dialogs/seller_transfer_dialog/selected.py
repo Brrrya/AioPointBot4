@@ -1,15 +1,13 @@
-import asyncio
 import logging
 
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 
-from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
-from aiogram_dialog.widgets.input import MessageInput
 
 from dialogs.supervisor_dialogs.seller_transfer_dialog import states as states_seller_transfer
 
-from database.supervisor_requests import SupervisorRequests
+from database.requests.supervisor_requests import SupervisorRequests
 
 
 async def seller_choice(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):

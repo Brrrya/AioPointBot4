@@ -1,17 +1,15 @@
 import logging
 
-from aiogram.types import CallbackQuery, Message, FSInputFile
+from aiogram.types import CallbackQuery, Message
 
-from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
-from aiogram_dialog.widgets.kbd import Button, Select
+from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
 from dialogs.shop_dialogs.plan_update_dialog import states
 from dialogs.shop_dialogs.main_message_dialog import states as main_dialog_states
 
-
-from database.shop_requests import ShopRequests
-from database.plan_requests import PlanRequests
+from database.requests.plan_requests import PlanRequests
 
 
 async def take_rto(m: Message, widget: MessageInput, manager: DialogManager):

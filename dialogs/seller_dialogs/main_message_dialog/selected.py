@@ -2,14 +2,14 @@ import logging
 
 from aiogram.types import CallbackQuery, Message
 
-from aiogram_dialog import DialogManager, BaseDialogManager
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
 from dialogs.seller_dialogs.main_message_dialog import states as states_main_message
 from dialogs.seller_dialogs.close_shop_dialog import states as states_close_dialog
 
-from database.seller_requests import SellerRequests
+from database.requests.seller_requests import SellerRequests
 
 
 async def checker_command(m: Message, widget: MessageInput, manager: DialogManager):

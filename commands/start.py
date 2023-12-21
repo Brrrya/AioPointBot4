@@ -11,7 +11,7 @@ from dialogs.supervisor_dialogs.main_message_dialog.states import MainMessageSup
 
 from loguru import logger
 
-from database.unknown_requests import UnknownRequests
+from database.requests.unknown_requests import UnknownRequests
 
 
 async def start(message: Message, dialog_manager: DialogManager):

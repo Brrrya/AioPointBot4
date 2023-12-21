@@ -1,10 +1,6 @@
-from aiogram.enums import ContentType
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
-
-from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 
-from database.supervisor_requests import SupervisorRequests
+from database.requests.supervisor_requests import SupervisorRequests
 
 
 async def select_shop_checker(dialog_manager: DialogManager, **kwargs):

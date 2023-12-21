@@ -3,7 +3,7 @@ import random
 
 from aiogram.types import CallbackQuery, Message
 
-from aiogram_dialog import DialogManager, BaseDialogManager, StartMode
+from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button, Select
 from aiogram_dialog.widgets.input import MessageInput
 
@@ -11,7 +11,7 @@ from dialogs.shop_dialogs.register_sub_dialog import states
 from dialogs.shop_dialogs.main_message_dialog import states as main_dialog_states
 
 
-from database.shop_requests import ShopRequests
+from database.requests.shop_requests import ShopRequests
 
 
 async def take_register_badge(m: Message, widget: MessageInput, manager: DialogManager):

@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.common import ManagedScroll
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
 
-from database.seller_requests import SellerRequests
+from database.requests.seller_requests import SellerRequests
 from dialogs.seller_dialogs.close_shop_dialog.states import MainMessageUserClose
 
 

@@ -3,8 +3,8 @@ from aiogram.types import FSInputFile
 from aiogram_dialog import StartMode
 from aiogram_dialog import setup_dialogs
 
-from database.apscheduler_requests import APScgedulerRequests
-from database.plan_requests import PlanRequests
+from database.requests.apscheduler_requests import APScgedulerRequests
+from database.requests.plan_requests import PlanRequests
 from dialogs.seller_dialogs.main_message_dialog.states import MainMessageUser
 from dialogs.shop_dialogs.main_message_dialog.states import MainMessage as MainMessageShop
 from service.plan import create_plan, update_coefficients
