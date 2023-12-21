@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Планы продаж
+*.ods
+*.ods.bak
+
+-A
 # C extensions
 *.so
 
