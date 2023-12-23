@@ -57,15 +57,97 @@ class DirectorRequests:
                         'rotate_shop': sv_rotate_shop_count
                     }
 
-            print(res)
             return res
 
 
+    @staticmethod
+    async def select_all_workers():
+        """Возвращает список всех продавцов"""
+        async with session_maker() as session:
+            sellers = await session.execute(
+                select(Sellers)
+                .order_by(Sellers.last_name)
+            )
+            sellers = sellers.scalars().all()
+
+            res = [
+                (f'{seller.last_name} {seller.first_name}', seller.tgid)
+                for seller in sellers
+            ]
+
+            return res
 
 
+    @staticmethod
+    async def select_data_about_seller(seller_tgid: int):
+        """Возвращает информацию о сотруднике"""
+        async with session_maker() as session:
+            seller = await session.get(
+                Sellers, seller_tgid
+            )
+
+            res = {
+                'full_name': f'{seller.last_name} {seller.first_name}',
+                'tgid': seller.tgid,
+                'sv': seller.supervisor,
+                'badge': seller.badge
+            }
+
+            return res
 
 
+    @staticmethod
+    async def appoint_supervisor(new_sv_tgid: int):
+        """Добавляет сотрудника к СВ убирает из продавцов"""
+        async with session_maker() as session:
+            seller = await session.get(
+                Sellers, new_sv_tgid
+            )
 
+            shop_with_seller = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.worker == seller.tgid)
+                    | (Shops.open_checker == seller.tgid)
+                    | (Shops.rotate_checker == seller.tgid))
+            )
+            shop_with_seller = shop_with_seller.scalars().all()
+
+
+            res = {
+                'was_authorized': False
+            }
+            if shop_with_seller:
+                """Если авторизирован или проверяющий в магазине убираем от туда"""
+                for shop in shop_with_seller:
+                    if shop.worker == seller.tgid:
+                        shop.worker = None
+                        res['was_authorized'] = True
+                        res.update(where_was_authorized_tgid=shop.tgid)
+
+                    if shop.open_checker == seller.tgid:
+                        shop.open_checker = None
+
+                    if shop.rotate_checker == seller.tgid:
+                        shop.rotate_checker = None
+
+                await session.flush()
+
+            session.add(Supervisors(
+                first_name=seller.first_name, last_name=seller.last_name,
+                tgid=seller.tgid, badge=seller.badge)
+            )
+
+            await session.delete(seller)
+
+            await session.commit()
+
+        # async with session_maker() as session:
+        #     seller = session.get(Sellers, new_sv_tgid)
+        #     session.delete(seller)
+        #     await session.commit()
+        #
+        return res
 
 if __name__ == '__main__':
     asyncio.run(DirectorRequests.main_message_info())

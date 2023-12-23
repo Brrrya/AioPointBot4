@@ -17,7 +17,24 @@ from dialogs.director_dialogs.main_message_dialog import (
 async def director_main_message():
     return Window(
         Format('{main_message_text}'),
-        keyboards.main_message,
+        Button(Const('Обновить'), on_click=selected.refresh, id='refresh_main_message_dr'),
+        Button(Const('Инспектировать СВ'), on_click=selected.inspected_sv, id='dr_inspect_sv'),
+        Button(Const('Изменить структуру'), on_click=selected.structure_changes, id='structure_changes_main_message_dr'),
         getter=getters.main_message,
         state=states.MainMessageDirector.main_message
     )
+
+
+async def structure_changes():
+    return Window(
+        Const('Окно изменения структуры сети'),
+        keyboards.main_message(
+            appoint_sv=selected.appoint_sv,
+            fire_sv=None,
+            inspect_sv=None
+        ),
+        getter=getters.structure_changes,
+        state=states.MainMessageDirector.structure_changes
+    )
+
+

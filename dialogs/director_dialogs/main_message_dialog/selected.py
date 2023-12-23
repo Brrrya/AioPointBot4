@@ -5,15 +5,36 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 
-from dialogs.supervisor_dialogs.fire_seller_dialog import states
-from dialogs.seller_dialogs.main_message_dialog import states as states_seller
+from dialogs.director_dialogs.main_message_dialog import states
+from dialogs.director_dialogs.appoint_supervisor_dialog import states as states_appoint
 
 from database.requests.supervisor_requests import SupervisorRequests
 
 
-async def seller_choice(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
+async def refresh(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку обновления основного окна id={c.from_user.id} username={c.from_user.username}')
 
-    ctx = manager.current_context()
-    ctx.dialog_data.update(fire_seller_tgid=int(item_id))
-    await manager.switch_to(states.SellerFireSupervisor.confirm)
+    await manager.update(data={})
+
+
+async def structure_changes(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку изменения структуры id={c.from_user.id} username={c.from_user.username}')
+
+    await manager.switch_to(states.MainMessageDirector.structure_changes)
+
+
+async def inspected_sv(c: CallbackQuery, widget: Button, manager: DialogManager):
+    pass
+
+
+async def appoint_sv(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку назначить СВ id={c.from_user.id} username={c.from_user.username}')
+
+    await manager.start(states_appoint.AppointSvDirector.choice_new_sv)  # Запустить диалог
+
+async def fire_sv(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку уволить СВ id={c.from_user.id} username={c.from_user.username}')
+
+
+
 
