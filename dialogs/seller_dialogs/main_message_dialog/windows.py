@@ -1,13 +1,12 @@
+import logging
+
 from aiogram import F
-
 from aiogram_dialog import Window, DialogManager, Data
-
-from aiogram_dialog.widgets.text import Format, Const
-from aiogram_dialog.widgets.kbd import Back, Button
 from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Back, Button
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.media.static import ContentType
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
-
+from aiogram_dialog.widgets.text import Format, Const
 
 from dialogs.seller_dialogs.main_message_dialog import (
     getters, keyboards, selected, states
@@ -15,6 +14,7 @@ from dialogs.seller_dialogs.main_message_dialog import (
 
 
 async def on_process_result(data: Data, result: dict, manager: DialogManager, **kwargs):
+    logging.info(f'on_process_result Seller result = {result}')
     if result:
         switch_to = result.get('switch_to')
         if switch_to == 'plug':
@@ -24,6 +24,7 @@ async def on_process_result(data: Data, result: dict, manager: DialogManager, **
 async def plug():
     return Window(
         Const("Вы не авторизированны ни на одном магазине"),
+        getter=getters.plug,
         state=states.MainMessageUser.plug
     )
 
@@ -52,6 +53,7 @@ async def open_photo():
         Const('Только одну фотографию!'),
         MessageInput(func=selected.open_photo, content_types=ContentType.PHOTO),
         Button(Const('❌ Отмена'), on_click=selected.to_main_message, id='user_button_back_to_main_window'),
+        getter=getters.open_photo_take,
         state=states.MainMessageUser.open_photo
     )
 
@@ -73,6 +75,7 @@ async def rotate_photo():
         Const('Только одну фотографию!'),
         MessageInput(func=selected.rotate_photo, content_types=ContentType.PHOTO),
         Button(Const('❌ Отмена'), on_click=selected.to_main_message, id='user_button_back_to_main_window'),
+        getter=getters.rotate_photo_take,
         state=states.MainMessageUser.rotate_photo
     )
 

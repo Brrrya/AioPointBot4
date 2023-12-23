@@ -12,12 +12,15 @@ from dialogs.seller_dialogs.close_shop_dialog.states import MainMessageUserClose
 
 async def close_take_rto(m: Message, widget: MessageInput, manager: DialogManager):
     logging.info(f'Ввел выручку РТО - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(close_rto=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_ckp)
 
+
 async def close_take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
     logging.info(f'Ввел выручку ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = manager.current_context()
     ctx.dialog_data.update(close_ckp=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_check)
@@ -40,6 +43,8 @@ async def close_take_dcart(m: Message, widget: MessageInput, manager: DialogMana
 
 
 async def on_delete_close_photo(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Удалил фото id={callback.from_user.id} username={callback.from_user.username}')
+
     scroll: ManagedScroll = dialog_manager.find("pages")
     media_number = await scroll.get_page()
     photos = dialog_manager.dialog_data.get("photos", [])

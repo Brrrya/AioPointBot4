@@ -37,6 +37,7 @@ async def authorization():
         Const("Сканируйте свой бейджик"),
         MessageInput(selected.take_auth_badge),
         Back(Const('❌ Отмена')),
+        getter=getters.authorization,
         state=states.MainMessage.auth_wait_badge
     )
 

@@ -1,13 +1,6 @@
-from aiogram import F
-
-from aiogram_dialog import Window, DialogManager, Data
-
-from aiogram_dialog.widgets.text import Format, Const, List, Multi, Case
+from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row
-from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.media.static import ContentType
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
-
+from aiogram_dialog.widgets.text import Format, Const
 
 from dialogs.supervisor_dialogs.change_checker_dialog import (
     getters, keyboards, selected, states
@@ -26,6 +19,7 @@ async def select_role_checker():
             Button(Const('Ротации'), id='change_rotate_checker', on_click=selected.change_rotate),
         ),
         Cancel(Const('Отмена')),
+        getter=getters.select_role_checker,
         state=states.ChangeCheckerSupervisor.select_role
     )
 

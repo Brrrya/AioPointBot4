@@ -1,13 +1,8 @@
-from aiogram import F
+import logging
 
 from aiogram_dialog import Window, DialogManager, Data
-
+from aiogram_dialog.widgets.kbd import Back, Button
 from aiogram_dialog.widgets.text import Format, Const, List, Multi, Case
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel
-from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.media.static import ContentType
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
-
 
 from dialogs.supervisor_dialogs.main_message_dialog import (
     getters, keyboards, selected, states
@@ -15,6 +10,9 @@ from dialogs.supervisor_dialogs.main_message_dialog import (
 
 
 async def on_process_result(data: Data, result: dict, manager: DialogManager, **kwargs):
+    logging.info(f'on_process_result Supervisor result={result}'
+                 f' id={manager.event.from_user.id} username={manager.event.from_user.username}')
+
     if result:
         switch_to = result.get('switch_to')
         if switch_to == 'main_message':
@@ -128,6 +126,7 @@ async def structure_changes():
             transfer_shop=selected.transfer_shop,
         ),
         Button(Const('Назад'), on_click=selected.back_to_main_message, id='back_to_main_message_sv'),
+        getter=getters.structure_changes,
         state=states.MainMessageSupervisor.structure_changes
     )
 

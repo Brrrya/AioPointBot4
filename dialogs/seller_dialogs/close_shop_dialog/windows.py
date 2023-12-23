@@ -22,6 +22,7 @@ async def close_take_rto():
         Const('Введите выручку РТО'),
         Cancel(Const('❌ Отмена')),
         MessageInput(selected.close_take_rto, filter=lambda message: message.text.isdigit()),
+        getter=getters.close_take_rto,
         state=states.MainMessageUserClose.close_take_rto
     )
 

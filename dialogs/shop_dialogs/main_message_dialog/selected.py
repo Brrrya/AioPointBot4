@@ -16,6 +16,7 @@ from dialogs.shop_dialogs.plan_change_dialog import states as states_change_plan
 from database.requests.shop_requests import ShopRequests
 from service import plan
 
+
 async def go_to_authorization(c: CallbackQuery, widget: Button, manager: DialogManager):
     logging.info(f'Магазин | Нажата кнопка авторизации id={c.from_user.id} username={c.from_user.username}')
 
@@ -33,8 +34,6 @@ async def take_auth_badge(m: Message, widget: MessageInput, manager: DialogManag
             await manager.bg(shop['worker_tgid'], shop['worker_tgid']).switch_to(states_seller.MainMessageUser.plug)
         if worker['other_shop_tgid']:
             await manager.bg(worker['other_shop_tgid'], worker['other_shop_tgid']).update(data=manager.start_data)
-        # if shop['supervisor_tgid']:
-        #     await manager.bg(shop['supervisor_tgid'], shop['supervisor_tgid']).update(data=manager.start_data)
 
         await manager.bg(worker['tgid'], worker['tgid']).start(states_seller.MainMessageUser.main_message)
         await manager.switch_to(states.MainMessage.main_message)

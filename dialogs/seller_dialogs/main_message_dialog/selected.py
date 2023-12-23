@@ -13,7 +13,7 @@ from database.requests.seller_requests import SellerRequests
 
 
 async def checker_command(m: Message, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Ввёл команду проверяющего {m.text} id={m.from_user.id} username={m.from_user.username}')
+    logging.info(f'Продавец | Ввёл команду проверяющего {m.text} id={m.from_user.id} username={m.from_user.username}')
     if m.text == '/open':
         data = await SellerRequests.checker_all_photo_open(int(m.from_user.id))
     else:
@@ -33,27 +33,26 @@ async def checker_command(m: Message, widget: MessageInput, manager: DialogManag
             text += f'{shop_name[0]}\n'
         await m.answer(text)
 
-    # await m.answer(m.text[1::])
 
 async def to_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Перешёл по кнопке в main_window id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Перешёл по кнопке в main_window id={c.from_user.id} username={c.from_user.username}')
     await manager.switch_to(states_main_message.MainMessageUser.main_message)
 
 
 async def open_button(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Нажал кнопку открытия id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Нажал кнопку открытия id={c.from_user.id} username={c.from_user.username}')
     await manager.switch_to(states_main_message.MainMessageUser.open_photo)
 
 
 async def open_photo(m: Message, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Отправил фото чека открытия id={m.from_user.id} username={m.from_user.username}')
+    logging.info(f'Продавец | Отправил фото чека открытия id={m.from_user.id} username={m.from_user.username}')
     ctx = manager.current_context()
     ctx.dialog_data.update(open_photo=m.photo[-1].file_id)
     await manager.switch_to(states_main_message.MainMessageUser.open_photo_confirm)
 
 
 async def open_photo_confirm(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Подтвердил фото открытия id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Подтвердил фото открытия id={c.from_user.id} username={c.from_user.username}')
     ctx = manager.current_context()
     await SellerRequests.insert_photo(c.from_user.id, 'open', [ctx.dialog_data.get('open_photo')])
     shop = await SellerRequests.take_main_window_info(c.from_user.id)
@@ -63,18 +62,19 @@ async def open_photo_confirm(c: CallbackQuery, widget: Button, manager: DialogMa
 
 
 async def rotate_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Нажал кнопку ротаций id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Нажал кнопку ротаций id={c.from_user.id} username={c.from_user.username}')
     await manager.switch_to(states_main_message.MainMessageUser.rotate_photo)
 
 
 async def rotate_photo(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Продавец | Отправил фото ротаций id={m.from_user.id} username={m.from_user.username}')
     ctx = manager.current_context()
     ctx.dialog_data.update(rotate_photo=m.photo[-1].file_id)
     await manager.switch_to(states_main_message.MainMessageUser.rotate_photo_confirm)
 
 
 async def rotate_photo_confirm(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Подтвердил фото ротаций id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Подтвердил фото ротаций id={c.from_user.id} username={c.from_user.username}')
     ctx = manager.current_context()
     await SellerRequests.insert_photo(c.from_user.id, 'rotate', [ctx.dialog_data.get('rotate_photo')])
     shop = await SellerRequests.take_main_window_info(c.from_user.id)
@@ -84,6 +84,6 @@ async def rotate_photo_confirm(c: CallbackQuery, widget: Button, manager: Dialog
 
 
 async def close_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Нажал кнопку закрытия id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Продавец | Нажал кнопку закрытия id={c.from_user.id} username={c.from_user.username}')
     await manager.start(states_close_dialog.MainMessageUserClose.close_take_rto)
 

@@ -15,6 +15,7 @@ async def scan_new_worker_badge():
         Const('Сканируйте бейджик нового сотрудника'),
         MessageInput(selected.take_register_badge, filter=lambda message: message.text.isdigit()),
         Cancel(Const('❌️ Отмена')),
+        getter=getters.scan_new_worker_badge,
         state=states.MainMessageRegistration.badge_scan
     )
 
@@ -29,6 +30,7 @@ async def take_first_name():
         Back(Const('⬅️ Назад')),
         Cancel(Const('❌ Отмена')),
         MessageInput(selected.take_first_name),
+        getter=getters.take_first_name,
         state=states.MainMessageRegistration.enter_f_name
     )
 

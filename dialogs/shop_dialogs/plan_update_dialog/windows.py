@@ -19,6 +19,7 @@ async def update_plan_take_rto():
         Const('Введите план РТО на месяц'),
         MessageInput(selected.take_rto, filter=lambda message: message.text.isdigit()),
         Cancel(Const('❌ Отмена')),
+        getter=getters.take_rto,
         state=states.MainMessageUpdatePlan.take_rto
     )
 

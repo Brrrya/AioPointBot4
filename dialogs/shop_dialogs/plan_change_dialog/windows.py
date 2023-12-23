@@ -25,6 +25,7 @@ async def take_date_for_change():
             on_click=selected.take_date_for_change
         ),
         Cancel(Const('❌ Отмена')),
+        getter=getters.take_date_for_change,
         state=states.MainMessageChangePlan.take_date_for_change
     )
 

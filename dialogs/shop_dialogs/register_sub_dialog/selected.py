@@ -35,6 +35,8 @@ async def take_first_name(m: Message, widget: MessageInput, dialog_manager: Dial
 
 
 async def take_last_name(m: Message, widget: MessageInput, dialog_manager: DialogManager):
+    logging.info(f'Магазин | Ввел фамилию нового сотрудника - {m.text} id={m.from_user.id} username={m.from_user.username}')
+
     ctx = dialog_manager.current_context()
     ctx.dialog_data.update(last_name=m.text)
     await dialog_manager.switch_to(states.MainMessageRegistration.enter_supervisor)

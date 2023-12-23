@@ -1,3 +1,5 @@
+import logging
+
 from aiogram.enums import ContentType
 
 from aiogram_dialog import DialogManager
@@ -5,7 +7,15 @@ from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.common import ManagedScroll
 
 
+
+async def close_take_rto(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.close_shop.close_take_rto>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+    return {}
+
 async def close_take_ckp(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.close_shop.close_take_ckp>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     ctx = dialog_manager.current_context()
     return {
         'close_rto': f"✅ {ctx.dialog_data.get('close_rto')}"
@@ -13,6 +23,8 @@ async def close_take_ckp(dialog_manager: DialogManager, **kwargs):
 
 
 async def close_take_check(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.close_shop.close_take_check>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     ctx = dialog_manager.current_context()
     return {
         'close_rto': f"✅ {ctx.dialog_data.get('close_rto')}",
@@ -21,6 +33,8 @@ async def close_take_check(dialog_manager: DialogManager, **kwargs):
 
 
 async def close_take_dcart(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.close_shop.close_take_dcart>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     ctx = dialog_manager.current_context()
     return {
         'close_rto': f"✅ {ctx.dialog_data.get('close_rto')}",
@@ -30,6 +44,8 @@ async def close_take_dcart(dialog_manager: DialogManager, **kwargs):
 
 
 async def close_take_photos(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.close_shop.close_take_photos>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     ctx = dialog_manager.current_context()
 
     scroll: ManagedScroll = dialog_manager.find("pages")

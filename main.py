@@ -18,14 +18,6 @@ from service import scheduler
 
 
 async def main() -> None:
-    # Создаем файлы логов и запускает логирование
-    log_handler = RotatingFileHandler(filename='../logs/log.log', maxBytes=128000000, backupCount=5)
-    log_handler.setFormatter(Formatter("%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s"))
-
-    logging.basicConfig(level=logging.DEBUG, filemode='a',
-                        format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s", )
-    logging.getLogger('').addHandler(log_handler)
-
     # Создает список команд для вывода в подсказках
     commands_for_bot = []
     for command in all_commands:
@@ -55,3 +47,32 @@ async def main() -> None:
     await bot.delete_webhook(drop_pending_updates=True)  # Пропускаем апдейты
     await dp.start_polling(bot)  # Запускам пуллинг бота
 
+async def prestart():
+    # Создаем файлы логов и запускает логирование
+    log_handler = RotatingFileHandler(filename='logs/bot_logs.log', maxBytes=128000000, backupCount=5)
+    log_handler.setFormatter(
+        Formatter("%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s")
+    )
+    log_handler.setLevel(logging.DEBUG)
+
+    logging.basicConfig(level=logging.DEBUG, filemode='a',
+                        format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s", )
+    logging.getLogger('').addHandler(log_handler)
+    logging.getLogger('').setLevel(logging.INFO)
+
+    # loggers_all = logging.Logger.manager.loggerDict
+    # print(loggers_all)
+    # # Вывести имена всех логгеров
+    # for name, logger in loggers_all.items():
+    #     print(name, logger)
+    # print('asd')
+
+
+    await main()
+
+if __name__ == '__main__':
+    try:
+        asyncio.run(prestart())
+    except (KeyboardInterrupt, SystemExit):
+        logging.info('Bot was stopped')
+        # print('end')

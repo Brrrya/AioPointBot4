@@ -20,7 +20,7 @@ def load_config() -> Config:
     env: Env = Env()   # Создаем экземпляр класса Env
     env.read_env('.env')   # Добавляем в переменные окружения данные, прочитанные из файла .env
 
-    logging.info('Конфиг загруужен')
+    logging.info('Конфиг загружен')
 
     return Config(tgbot=TgBot(token=env('BOT_TOKEN')),
                   database=Database(
