@@ -1,14 +1,12 @@
 import logging
 
 from aiogram.types import CallbackQuery
-
 from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button
 
+from database.requests.director_requests import DirectorRequests
 from dialogs.director_dialogs.appoint_supervisor_dialog import states
 from dialogs.supervisor_dialogs.main_message_dialog import states as sv_states
-
-from database.requests.director_requests import DirectorRequests
 
 
 async def choice_new_sv(c: CallbackQuery, widget, manager: DialogManager, item_id: str):
