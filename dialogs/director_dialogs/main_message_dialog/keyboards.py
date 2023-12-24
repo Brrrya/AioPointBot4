@@ -18,3 +18,19 @@ def main_message(appoint_sv, fire_sv, transfer_shop, transfer_seller, fire_selle
         Back(Const("<<< Назад")),
         id='seller_main_message_group',
     )
+
+
+def who_will_inspected(on_click):
+    return ScrollingGroup(
+        Select(
+            Format('{item[0]}'),
+            id='dr_scroll_supervisors_inspect',
+            item_id_getter=operator.itemgetter(1),
+            items='supervisors',
+            on_click=on_click
+        ),
+        id='dr_all_supervisors_scroll_inspect',
+        width=2,
+        height=4
+    )
+

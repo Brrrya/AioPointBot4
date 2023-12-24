@@ -6,6 +6,7 @@ from aiogram.types import CallbackQuery
 
 from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button
+from aiogram_dialog.api.entities import ShowMode
 
 from dialogs.supervisor_dialogs.main_message_dialog import states as states_main_message
 from dialogs.supervisor_dialogs.seller_transfer_dialog import states as states_transfer_seller
@@ -35,8 +36,7 @@ async def open_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
     all_photos = await SupervisorRequests.take_all_photo_rotate_or_state(int(c.from_user.id), 'open')
     for photo in all_photos:
         await c.message.answer_photo(photo=photo[0], caption=photo[1])
-    await manager.reset_stack()
-    await manager.start(mode=StartMode.RESET_STACK, state=states_main_message.MainMessageSupervisor.open_photos)
+    await manager.switch_to(state=states_main_message.MainMessageSupervisor.open_photos, show_mode=ShowMode.SEND)
 
 
 async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
@@ -46,8 +46,7 @@ async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager
                                                                          action='rotate')
     for photo in all_photos:
         await c.message.answer_photo(photo=photo[0], caption=photo[1])
-    await manager.reset_stack()
-    await manager.start(mode=StartMode.RESET_STACK, state=states_main_message.MainMessageSupervisor.rotate_photos)
+    await manager.switch_to(state=states_main_message.MainMessageSupervisor.rotate_photos, show_mode=ShowMode.SEND)
 
 
 async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager):
@@ -71,8 +70,7 @@ async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager
         await c.message.answer(text)
         await c.message.answer_media_group(media.build())
 
-    await manager.reset_stack()
-    await manager.start(mode=StartMode.RESET_STACK, state=states_main_message.MainMessageSupervisor.close_reports)
+    await manager.switch_to(state=states_main_message.MainMessageSupervisor.close_reports, show_mode=ShowMode.SEND)
 
 
 async def change_structure(c: CallbackQuery, widget: Button, manager: DialogManager):

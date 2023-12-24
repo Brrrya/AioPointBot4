@@ -42,6 +42,7 @@ class SupervisorRequests:
                 .options(selectinload(Supervisors.shops))
                 .where(Supervisors.tgid == sv_tgid)
             )
+
             supervisor = supervisor.scalar()
             res = []
             for shop in supervisor.shops:

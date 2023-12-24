@@ -33,3 +33,12 @@ async def structure_changes(dialog_manager: DialogManager, **kwargs):
     return {}
 
 
+async def who_will_inspected(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Director.main_message.who_will_inspected>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+
+    data = await DirectorRequests.select_all_supervisors()
+
+    return {
+        'supervisors': data
+    }

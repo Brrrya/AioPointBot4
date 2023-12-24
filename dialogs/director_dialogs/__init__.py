@@ -6,6 +6,7 @@ from dialogs.director_dialogs.fire_supervisor_dialog import windows as fire_sv_w
 from dialogs.director_dialogs.fire_seller_dialog import windows as fire_seller_window
 from dialogs.director_dialogs.transfer_seller_dialog import windows as transfer_seller_window
 from dialogs.director_dialogs.transfer_shop_dialog import windows as transfer_shop_window
+from dialogs.director_dialogs.inspect_sv_dialog import windows as inspect_sv_window
 
 
 async def all_director_dialogs():
@@ -14,6 +15,7 @@ async def all_director_dialogs():
 
             await main_message_window.director_main_message(),
             await main_message_window.structure_changes(),
+            await main_message_window.who_will_inspected(),
         ),
         Dialog(
             await appoint_sv_window.choice_new_sv(),
@@ -38,5 +40,11 @@ async def all_director_dialogs():
             await transfer_shop_window.who_will_take_shops(),
             await transfer_shop_window.confirm_shop_transfer(),
             await transfer_shop_window.select_all_shops_for_transfer_by_sv(),
+        ),
+        Dialog(
+            await inspect_sv_window.main_message(),
+            await inspect_sv_window.open_photos(),
+            await inspect_sv_window.rotate_photos(),
+            await inspect_sv_window.close_reports()
         ),
     ]

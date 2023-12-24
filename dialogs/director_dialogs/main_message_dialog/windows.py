@@ -40,3 +40,12 @@ async def structure_changes():
     )
 
 
+async def who_will_inspected():
+    return Window(
+        Const("Выберете управляющего для просмотра"),
+        keyboards.who_will_inspected(on_click=selected.start_inspect),
+        Button(Const('Назад'), id='dr_back_to_main_window', on_click=selected.back_to_main_window),
+        getter=getters.who_will_inspected,
+        state=states.MainMessageDirector.inspect_sv
+
+    )
