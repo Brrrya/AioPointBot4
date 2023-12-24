@@ -9,6 +9,7 @@ from dialogs.director_dialogs.main_message_dialog import states
 from dialogs.director_dialogs.appoint_supervisor_dialog import states as states_appoint
 from dialogs.director_dialogs.fire_supervisor_dialog import states as states_fire_sv
 from dialogs.director_dialogs.fire_seller_dialog import states as states_fire_seller
+from dialogs.director_dialogs.transfer_seller_dialog import states as states_transfer_seller
 
 from database.requests.director_requests import DirectorRequests
 
@@ -46,5 +47,10 @@ async def fire_seller(c: CallbackQuery, widget: Button, manager: DialogManager):
 
     await manager.start(states_fire_seller.FireSellerDirector.fire_choice_seller)
 
+
+async def transfer_seller(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку передать сотрудника id={c.from_user.id} username={c.from_user.username}')
+
+    await manager.start(states_transfer_seller.TransferSellerDirector.select_seller)
 
 

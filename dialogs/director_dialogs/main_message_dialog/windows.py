@@ -32,7 +32,7 @@ async def structure_changes():
             appoint_sv=selected.appoint_sv,
             fire_sv=selected.fire_sv,
             transfer_shop=None,
-            transfer_seller=None,
+            transfer_seller=selected.transfer_seller,
             fire_seller=selected.fire_seller,
         ),
         getter=getters.structure_changes,

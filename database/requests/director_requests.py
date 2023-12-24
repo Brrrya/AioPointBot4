@@ -259,10 +259,60 @@ class DirectorRequests:
             return res
 
 
+    @staticmethod
+    async def take_data_for_transfer_seller(
+            old_sv_tgid: int | None,
+            new_sv_tgid: int,
+            seller_tgid: int | None
+    ):
+        """Возвращает данные для подтверждения передачи сотрудника"""
+        async with session_maker() as session:
+            new_sv = await session.get(Supervisors, new_sv_tgid)
+            if seller_tgid:
+                seller = await session.get(Sellers, seller_tgid)
+                old_sv = await session.get(Supervisors, seller.supervisor)
+            else:
+                old_sv = await session.get(Supervisors, old_sv_tgid)
+
+            return {
+                'old_sv_data': {
+                    'full_name': f'{old_sv.last_name} {old_sv.first_name}'
+                },
+                'new_sv_data': {
+                    'full_name': f'{new_sv.last_name} {new_sv.first_name}'
+                },
+                'seller_data': {
+                    'full_name': f'{seller.last_name} {seller.first_name}' if seller_tgid else None
+                }
+            }
 
 
+    @staticmethod
+    async def transfer_sellers(
+            old_sv_tgid: int | None,
+            new_sv_tgid: int,
+            seller_tgid: int | None,
+            all_or_not: bool
+    ):
+        async with session_maker() as session:
+            if all_or_not is True:
+                old_sv = await session.execute(
+                    select(Supervisors)
+                    .where(Supervisors.tgid == old_sv_tgid)
+                    .options(
+                        selectinload(Supervisors.sellers)
+                    )
+                )
+                old_sv = old_sv.scalar()
 
+                for seller in old_sv.sellers:
+                    seller.supervisor = new_sv_tgid
 
+            else:
+                seller = await session.get(Sellers, seller_tgid)
+                seller.supervisor = new_sv_tgid
+
+            await session.commit()
 
 
 
