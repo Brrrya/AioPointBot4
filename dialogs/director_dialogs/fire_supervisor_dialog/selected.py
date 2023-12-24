@@ -1,13 +1,11 @@
 import logging
 
 from aiogram.types import CallbackQuery
-
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 
-from dialogs.director_dialogs.fire_supervisor_dialog import states
-
 from database.requests.director_requests import DirectorRequests
+from dialogs.director_dialogs.fire_supervisor_dialog import states
 
 
 async def fire_choice_sv(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
@@ -24,6 +22,7 @@ async def fire_confirm(c: CallbackQuery, widget: Button, manager: DialogManager)
 
     ctx = manager.current_context()
 
+    await manager.bg(ctx.dialog_data.get('fire_sv_tgid'), ctx.dialog_data.get('fire_sv_tgid')).done(result={'switch_to': 'end'})
     await DirectorRequests.fire_sv(ctx.dialog_data.get('fire_sv_tgid'))
 
     await c.answer('Выполнено!')

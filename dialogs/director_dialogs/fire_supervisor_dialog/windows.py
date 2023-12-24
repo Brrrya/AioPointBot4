@@ -1,13 +1,6 @@
-from aiogram import F
-
-from aiogram_dialog import Window, DialogManager, Data
-
-from aiogram_dialog.widgets.text import Format, Const, List, Multi, Case
+from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row
-from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.media.static import ContentType
-from aiogram_dialog.widgets.media import StaticMedia, DynamicMedia
-
+from aiogram_dialog.widgets.text import Format, Const, Multi, Case
 
 from dialogs.director_dialogs.fire_supervisor_dialog import (
     getters, keyboards, selected, states

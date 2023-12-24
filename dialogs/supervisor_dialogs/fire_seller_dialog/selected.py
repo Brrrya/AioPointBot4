@@ -32,5 +32,7 @@ async def confirm(c: CallbackQuery, widget: Button, manager: DialogManager):
         await manager.bg(res['shop_with_seller_tgid'], res['shop_with_seller_tgid']).update(data=manager.start_data)
         await manager.bg(seller_tgid, seller_tgid).switch_to(states_seller.MainMessageUser.plug)
 
+    await manager.bg(seller_tgid, seller_tgid).done(result={'switch_to': 'end'})
+
     await manager.done()
 

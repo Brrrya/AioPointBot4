@@ -1,14 +1,11 @@
 import logging
 
 from aiogram.types import CallbackQuery
-
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 
-from dialogs.director_dialogs.fire_seller_dialog import states
-from dialogs.seller_dialogs.main_message_dialog import states as states_seller
-
 from database.requests.director_requests import DirectorRequests
+from dialogs.director_dialogs.fire_seller_dialog import states
 
 
 async def fire_choice_seller(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
@@ -30,8 +27,7 @@ async def fire_seller_confirm(c: CallbackQuery, widget: Button, manager: DialogM
         """Если был где-то авторизирован обновляем сообщение того магазина"""
         await manager.bg(data['where_was_authorized_tgid'], data['where_was_authorized_tgid']).update(data={})
 
-    await manager.bg(int(ctx.dialog_data.get('fire_seller_tgid')), int(ctx.dialog_data.get('fire_seller_tgid'))).start(mode=StartMode.RESET_STACK, state=states_seller.MainMessageUser.plug)
-
+    await manager.bg(ctx.dialog_data.get('fire_seller_tgid'), ctx.dialog_data.get('fire_seller_tgid')).done(result={'switch_to': 'end'})
 
     await c.answer('Выполнено!')
     await manager.done()

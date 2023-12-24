@@ -19,6 +19,8 @@ async def on_process_result(data: Data, result: dict, manager: DialogManager, **
         switch_to = result.get('switch_to')
         if switch_to == 'plug':
             await manager.switch_to(states.MainMessageUser.plug)
+        elif switch_to == 'end':
+            await manager.close_manager()
 
 
 async def plug():
