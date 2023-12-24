@@ -5,20 +5,26 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 
-from dialogs.director_dialogs.main_message_dialog import states
+from dialogs.director_dialogs.fire_supervisor_dialog import states
 
-from database.requests.supervisor_requests import SupervisorRequests
-
-
-async def refresh(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Директор | Нажал кнопку обновления основного окна id={c.from_user.id} username={c.from_user.username}')
-
-    await manager.update(data={})
+from database.requests.director_requests import DirectorRequests
 
 
-async def fire_sv(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'Директор | Нажал кнопку уволить СВ id={c.from_user.id} username={c.from_user.username}')
+async def fire_choice_sv(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
+    logging.info(f'Директор | Выбрал супервайзера для увольнения - {item_id} id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+    ctx.dialog_data.update(fire_sv_tgid=int(item_id))
+
+    await manager.switch_to(states.FireSvDirector.fire_confirm)
 
 
+async def fire_confirm(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Подтвердил увольнение СВ id={c.from_user.id} username={c.from_user.username}')
 
+    ctx = manager.current_context()
 
+    await DirectorRequests.fire_sv(ctx.dialog_data.get('fire_sv_tgid'))
+
+    await c.answer('Выполнено!')
+    await manager.done()

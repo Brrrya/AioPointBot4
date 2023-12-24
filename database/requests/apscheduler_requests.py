@@ -119,8 +119,8 @@ class APScgedulerRequests:
             return res
 
     @staticmethod
-    async def reset_all_shops():
-        """Обнуляет все магазины, и возвращает списки всех сотрудников и магазинов"""
+    async def reset_all_everyday():
+        """Обнуляет все магазины и все регистрации, и возвращает списки всех сотрудников и магазинов"""
         async with session_maker() as session:
             shops = await session.execute(
                 select(Shops)
@@ -133,6 +133,15 @@ class APScgedulerRequests:
                 shop.rotate = False
                 shop.worker = None
                 res_shop.append(shop.tgid)
+
+            reg_users = await session.execute(
+                select(Registers)
+            )
+            reg_users = reg_users.scalars().all()
+
+            if reg_users:
+                for user in reg_users:
+                    await session.delete(user)
 
 
             sellers = await session.execute(

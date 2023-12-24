@@ -58,7 +58,7 @@ async def who_not_make_rotate(bot: Bot):
 
 async def reset_all_shops(setups: setup_dialogs, bot: Bot):
     """Обнуляет все магазины и обновляет диалог у каждого пользователя (чтобы отобразить новые данные)"""
-    data = await APScgedulerRequests.reset_all_shops()
+    data = await APScgedulerRequests.reset_all_everyday()
 
     for shop in data['shops']:
         try:

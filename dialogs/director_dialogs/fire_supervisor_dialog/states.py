@@ -1,8 +1,8 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class MainMessageDirector(StatesGroup):
+class FireSvDirector(StatesGroup):
 
-    select_sv = State()
-    confirm = State()
+    fire_choice_sv = State()
+    fire_confirm = State()
 

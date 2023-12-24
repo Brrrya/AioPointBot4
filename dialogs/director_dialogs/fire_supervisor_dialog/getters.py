@@ -6,22 +6,23 @@ from aiogram_dialog import DialogManager
 from database.requests.director_requests import DirectorRequests
 
 
-async def main_message(dialog_manager: DialogManager, **kwargs):
-    logging.info('Загружено окно <Director.main_message.main_message>'
+async def fire_choice_sv(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Director.fire_supervisor.fire_choice_sv>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
 
-    data = await DirectorRequests.main_message_info()
+    data = await DirectorRequests.select_all_supervisors()
 
-    text = 'Общие данные\n' \
-           f'Всего СВ - {data["sv_count"]}\n' \
-           f'Всего продавцов - {data["seller_count"]}\n\n'
+    return {
+        'supervisors': data
+    }
 
 
-    for sv in data['sv_data']:
-        text += f'СВ - {sv}\n'
-        text += f'Открыто {data["sv_data"][sv]["open_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
-        text += f'Ротации {data["sv_data"][sv]["rotate_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
-        text += '\n'
+async def fire_confirm(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Director.fire_supervisor.fire_confirm>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
 
-    return {'main_message_text': text}
+    ctx = dialog_manager.current_context()
 
+    data = await DirectorRequests.select_data_about_fire_sv(ctx.dialog_data.get('fire_sv_tgid'))
+
+    return data

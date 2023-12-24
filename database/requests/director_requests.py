@@ -142,13 +142,84 @@ class DirectorRequests:
 
             await session.commit()
 
-        # async with session_maker() as session:
-        #     seller = session.get(Sellers, new_sv_tgid)
-        #     session.delete(seller)
-        #     await session.commit()
-        #
         return res
 
+
+    @staticmethod
+    async def select_all_supervisors():
+        """Возвращает список всех СВ"""
+        async with session_maker() as session:
+            sv = await session.execute(
+                select(Supervisors)
+                .order_by(Supervisors.last_name)
+            )
+            sv = sv.scalars().all()
+
+            res = [
+                (f'{supervisor.last_name} {supervisor.first_name}', supervisor.tgid)
+                for supervisor in sv
+            ]
+
+            return res
+
+
+    @staticmethod
+    async def select_data_about_fire_sv(sv_tgid: int):
+        """Возвращает информацию об увольняймом св"""
+        async with session_maker() as session:
+            data = await session.execute(
+                select(Supervisors)
+                .where(Supervisors.tgid == sv_tgid)
+                .options(selectinload(Supervisors.sellers))
+                .options(selectinload(Supervisors.shops))
+            )
+
+            sv = data.scalar()
+
+
+
+            shops_count = 0
+            sellers_count = 0
+            some_thing = True
+
+            if sv.shops:
+                some_thing = False
+                for shop in sv.shops:
+                    shops_count += 1
+
+            if sv.sellers:
+                some_thing = False
+                for seller in sv.sellers:
+                    sellers_count += 1
+
+            return {
+                'some_thing': some_thing,
+                'shops_count': shops_count,
+                'seller_count': sellers_count,
+                'sv_name': f'{sv.last_name} {sv.first_name}'
+            }
+
+
+    @staticmethod
+    async def fire_sv(sv_tgid: int):
+        """Удаляет супервайзера из базы данных"""
+        async with session_maker() as session:
+            sv = await session.get(Supervisors, sv_tgid)
+
+            reg_users = await session.execute(
+                select(Registers)
+                .where(Registers.supervisor == sv_tgid)
+            )
+            reg_users = reg_users.scalars().all()
+
+            if reg_users:
+                for user in reg_users:
+                    await session.delete(user)
+
+            await session.delete(sv)
+            await session.commit()
+
+
 if __name__ == '__main__':
-    asyncio.run(DirectorRequests.main_message_info())
+    asyncio.run(DirectorRequests.select_data_about_fire_sv(109338928))
 

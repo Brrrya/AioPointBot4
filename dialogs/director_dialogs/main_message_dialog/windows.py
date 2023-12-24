@@ -30,7 +30,7 @@ async def structure_changes():
         Const('Окно изменения структуры сети'),
         keyboards.main_message(
             appoint_sv=selected.appoint_sv,
-            fire_sv=None,
+            fire_sv=selected.fire_sv,
             inspect_sv=None
         ),
         getter=getters.structure_changes,
