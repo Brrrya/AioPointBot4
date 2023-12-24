@@ -59,7 +59,7 @@ async def confirm_seller_transfer():
             selector='all_or_not'
         ),
         Const('Новому управляющему'),
-        Format('{new_sv_name}?'),
+        Format('- {new_sv_name}?'),
         Button(Const('Да'), id='dr_confirm_seller_transfer', on_click=selected.confirm),
         Row(
             Cancel(Const('Отмена')),

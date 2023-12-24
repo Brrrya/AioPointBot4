@@ -31,7 +31,7 @@ async def structure_changes():
         keyboards.main_message(
             appoint_sv=selected.appoint_sv,
             fire_sv=selected.fire_sv,
-            transfer_shop=None,
+            transfer_shop=selected.transfer_shop,
             transfer_seller=selected.transfer_seller,
             fire_seller=selected.fire_seller,
         ),

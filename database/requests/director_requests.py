@@ -61,6 +61,23 @@ class DirectorRequests:
 
 
     @staticmethod
+    async def select_all_shops():
+        """Возвращает список всех магазинов"""
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .order_by(Shops.title)
+            )
+            shops = shops.scalars().all()
+
+            res = [
+                (shop.title, shop.tgid)
+                for shop in shops
+            ]
+
+            return res
+
+    @staticmethod
     async def select_all_workers():
         """Возвращает список всех продавцов"""
         async with session_maker() as session:
@@ -263,12 +280,14 @@ class DirectorRequests:
     async def take_data_for_transfer_seller(
             old_sv_tgid: int | None,
             new_sv_tgid: int,
-            seller_tgid: int | None
+            seller_tgid: int | None,
+            all_or_not: bool
+
     ):
         """Возвращает данные для подтверждения передачи сотрудника"""
         async with session_maker() as session:
             new_sv = await session.get(Supervisors, new_sv_tgid)
-            if seller_tgid:
+            if all_or_not is True:
                 seller = await session.get(Sellers, seller_tgid)
                 old_sv = await session.get(Supervisors, seller.supervisor)
             else:
@@ -282,7 +301,7 @@ class DirectorRequests:
                     'full_name': f'{new_sv.last_name} {new_sv.first_name}'
                 },
                 'seller_data': {
-                    'full_name': f'{seller.last_name} {seller.first_name}' if seller_tgid else None
+                    'full_name': f'{seller.last_name} {seller.first_name}' if all_or_not is True else None
                 }
             }
 
@@ -314,6 +333,62 @@ class DirectorRequests:
 
             await session.commit()
 
+
+    @staticmethod
+    async def take_data_for_transfer_shop(
+            old_sv_tgid: int | None,
+            new_sv_tgid: int,
+            shop_tgid: int | None,
+            all_or_not: bool
+
+    ):
+        """Возвращает данные для подтверждения передачи магазина"""
+        async with session_maker() as session:
+            new_sv = await session.get(Supervisors, new_sv_tgid)
+            if all_or_not is True:
+                shop = await session.get(Shops, shop_tgid)
+                old_sv = await session.get(Supervisors, shop.supervisor)
+            else:
+                old_sv = await session.get(Supervisors, old_sv_tgid)
+
+            return {
+                'old_sv_data': {
+                    'full_name': f'{old_sv.last_name} {old_sv.first_name}'
+                },
+                'new_sv_data': {
+                    'full_name': f'{new_sv.last_name} {new_sv.first_name}'
+                },
+                'shop_data': {
+                    'full_name': shop.title if all_or_not is True else None
+                }
+            }
+
+    @staticmethod
+    async def transfer_shops(
+            old_sv_tgid: int | None,
+            new_sv_tgid: int,
+            shop_tgid: int | None,
+            all_or_not: bool
+    ):
+        async with session_maker() as session:
+            if all_or_not is True:
+                old_sv = await session.execute(
+                    select(Supervisors)
+                    .where(Supervisors.tgid == old_sv_tgid)
+                    .options(
+                        selectinload(Supervisors.shops)
+                    )
+                )
+                old_sv = old_sv.scalar()
+
+                for shop in old_sv.shops:
+                    shop.supervisor = new_sv_tgid
+
+            else:
+                shop = await session.get(Shops, shop_tgid)
+                shop.supervisor = new_sv_tgid
+
+            await session.commit()
 
 
 

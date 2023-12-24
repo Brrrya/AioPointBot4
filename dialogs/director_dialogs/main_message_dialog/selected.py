@@ -10,6 +10,7 @@ from dialogs.director_dialogs.appoint_supervisor_dialog import states as states_
 from dialogs.director_dialogs.fire_supervisor_dialog import states as states_fire_sv
 from dialogs.director_dialogs.fire_seller_dialog import states as states_fire_seller
 from dialogs.director_dialogs.transfer_seller_dialog import states as states_transfer_seller
+from dialogs.director_dialogs.transfer_shop_dialog import states as states_transfer_shop
 
 from database.requests.director_requests import DirectorRequests
 
@@ -54,3 +55,7 @@ async def transfer_seller(c: CallbackQuery, widget: Button, manager: DialogManag
     await manager.start(states_transfer_seller.TransferSellerDirector.select_seller)
 
 
+async def transfer_shop(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Нажал кнопку передать магазин id={c.from_user.id} username={c.from_user.username}')
+
+    await manager.start(states_transfer_shop.TransferShopDirector.select_shop)

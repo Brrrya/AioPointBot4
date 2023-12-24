@@ -47,7 +47,8 @@ async def confirm_seller_transfer(dialog_manager: DialogManager, **kwargs):
     data = await DirectorRequests.take_data_for_transfer_seller(
         old_sv_tgid=ctx.dialog_data.get('dr_sv_whose_sellers_will_transfer'),
         new_sv_tgid=int(ctx.dialog_data.get('dr_sv_who_take_seller')),
-        seller_tgid=ctx.dialog_data.get('dr_transfer_seller')
+        seller_tgid=ctx.dialog_data.get('dr_transfer_seller'),
+        all_or_not=bool(ctx.dialog_data.get('dr_transfer_seller')),
     )
 
     return {

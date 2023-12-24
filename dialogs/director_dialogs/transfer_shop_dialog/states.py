@@ -1,8 +1,11 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class FireSellerDirector(StatesGroup):
+class TransferShopDirector(StatesGroup):
 
-    fire_choice_seller = State()
-    fire_confirm = State()
+    select_shop = State()
 
+    select_recipient = State()
+    confirm = State()
+
+    select_shops_by_sv = State()
