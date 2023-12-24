@@ -219,6 +219,55 @@ class DirectorRequests:
             await session.delete(sv)
             await session.commit()
 
+    @staticmethod
+    async def fire_seller(seller_tgid):
+        """Удаляет продавца из бд и убирает его с проверяющих"""
+        async with session_maker() as session:
+            seller = await session.get(Sellers, seller_tgid)
+
+            shop_with_seller = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.worker == seller.tgid)
+                    | (Shops.open_checker == seller.tgid)
+                    | (Shops.rotate_checker == seller.tgid))
+            )
+            shop_with_seller = shop_with_seller.scalars().all()
+
+            res = {
+                'was_authorized': False
+            }
+            if shop_with_seller:
+                """Если авторизирован или проверяющий в магазине убираем от туда"""
+                for shop in shop_with_seller:
+                    if shop.worker == seller.tgid:
+                        shop.worker = None
+                        res['was_authorized'] = True
+                        res.update(where_was_authorized_tgid=shop.tgid)
+
+                    if shop.open_checker == seller.tgid:
+                        shop.open_checker = None
+
+                    if shop.rotate_checker == seller.tgid:
+                        shop.rotate_checker = None
+
+                await session.flush()
+
+            await session.delete(seller)
+            await session.commit()
+
+            return res
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     asyncio.run(DirectorRequests.select_data_about_fire_sv(109338928))

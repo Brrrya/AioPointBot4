@@ -2,7 +2,6 @@ import logging
 
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
-from loguru import logger
 
 from database.requests.unknown_requests import UnknownRequests
 from dialogs.seller_dialogs.main_message_dialog.states import MainMessageUser as UserMainMessage
@@ -35,5 +34,5 @@ async def start(message: Message, dialog_manager: DialogManager):
     # elif res == 'admin':
         # await dialog_manager.start(AdminMainMessage.main_message)
     else:
-        logger.info(f'Неизвестный пользователь id={message.from_user.id} username={message.from_user.username}')
+        logging.info(f'Неизвестный пользователь id={message.from_user.id} username={message.from_user.username}')
         await message.answer('неизвестный пользователь')

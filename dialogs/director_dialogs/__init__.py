@@ -3,6 +3,7 @@ from aiogram_dialog import Dialog, DialogManager
 from dialogs.director_dialogs.main_message_dialog import windows as main_message_window
 from dialogs.director_dialogs.appoint_supervisor_dialog import windows as appoint_sv_window
 from dialogs.director_dialogs.fire_supervisor_dialog import windows as fire_sv_window
+from dialogs.director_dialogs.fire_seller_dialog import windows as fire_seller_window
 
 
 async def all_director_dialogs():
@@ -20,6 +21,8 @@ async def all_director_dialogs():
             await fire_sv_window.fire_choice_sv(),
             await fire_sv_window.fire_confirm(),
         ),
-        # Dialog(
-        # ),
+        Dialog(
+            await fire_seller_window.fire_choice_seller(),
+            await fire_seller_window.fire_seller_confirm(),
+        ),
     ]
