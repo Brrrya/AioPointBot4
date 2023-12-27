@@ -58,7 +58,7 @@ async def create_plan(
     # point_data: list[str | int] = await db.database.select_all_data_about_tt(point_tgid)
     # plan_data = await db.database.select_all_plan_data(point_data[1])
 
-    doc = ezodf.newdoc(doctype='ods', filename=f'../service/plans/{data["shop_data"]["shop_title"]}.ods')
+    doc = ezodf.newdoc(doctype='ods', filename=f'/service/plans/{data["shop_data"]["shop_title"]}.ods')
     sheets = doc.sheets
     sheets += ezodf.Table("Sheet1", size=(40, 15))
     sheet = sheets[0]

@@ -13,6 +13,7 @@ async def plug(dialog_manager: DialogManager, **kwargs):
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     return {}
 
+
 async def main_message(dialog_manager: DialogManager, **kwargs):
     logging.info(f'Загружено окно <Seller.main_dialog.MainWindow>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
