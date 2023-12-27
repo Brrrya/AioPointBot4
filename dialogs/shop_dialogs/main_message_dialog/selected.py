@@ -58,7 +58,7 @@ async def get_plan(c: CallbackQuery, widget: Button, manager: DialogManager):
 
     await plan.create_plan(c.from_user.id)
     data = await ShopRequests.take_info_about_shop(c.from_user.id)
-    await c.message.answer_document(document=FSInputFile(path=f"../service/plans/{data['title']}.ods"))
+    await c.message.answer_document(document=FSInputFile(path=f"service/plans/{data['title']}.ods"))
 
     await manager.reset_stack()
     await manager.start(mode=StartMode.RESET_STACK, state=states.MainMessage.main_message)
