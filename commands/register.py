@@ -20,7 +20,8 @@ async def register_command_check_reg_code(message: Message, state: FSMContext) -
     try:
         if await UnknownRequests.select_register_user_by_reg_code(int(message.text), int(message.from_user.id)):
             logging.info(f'Успешно зарегистрирован id={message.from_user.id} username={message.from_user.username}')
-            await message.answer("Вы успешно зарегистрировались!")
+            await message.answer("Вы успешно зарегистрировались!\nНапишите /start")
+
         else:
             logging.info(f'Неверный код регистрации id={message.from_user.id} username={message.from_user.username}')
             await message.answer("Регистрационный код не найден")
