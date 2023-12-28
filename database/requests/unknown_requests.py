@@ -51,3 +51,40 @@ class UnknownRequests:
                 return True
             return False
 
+    @staticmethod
+    async def who_cant_register():
+        """Возвращает список tgid всех кто не может регестрироваться"""
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .order_by(Shops.title)
+            )
+            sellers = await session.execute(
+                select(Sellers)
+                .order_by(Sellers.last_name)
+            )
+            supervisors = await session.execute(
+                select(Supervisors)
+                .order_by(Supervisors.last_name)
+            )
+            directors = await session.execute(
+                select(Directors)
+                .order_by(Directors.last_name)
+            )
+            sellers = sellers.scalars().all()
+            supervisors = supervisors.scalars().all()
+            directors = directors.scalars().all()
+            shops = shops.scalars().all()
+
+            res = []
+
+            for shop in shops:
+                res.append(shop.tgid)
+            for seller in sellers:
+                res.append(seller.tgid)
+            for supervisor in supervisors:
+                res.append(supervisor.tgid)
+            for director in directors:
+                res.append(director.tgid)
+
+            return res
