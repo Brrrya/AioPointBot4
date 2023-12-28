@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from aiogram.types import CallbackQuery, Message
@@ -6,6 +7,7 @@ from aiogram_dialog.widgets.common import ManagedScroll
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
 
+from database.requests.plan_requests import PlanRequests
 from database.requests.seller_requests import SellerRequests
 from dialogs.seller_dialogs.close_shop_dialog.states import MainMessageUserClose
 
@@ -79,6 +81,14 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
         dcart=int(ctx.dialog_data.get('close_dcart')),
         shop_tgid=int(shop['shop_tgid']),
         seller_tgid=int(callback.from_user.id)
+    )
+    await PlanRequests.change_data_in_plan(
+        date_for_change=str(datetime.date.today()),
+        rto_new_data=int(ctx.dialog_data.get('close_ckp')),
+        ckp_new_data=int(ctx.dialog_data.get('close_ckp')),
+        check_new_data=int(ctx.dialog_data.get('close_check')),
+        dcart_new_data=int(ctx.dialog_data.get('close_dcart')),
+        shop_tgid=int(shop['shop_tgid'])
     )
 
     await dialog_manager.bg(shop['shop_tgid'], shop['shop_tgid']).update(data=dialog_manager.start_data)

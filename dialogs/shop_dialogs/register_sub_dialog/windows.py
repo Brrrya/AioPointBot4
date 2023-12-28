@@ -90,6 +90,8 @@ async def register_code():
         Const(' '),
         Const('ВНИМАНИЕ'),
         Const('Регистрироваться надо всего один раз. НЕ НАДО регистрироваться на каждом магазине.'),
+        Const('Данные регистрации сбрасываются на следующий день, то есть, если вы не успели завершить регистрацию, '
+              'на следующий день придется снова вводить свои данные.'),
         Button(Const('✅ Завершить'), on_click=selected.coplete_register, id='complete_register_new_user'),
         getter=getters.register_code,
         state=states.MainMessageRegistration.register_code
