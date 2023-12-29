@@ -50,6 +50,7 @@ class Sellers(Base):
 
     sv = relationship('Supervisors', back_populates='sellers')
 
+
 class Shops(Base):
     __tablename__ = 'shops'
 
@@ -69,6 +70,7 @@ class Shops(Base):
     reports = relationship('Reports', back_populates='shops')
     photos = relationship('Photos', back_populates='shops')
 
+
 class Reports(Base):
     __tablename__ = 'reports'
 
@@ -80,6 +82,9 @@ class Reports(Base):
     ckp = Column(Integer, nullable=False)
     check = Column(Integer, nullable=False)
     dcart = Column(Integer, nullable=False)
+    p_rto = Column(Integer, nullable=False)
+    p_ckp = Column(Integer, nullable=False)
+    p_check = Column(Integer, nullable=False)
 
     shops = relationship('Shops', back_populates='reports')
 
@@ -94,6 +99,7 @@ class Photos(Base):
     p_date = Column(Date(), nullable=False)
 
     shops = relationship('Shops', back_populates='photos')
+
 
 class Registers(Base):
     __tablename__ = 'registers'

@@ -55,6 +55,9 @@ class SellerRequests:
             ckp: int,
             check: int,
             dcart: int,
+            p_rto: int,
+            p_ckp: int,
+            p_check: int,
             shop_tgid: int,
             seller_tgid: int
     ):
@@ -68,6 +71,9 @@ class SellerRequests:
                 ckp=ckp,
                 check=check,
                 dcart=dcart,
+                p_rto=p_rto,
+                p_ckp=p_ckp,
+                p_check=p_check
             ))
             await session.commit()
 

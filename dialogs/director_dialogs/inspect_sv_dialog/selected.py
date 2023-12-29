@@ -53,9 +53,9 @@ async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager
         text = ''
         text += f'Магазин - {all_data[key]["shop_name"]}\n'
         text += f'Сотрудник - {all_data[key]["seller_name"]}\n'
-        text += f'РТО - {all_data[key]["rto"]}\n'
-        text += f'ЦКП - {all_data[key]["ckp"]}\n'
-        text += f'Чеки - {all_data[key]["check"]}\n'
+        text += f'РТО - {all_data[key]["rto"]} / {all_data[key]["p_rto"]}\n'
+        text += f'ЦКП - {all_data[key]["ckp"]} / {all_data[key]["p_ckp"]}\n'
+        text += f'Чеки - {all_data[key]["check"]} / {all_data[key]["p_check"]}\n'
         text += f'Дисконт. карты - {all_data[key]["dcart"]}\n'
 
         media = MediaGroupBuilder()

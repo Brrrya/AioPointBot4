@@ -378,6 +378,7 @@ class SupervisorRequests:
     async def take_all_close_report_data(sv_tgid: int):
         """Возвращает вечерние отчеты тех кто их отправил"""
         async with session_maker() as session:
+            # Получаем список магазинов СВ
             shops = await session.execute(
                 select(Shops)
                 .where(
@@ -390,6 +391,7 @@ class SupervisorRequests:
             result = {}
             counter = 0
             for shop in shops:
+                # Проходимся по всем магазинам и собираем вечерний отчет каждого
                 report = await session.execute(
                     select(Reports)
                     .where(
@@ -399,8 +401,9 @@ class SupervisorRequests:
                 )
                 report = report.scalar()
                 if report:
+                    # Если есть вечерний отчет
                     photo_list = []
-                    photos = await session.execute(
+                    photos = await session.execute(  # Получаем фото вечернего отчета
                         select(Photos)
                         .where(
                             (Photos.shop_tgid == shop.tgid)
@@ -411,9 +414,9 @@ class SupervisorRequests:
                     photos = photos.scalars().all()
 
                     for photo in photos:
-                        photo_list.append(photo.photo_tgid)
+                        photo_list.append(photo.photo_tgid)  # Добавляем эти фото в список
 
-                    report_seller = await session.get(Sellers, report.seller_tgid)
+                    report_seller = await session.get(Sellers, report.seller_tgid)  # Находим сотрудника который закрывался
                     result.update(
                         {
                             counter: {
@@ -423,7 +426,10 @@ class SupervisorRequests:
                                 'ckp': report.ckp,
                                 'check': report.check,
                                 'dcart': report.dcart,
-                                'photos': photo_list
+                                'p_rto': report.p_rto,
+                                'p_ckp': report.p_ckp,
+                                'p_check': report.p_check,
+                                'photos': photo_list,
                             }
                         }
                     )

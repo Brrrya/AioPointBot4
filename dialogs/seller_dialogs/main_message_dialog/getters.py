@@ -17,9 +17,12 @@ async def plug(dialog_manager: DialogManager, **kwargs):
 async def main_message(dialog_manager: DialogManager, **kwargs):
     logging.info(f'Загружено окно <Seller.main_dialog.MainWindow>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
-    user = dialog_manager.event.from_user.id
-    return await SellerRequests.take_main_window_info(user)
+    ctx = dialog_manager.current_context()
 
+    user = dialog_manager.event.from_user.id
+    data = await SellerRequests.take_main_window_info(user)
+    ctx.dialog_data.update(shop_tgid=data['shop_tgid'])
+    return data
 
 async def open_photo_take(dialog_manager: DialogManager, **kwargs):
     logging.info(f'Загружено окно <Seller.main_dialog.open_photo_take>'

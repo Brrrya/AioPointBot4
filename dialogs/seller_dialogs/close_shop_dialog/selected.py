@@ -72,6 +72,7 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
     for photo in photos:
         photos_to_send.append(photo[0])
     shop = await SellerRequests.take_main_window_info(callback.from_user.id)
+
     await SellerRequests.insert_photo(callback.from_user.id, 'close', photos_to_send)
 
     await SellerRequests.save_report(
@@ -79,12 +80,15 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
         ckp=int(ctx.dialog_data.get('close_ckp')),
         check=int(ctx.dialog_data.get('close_check')),
         dcart=int(ctx.dialog_data.get('close_dcart')),
+        p_rto=int(ctx.dialog_data.get('rto_plan')),
+        p_ckp=int(ctx.dialog_data.get('ckp_plan')),
+        p_check=int(ctx.dialog_data.get('check_plan')),
         shop_tgid=int(shop['shop_tgid']),
         seller_tgid=int(callback.from_user.id)
     )
     await PlanRequests.change_data_in_plan(
         date_for_change=str(datetime.date.today()),
-        rto_new_data=int(ctx.dialog_data.get('close_ckp')),
+        rto_new_data=int(ctx.dialog_data.get('close_rto')),
         ckp_new_data=int(ctx.dialog_data.get('close_ckp')),
         check_new_data=int(ctx.dialog_data.get('close_check')),
         dcart_new_data=int(ctx.dialog_data.get('close_dcart')),
@@ -92,7 +96,7 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
     )
 
     await dialog_manager.bg(shop['shop_tgid'], shop['shop_tgid']).update(data=dialog_manager.start_data)
-    await callback.message.answer('Спасибо за работу! \nМагазин считается закрытым')
+    await callback.message.answer(f'Спасибо за работу! \nМагазин {shop["title"]} считается закрытым')
     await dialog_manager.done(result={
         'switch_to': 'plug'
     })

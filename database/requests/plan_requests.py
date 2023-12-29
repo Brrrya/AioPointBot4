@@ -198,6 +198,27 @@ class PlanRequests:
             )
             await session.commit()
 
+
+    @staticmethod
+    async def take_plan_one_day(
+            shop_tgid: int,
+            date_: datetime.date
+    ):
+        """Возвращает данные ПЛАНА за определенный день"""
+        async with session_maker() as session:
+            shop = await session.get(Shops, shop_tgid)
+            day_data = await session.execute(
+                text(f"SELECT (plan_rto, plan_ckp, plan_check) "
+                     f"FROM {shop.bd_title} WHERE date_ = '{date_}'")
+            )
+            day_data = day_data.scalars().all()
+            return {
+                'rto_plan': day_data[0][0] if day_data[0][0] else 0,
+                'ckp_plan': day_data[0][1] if day_data[0][1] else 0,
+                'check_plan': day_data[0][2] if day_data[0][2] else 0,
+            }
+
+
 if __name__ == '__main__':
     asyncio.run(PlanRequests.recreate_coefs(coefficients=[30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25,20,25,25,28,30,35,25],
                                             full_coeff=842))

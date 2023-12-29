@@ -85,5 +85,9 @@ async def rotate_photo_confirm(c: CallbackQuery, widget: Button, manager: Dialog
 
 async def close_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
     logging.info(f'Продавец | Нажал кнопку закрытия id={c.from_user.id} username={c.from_user.username}')
-    await manager.start(states_close_dialog.MainMessageUserClose.close_take_rto)
+
+    ctx = manager.current_context()
+
+    await manager.start(states_close_dialog.MainMessageUserClose.close_take_rto,
+                        data={'shop_tgid': ctx.dialog_data.get('shop_tgid')})
 

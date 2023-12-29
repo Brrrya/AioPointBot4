@@ -14,14 +14,14 @@ from dialogs.seller_dialogs.close_shop_dialog import (
 
 async def close_take_rto():
     return Window(
-        Const('Выручка РТО - ❌'),
-        Const('Выручка ЦКП - ❌'),
-        Const('Количество чеков - ❌'),
-        Const('Создано дисконт. карт - ❌'),
+        Format('Выручка РТО - ??? / {rto_plan}'),
+        Format('Выручка ЦКП - ??? / {ckp_plan}'),
+        Format('Количество чеков - ??? / {check_plan}'),
+        Const('Создано дисконт. карт - ???'),
         Const(' '),
         Const('Введите выручку РТО'),
         Cancel(Const('❌ Отмена')),
-        MessageInput(selected.close_take_rto, filter=lambda message: message.text.isdigit()),
+        MessageInput(selected.close_take_rto, content_types=[ContentType.TEXT], filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_rto,
         state=states.MainMessageUserClose.close_take_rto
     )
@@ -29,17 +29,17 @@ async def close_take_rto():
 
 async def close_take_ckp():
     return Window(
-        Format('Выручка РТО - {close_rto}'),
-        Const('Выручка ЦКП - ❌'),
-        Const('Количество чеков - ❌'),
-        Const('Создано дисконт. карт - ❌'),
+        Format('Выручка РТО - {close_rto} / {rto_plan}'),
+        Format('Выручка ЦКП - ??? / {ckp_plan}'),
+        Format('Количество чеков - ??? / {check_plan}'),
+        Const('Создано дисконт. карт - ???'),
         Const(' '),
         Const('Введите выручку ЦКП'),
         Row(
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_ckp, filter=lambda message: message.text.isdigit()),
+        MessageInput(selected.close_take_ckp, content_types=[ContentType.TEXT], filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_ckp,
         state=states.MainMessageUserClose.close_take_ckp
     )
@@ -47,17 +47,17 @@ async def close_take_ckp():
 
 async def close_take_check():
     return Window(
-        Format('Выручка РТО - {close_rto}'),
-        Format('Выручка ЦКП - {close_ckp}'),
-        Const('Количество чеков - ❌'),
-        Const('Создано дисконт. карт - ❌'),
+        Format('Выручка РТО - {close_rto} / {rto_plan}'),
+        Format('Выручка ЦКП - {close_ckp} / {ckp_plan}'),
+        Format('Количество чеков - ??? / {check_plan}'),
+        Const('Создано дисконт. карт - ???'),
         Const(' '),
         Const('Введите количество чеков за сегодня'),
         Row(
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_check, filter=lambda message: message.text.isdigit()),
+        MessageInput(selected.close_take_check, content_types=[ContentType.TEXT], filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_check,
         state=states.MainMessageUserClose.close_take_check
     )
@@ -65,17 +65,17 @@ async def close_take_check():
 
 async def close_take_dcart():
     return Window(
-        Format('Выручка РТО - {close_rto}'),
-        Format('Выручка ЦКП - {close_ckp}'),
-        Format('Количество чеков - {close_check}'),
-        Const('Создано дисконт. карт - ❌'),
+        Format('Выручка РТО - {close_rto} / {rto_plan}'),
+        Format('Выручка ЦКП - {close_ckp} / {ckp_plan}'),
+        Format('Количество чеков - {close_check} / {check_plan}'),
+        Const('Создано дисконт. карт - ???'),
         Const(' '),
         Const('Введите количество созданных дисконтных карт за сегодня'),
         Row(
             Cancel(Const('❌ Отмена')),
             Back(Const('⬅️ Назад')),
         ),
-        MessageInput(selected.close_take_dcart, filter=lambda message: message.text.isdigit()),
+        MessageInput(selected.close_take_dcart, content_types=[ContentType.TEXT], filter=lambda message: message.text.isdigit()),
         getter=getters.close_take_dcart,
         state=states.MainMessageUserClose.close_take_dcart
     )
@@ -83,9 +83,9 @@ async def close_take_dcart():
 
 async def close_take_photos():
     return Window(
-        Format('Выручка РТО - {close_rto}'),
-        Format('Выручка ЦКП - {close_ckp}'),
-        Format('Количество чеков - {close_check}'),
+        Format('Выручка РТО - {close_rto} / {rto_plan}'),
+        Format('Выручка ЦКП - {close_ckp} / {ckp_plan}'),
+        Format('Количество чеков - {close_check} / {check_plan}'),
         Format('Создано дисконт. карт - {close_dcart}'),
         Const(' '),
         Const('Отправьте фотографии чека закрытия, запечатанного инкассационного пакета '
