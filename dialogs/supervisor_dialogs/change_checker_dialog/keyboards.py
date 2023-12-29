@@ -18,6 +18,7 @@ def select_shop_checker(on_click):
         height=4
     )
 
+
 def select_seller_checker(on_click):
     return ScrollingGroup(
         Select(

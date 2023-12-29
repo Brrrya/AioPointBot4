@@ -21,7 +21,7 @@ async def who_will_deleted():
         keyboards.all_sellers_by_sv(
             seller_choice=selected.seller_choice,
         ),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.who_will_deleted,
         state=states.SellerFireSupervisor.who_will_fired
     )
@@ -34,8 +34,8 @@ async def confirm():
         Const('Вернуться он сможет только заново зарегистрировавшись'),
         Button(Const("Да"), id='confirm_fire_seller', on_click=selected.confirm),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.confirm,
         state=states.SellerFireSupervisor.confirm

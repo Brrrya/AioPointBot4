@@ -15,10 +15,10 @@ async def select_role_checker():
         Const(' '),
         Const('Какого проверяющего поменять?'),
         Row(
-            Button(Const('Открытие'), id='change_open_checker', on_click=selected.change_open),
-            Button(Const('Ротации'), id='change_rotate_checker', on_click=selected.change_rotate),
+            Button(Const('🔐 Открытие'), id='change_open_checker', on_click=selected.change_open),
+            Button(Const('📱 Ротации'), id='change_rotate_checker', on_click=selected.change_rotate),
         ),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.select_role_checker,
         state=states.ChangeCheckerSupervisor.select_role
     )
@@ -35,8 +35,8 @@ async def select_shop_checker():
             on_click=selected.select_shop_checker
         ),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.select_shop_checker,
         state=states.ChangeCheckerSupervisor.select_shop
@@ -55,8 +55,8 @@ async def select_seller_checker():
             on_click=selected.select_seller_checker
         ),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.select_seller_checker,
         state=states.ChangeCheckerSupervisor.select_new_checker
@@ -70,10 +70,10 @@ async def confirm():
         Format('Новый проверяющий - {new_checker}'),
         Const(' '),
         Const('Всё верно?'),
-        Button(Const('Да'), id='confirm_new_checker', on_click=selected.confirm_new_checker),
+        Button(Const('✅ Да'), id='confirm_new_checker', on_click=selected.confirm_new_checker),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.confirm,
         state=states.ChangeCheckerSupervisor.confirm

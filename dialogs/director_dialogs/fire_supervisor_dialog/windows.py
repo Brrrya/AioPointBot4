@@ -15,7 +15,7 @@ async def fire_choice_sv():
         keyboards.choice_sv(
             on_click=selected.fire_choice_sv
         ),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.fire_choice_sv,
         state=states.FireSvDirector.fire_choice_sv
     )
@@ -38,10 +38,10 @@ async def fire_confirm():
             },
             selector='some_thing'
         ),
-        Button(Const('Уволить'), when='some_thing', id='confirm_fire_supervisor', on_click=selected.fire_confirm),
+        Button(Const('🔥 Уволить'), when='some_thing', id='confirm_fire_supervisor', on_click=selected.fire_confirm),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.fire_confirm,
         state=states.FireSvDirector.fire_confirm

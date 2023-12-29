@@ -1,5 +1,5 @@
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel
+from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row
 from aiogram_dialog.widgets.text import Format, Const, Case
 
 from dialogs.supervisor_dialogs.seller_transfer_dialog import (
@@ -21,9 +21,9 @@ async def who_will_transfer():
         keyboards.all_sellers_by_sv(
             seller_choice=selected.seller_choice,
         ),
-        Button(Const("Всех"), id='all_seller_choice_for_transfer',
+        Button(Const("📝 Всех"), id='all_seller_choice_for_transfer',
                when='more_then_nobody', on_click=selected.all_seller_choice),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.who_will_transfer,
         state=states.SellerTransferSupervisor.who_will_transfer
     )
@@ -35,8 +35,10 @@ async def who_will_take_seller():
         keyboards.all_sv_for_transfer(
             sv_choice=selected.sv_choice,
         ),
-        Back(Const('Назад')),
-        Cancel(Const('Отмена')),
+        Row(
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
+        ),
         getter=getters.who_will_take_seller,
         state=states.SellerTransferSupervisor.who_will_take_seller,
     )
@@ -46,9 +48,11 @@ async def confirm():
     return Window(
         Format("Вы действительно хотите передать сотрудника - {transfer_seller_name}"),
         Format('Управляющему - {transfer_seller_sv_name}?'),
-        Button(Const("Передать"), id='confirm_seller_transfer', on_click=selected.confirm),
-        Back(Const("Назад")),
-        Cancel(Const("Отмена")),
+        Button(Const("✅ Передать"), id='confirm_seller_transfer', on_click=selected.confirm),
+        Row(
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
+        ),
         getter=getters.confirm,
         state=states.SellerTransferSupervisor.confirm,
     )

@@ -13,7 +13,7 @@ async def fire_choice_seller():
         keyboards.choice_seller(
             on_click=selected.fire_choice_seller
         ),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.fire_choice_seller,
         state=states.FireSellerDirector.fire_choice_seller
     )
@@ -22,10 +22,10 @@ async def fire_choice_seller():
 async def fire_seller_confirm():
     return Window(
         Format('Вы действительно хотите уволить сотрудника {full_name}'),
-        Button(Const('Уволить'), id='dr_confirm_fire_seller', on_click=selected.fire_seller_confirm),
+        Button(Const('🔥 Уволить'), id='dr_confirm_fire_seller', on_click=selected.fire_seller_confirm),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.fire_seller_confirm,
         state=states.FireSellerDirector.fire_confirm

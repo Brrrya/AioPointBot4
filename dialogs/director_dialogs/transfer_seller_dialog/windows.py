@@ -12,8 +12,8 @@ async def select_seller_for_transfer():
         Const('Тут можно переместить сотрудника от одного управляющего к другому или сразу всех сотрудников СВ'),
         Const('Выберете сотрудника для перемещения'),
         keyboards.choice_seller(on_click=selected.transfer_seller),
-        Button(Const("Всех сотрудников супервайзера"), id='dr_transfer_all_workers_sv', on_click=selected.transfer_all_by_sv),
-        Cancel(Const('Отмена')),
+        Button(Const("📝 Всех сотрудников супервайзера"), id='dr_transfer_all_workers_sv', on_click=selected.transfer_all_by_sv),
+        Cancel(Const('❌ Отмена')),
         getter=getters.select_seller_for_transfer,
         state=states.TransferSellerDirector.select_seller
     )
@@ -23,7 +23,7 @@ async def select_all_seller_for_transfer_by_sv():
     return Window(
         Const('Сотрудников какого СВ переместить?'),
         keyboards.choice_sv(on_click=selected.select_all_seller_for_transfer_by_sv),
-        Cancel(Const('Отмена')),
+        Cancel(Const('❌ Отмена')),
         getter=getters.select_all_seller_for_transfer_by_sv,
         state=states.TransferSellerDirector.select_sellers_by_sv
     )
@@ -34,8 +34,8 @@ async def who_will_take_sellers():
         Const('Какому СВ передать сотрудников?'),
         keyboards.choice_sv(on_click=selected.who_will_take_sellers),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.who_will_take_sellers,
         state=states.TransferSellerDirector.select_recipient
@@ -60,10 +60,10 @@ async def confirm_seller_transfer():
         ),
         Const('Новому управляющему'),
         Format('- {new_sv_name}?'),
-        Button(Const('Да'), id='dr_confirm_seller_transfer', on_click=selected.confirm),
+        Button(Const('✅ Да'), id='dr_confirm_seller_transfer', on_click=selected.confirm),
         Row(
-            Cancel(Const('Отмена')),
-            Back(Const('Назад'))
+            Cancel(Const('❌ Отмена')),
+            Back(Const('⬅️ Назад'))
         ),
         getter=getters.confirm_seller_transfer,
         state=states.TransferSellerDirector.confirm

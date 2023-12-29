@@ -67,8 +67,8 @@ async def open_photos():
             },
             selector='open_or_not'
         ),
-        Button(Const('Обновить'), id='take_open_photos_sv', on_click=selected.open_photos),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_open_photos_sv', on_click=selected.open_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.open_photos,
         state=states.MainMessageSupervisor.open_photos
     )
@@ -89,8 +89,8 @@ async def rotate_photos():
             },
             selector='rotate_or_not'
         ),
-        Button(Const('Обновить'), id='take_rotate_photos_sv', on_click=selected.rotate_photos),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_rotate_photos_sv', on_click=selected.rotate_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.rotate_photos,
         state=states.MainMessageSupervisor.rotate_photos
     )
@@ -111,8 +111,8 @@ async def close_reports():
             },
             selector='close_report_or_not'
         ),
-        Button(Const('Обновить'), id='take_close_report_sv', on_click=selected.close_reports),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_close_report_sv', on_click=selected.close_reports),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.close_reports,
         state=states.MainMessageSupervisor.close_reports,
     )
@@ -127,7 +127,7 @@ async def structure_changes():
             transfer_seller=selected.transfer_seller,
             transfer_shop=selected.transfer_shop,
         ),
-        Button(Const('Назад'), on_click=selected.back_to_main_message, id='back_to_main_message_sv'),
+        Button(Const('⬅️ Назад'), on_click=selected.back_to_main_message, id='back_to_main_message_sv'),
         getter=getters.structure_changes,
         state=states.MainMessageSupervisor.structure_changes
     )
@@ -151,8 +151,8 @@ async def checkers():
             selector='some_shops'
         ),
 
-        Button(Const('Изменить проверяющих'), id='change_checker', on_click=selected.change_checker),
-        Back(Const('Назад')),
+        Button(Const('🔧 Изменить проверяющих'), id='change_checker', on_click=selected.change_checker),
+        Back(Const('⬅️ Назад')),
         getter=getters.checkers,
         state=states.MainMessageSupervisor.checkers
     )

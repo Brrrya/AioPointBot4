@@ -1,5 +1,5 @@
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row
+from aiogram_dialog.widgets.kbd import Button, Cancel
 from aiogram_dialog.widgets.text import Format, Const, Case, Multi, List
 
 from dialogs.director_dialogs.inspect_sv_dialog import (
@@ -31,7 +31,7 @@ async def main_message():
             refresh_main_message=selected.refresh_main_message,
             close_reports=selected.close_reports
         ),
-        Cancel(Const("Отмена")),
+        Cancel(Const("❌ Отмена")),
         getter=getters.main_message,
         state=states.InspectSupervisorDirector.main_message,
     )
@@ -52,8 +52,8 @@ async def open_photos():
             },
             selector='open_or_not'
         ),
-        Button(Const('Обновить'), id='take_open_photos_sv', on_click=selected.open_photos),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_open_photos_sv', on_click=selected.open_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.open_photos,
         state=states.InspectSupervisorDirector.open_photos
     )
@@ -74,8 +74,8 @@ async def rotate_photos():
             },
             selector='rotate_or_not'
         ),
-        Button(Const('Обновить'), id='take_rotate_photos_sv', on_click=selected.rotate_photos),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_rotate_photos_sv', on_click=selected.rotate_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.rotate_photos,
         state=states.InspectSupervisorDirector.rotate_photo
     )
@@ -96,8 +96,8 @@ async def close_reports():
             },
             selector='close_report_or_not'
         ),
-        Button(Const('Обновить'), id='take_close_report_sv', on_click=selected.close_reports),
-        Button(Const('Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        Button(Const('🔄 Обновить'), id='take_close_report_sv', on_click=selected.close_reports),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.close_reports,
         state=states.InspectSupervisorDirector.close_reports,
     )
