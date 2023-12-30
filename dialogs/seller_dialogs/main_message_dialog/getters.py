@@ -24,6 +24,7 @@ async def main_message(dialog_manager: DialogManager, **kwargs):
     ctx.dialog_data.update(shop_tgid=data['shop_tgid'])
     return data
 
+
 async def open_photo_take(dialog_manager: DialogManager, **kwargs):
     logging.info(f'Загружено окно <Seller.main_dialog.open_photo_take>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')

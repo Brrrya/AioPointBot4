@@ -164,19 +164,30 @@ class PlanRequests:
     ):
         """Возвращает данные выручки за определенный день"""
         async with session_maker() as session:
-            shop = await session.get(Shops, shop_tgid)
-            day_data = await session.execute(
-                text(f"SELECT (fact_rto, fact_ckp, fact_check, fact_dcart) "
-                     f"FROM {shop.bd_title} WHERE date_ = '{date_for_data}'")
-            )
-            day_data = day_data.scalars().all()
+            try:
+                shop = await session.get(Shops, shop_tgid)
+                day_data = await session.execute(
+                    text(f"SELECT (fact_rto, fact_ckp, fact_check, fact_dcart) "
+                         f"FROM {shop.bd_title} WHERE date_ = '{date_for_data}'")
+                )
+                day_data = day_data.scalars().all()
 
-            return {
-                'rto_old_data': day_data[0][0] if day_data[0][0] else 0,
-                'ckp_old_data': day_data[0][1] if day_data[0][1] else 0,
-                'check_old_data': day_data[0][2] if day_data[0][2] else 0,
-                'dcart_old_data': day_data[0][3] if day_data[0][3] else 0,
-            }
+                return {
+                    'rto_old_data': day_data[0][0] if day_data[0][0] else 0,
+                    'ckp_old_data': day_data[0][1] if day_data[0][1] else 0,
+                    'check_old_data': day_data[0][2] if day_data[0][2] else 0,
+                    'dcart_old_data': day_data[0][3] if day_data[0][3] else 0,
+                }
+
+            except:
+                # Если нет, то завершаем сессию и будет выполнен код, что внизу функции
+                await session.rollback()
+
+                # Если у магазина не создан план, то выполниться эта часть кода и создаст план со стандартными знач.
+            await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
+            # А затем вернет эту же функцию, что по итогу всё же выполнит её
+            return await PlanRequests.data_for_that_day(date_for_data, shop_tgid)
+
 
     @staticmethod
     async def change_data_in_plan(
@@ -189,14 +200,25 @@ class PlanRequests:
     ):
         """Меняет данные выручки за определенный день"""
         async with session_maker() as session:
-            shop = await session.get(Shops, shop_tgid)
-            await session.execute(
-                text(f"UPDATE {shop.bd_title} SET "
-                     f"fact_rto = {rto_new_data}, fact_ckp = {ckp_new_data}, "
-                     f"fact_check = {check_new_data}, fact_dcart = {dcart_new_data} "
-                     f"WHERE date_ = '{str(date_for_change)}'")
-            )
-            await session.commit()
+            try:
+                shop = await session.get(Shops, shop_tgid)
+                await session.execute(
+                    text(f"UPDATE {shop.bd_title} SET "
+                         f"fact_rto = {rto_new_data}, fact_ckp = {ckp_new_data}, "
+                         f"fact_check = {check_new_data}, fact_dcart = {dcart_new_data} "
+                         f"WHERE date_ = '{str(date_for_change)}'")
+                )
+                await session.commit()
+
+            except:
+                # Если нет, то завершаем сессию и будет выполнен код, что внизу функции
+                await session.rollback()
+
+                # Если у магазина не создан план, то выполниться эта часть кода и создаст план со стандартными знач.
+            await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
+            # А затем вернет эту же функцию, что по итогу всё же выполнит её
+            return await PlanRequests.change_data_in_plan(date_for_change, rto_new_data, ckp_new_data,
+                                                          check_new_data, dcart_new_data, shop_tgid)
 
 
     @staticmethod
@@ -206,17 +228,27 @@ class PlanRequests:
     ):
         """Возвращает данные ПЛАНА за определенный день"""
         async with session_maker() as session:
-            shop = await session.get(Shops, shop_tgid)
-            day_data = await session.execute(
-                text(f"SELECT (plan_rto, plan_ckp, plan_check) "
-                     f"FROM {shop.bd_title} WHERE date_ = '{date_}'")
-            )
-            day_data = day_data.scalars().all()
-            return {
-                'rto_plan': day_data[0][0] if day_data[0][0] else 0,
-                'ckp_plan': day_data[0][1] if day_data[0][1] else 0,
-                'check_plan': day_data[0][2] if day_data[0][2] else 0,
-            }
+            try:
+                shop = await session.get(Shops, shop_tgid)
+                day_data = await session.execute(
+                    text(f"SELECT (plan_rto, plan_ckp, plan_check) "
+                         f"FROM {shop.bd_title} WHERE date_ = '{date_}'")
+                )
+                day_data = day_data.scalars().all()
+                return {
+                    'rto_plan': day_data[0][0] if day_data[0][0] else 0,
+                    'ckp_plan': day_data[0][1] if day_data[0][1] else 0,
+                    'check_plan': day_data[0][2] if day_data[0][2] else 0,
+                }
+
+            except:
+                # Если нет, то завершаем сессию и будет выполнен код, что внизу функции
+                await session.rollback()
+
+                # Если у магазина не создан план, то выполниться эта часть кода и создаст план со стандартными знач.
+            await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
+            # А затем вернет эту же функцию, что по итогу всё же выполнит её
+            return await PlanRequests.take_plan_one_day(shop_tgid, date_)
 
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ from database.requests.supervisor_requests import SupervisorRequests
 
 
 async def back_to_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):
-    logging.info(f'СВ | Вернулся к главному сообщению по кнопке id={c.from_user.id} username={c.from_user.username}')
+    logging.info(f'Директор | Инспекция | Вернулся к главному сообщению по кнопке id={c.from_user.id} username={c.from_user.username}')
 
     await manager.switch_to(states.InspectSupervisorDirector.main_message)
 

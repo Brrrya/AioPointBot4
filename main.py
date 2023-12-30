@@ -49,7 +49,7 @@ async def main() -> None:
 
 async def prestart():
     # Создаем файлы логов и запускает логирование
-    log_handler = RotatingFileHandler(filename='logs/bot_logs.log', maxBytes=128000000, backupCount=5)
+    log_handler = RotatingFileHandler(filename='logs/bot_logs.log', maxBytes=64000000, backupCount=10)
     log_handler.setFormatter(
         Formatter("%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s")
     )
