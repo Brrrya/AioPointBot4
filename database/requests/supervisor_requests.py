@@ -56,7 +56,9 @@ class SupervisorRequests:
                         )
                     )
                     photo = photo.scalar()
-                    res.append((photo.photo_tgid, shop.title))
+                    if photo:
+                        res.append((photo.photo_tgid, shop.title))
+
             return res
 
     @staticmethod

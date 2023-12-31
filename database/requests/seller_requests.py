@@ -110,7 +110,10 @@ class SellerRequests:
                         ),
                     )
                     photo = photo.scalar()
-                    all_photos.append((photo.photo_tgid, shop.title))
+                    if photo:
+                        all_photos.append((photo.photo_tgid, shop.title))
+                    else:
+                        who_not_do.append((shop.title, shop.tgid))
 
             res = {
                 'all_photo': (
@@ -154,7 +157,10 @@ class SellerRequests:
                         ),
                     )
                     photo = photo.scalar()
-                    all_photos.append((photo.photo_tgid, shop.title))
+                    if photo:
+                        all_photos.append((photo.photo_tgid, shop.title))
+                    else:
+                        who_not_do.append((shop.title, shop.tgid))
 
             res = {
                 'all_photo': (
