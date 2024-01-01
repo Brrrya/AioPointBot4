@@ -1,7 +1,6 @@
 import asyncio
 import calendar
 import datetime
-from datetime import datetime
 
 import ezodf
 
@@ -49,6 +48,7 @@ async def update_coefficients(
 
     # Закидываем данные в функцию, которая записывает всё в БД
     await PlanRequests.recreate_coefs(coefficients, c_full)
+
 
 async def create_plan(
         point_tgid: int

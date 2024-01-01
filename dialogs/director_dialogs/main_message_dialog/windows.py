@@ -13,6 +13,12 @@ async def director_main_message():
         Button(Const('🔄 Обновить'), on_click=selected.refresh, id='refresh_main_message_dr'),
         Button(Const('🔦 Инспектировать СВ'), on_click=selected.inspected_sv, id='dr_inspect_sv'),
         Button(Const('⚙️ Изменить структуру'), on_click=selected.structure_changes, id='structure_changes_main_message_dr'),
+        # Button(
+        #     Const('Админ команды'),
+        #     id='admin_commands',
+        #     on_click=selected.admin_commands,
+        #     when='is_admin'
+        # ),
         getter=getters.main_message,
         state=states.MainMessageDirector.main_message
     )

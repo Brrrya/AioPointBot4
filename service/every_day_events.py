@@ -91,7 +91,7 @@ async def update_all_plans(bot: Bot, setups: setup_dialogs):
     for shop in all_shop_data['all_shops']:
         # формируем старый план для каждого магазина и отправляем его ему
         await create_plan(shop[1])
-        await bot.send_document(document=FSInputFile(path=f"../service/plans/{shop[0]}.ods"), chat_id=shop[1])
+        await bot.send_document(document=FSInputFile(path=f"service/plans/{shop[0]}.ods"), chat_id=shop[1])
         await setups.bg(bot=bot, chat_id=shop[1], user_id=shop[1]).done()
         await setups.bg(bot=bot, chat_id=shop[1], user_id=shop[1]).start(MainMessageShop.main_message)
         # Обновляем план в БД для каждого магазина
