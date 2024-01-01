@@ -86,6 +86,7 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
         shop_tgid=int(shop['shop_tgid']),
         seller_tgid=int(callback.from_user.id)
     )
+
     await PlanRequests.change_data_in_plan(
         date_for_change=str(datetime.date.today()),
         rto_new_data=int(ctx.dialog_data.get('close_rto')),

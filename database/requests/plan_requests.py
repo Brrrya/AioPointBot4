@@ -200,6 +200,7 @@ class PlanRequests:
     ):
         """Меняет данные выручки за определенный день"""
         async with session_maker() as session:
+            done = False
             try:
                 shop = await session.get(Shops, shop_tgid)
                 await session.execute(
@@ -208,17 +209,19 @@ class PlanRequests:
                          f"fact_check = {check_new_data}, fact_dcart = {dcart_new_data} "
                          f"WHERE date_ = '{str(date_for_change)}'")
                 )
+                done = True
                 await session.commit()
 
             except:
                 # Если нет, то завершаем сессию и будет выполнен код, что внизу функции
                 await session.rollback()
 
+            if done is False:
                 # Если у магазина не создан план, то выполниться эта часть кода и создаст план со стандартными знач.
-            await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
-            # А затем вернет эту же функцию, что по итогу всё же выполнит её
-            return await PlanRequests.change_data_in_plan(date_for_change, rto_new_data, ckp_new_data,
-                                                          check_new_data, dcart_new_data, shop_tgid)
+                await PlanRequests.update_plan(1000000, 100000, 1000, shop_tgid)
+                # А затем вернет эту же функцию, что по итогу всё же выполнит её
+                return await PlanRequests.change_data_in_plan(date_for_change, rto_new_data, ckp_new_data,
+                                                              check_new_data, dcart_new_data, shop_tgid)
 
 
     @staticmethod
