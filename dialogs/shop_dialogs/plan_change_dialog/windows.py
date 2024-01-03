@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta, date
+from datetime import date
+import calendar
 
 from aiogram_dialog import Window, DialogManager
 from aiogram_dialog.widgets.text import Format, Const, Case, Multi
@@ -19,8 +20,8 @@ async def take_date_for_change():
         Calendar(
             id='calendar_for_change_plan_',
             config=CalendarConfig(
-                min_date=date(2023, 12, 1),
-                max_date=date(2023, 12, 31),
+                min_date=date(date.today().year, date.today().month, 1),
+                max_date=date(date.today().year, date.today().month, calendar.monthrange(date.today().year, date.today().month)[1]),
             ),
             on_click=selected.take_date_for_change
         ),
