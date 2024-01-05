@@ -15,11 +15,11 @@ async def create_tasks(bot: Bot, setups: setup_dialogs):
     scheduler.add_job(every_day_events.who_not_close_shops, trigger='cron',
                       hour='23', minute='00', kwargs={'bot': bot})  # предупреждение о не закрытых
     scheduler.add_job(every_day_events.who_not_make_rotate, trigger='cron',
-                      hour='19', minute='00', kwargs={'bot': bot})  # предупреждение о не сделавших ротации
+                      hour='18', minute='00', kwargs={'bot': bot})  # предупреждение о не сделавших ротации
     scheduler.add_job(every_day_events.reset_all_shops, trigger='cron',
                       hour='00', minute='05', kwargs={'setups': setups, 'bot': bot})  # обнуление всех магазинов
     scheduler.add_job(every_day_events.update_all_plans, trigger='cron',
-                      day='01', hour='00', minute='05', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
+                      day='01', hour='00', minute='10', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
 
     scheduler.start()
 
