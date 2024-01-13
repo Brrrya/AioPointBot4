@@ -8,3 +8,4 @@ class Database:
     db_user: str
     db_password: str
     db_url: str
+    db_port: int

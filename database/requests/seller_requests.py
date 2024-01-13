@@ -173,8 +173,106 @@ class SellerRequests:
             }
             return res
 
+    @staticmethod
+    async def checker_reports(
+            checker_tgid: int
+    ):
+        """Возвращает отчеты магазинов, за которым закреплен проверяющим"""
+        async with session_maker() as session:
+            # Получаем список магазинов СВ
+            shops = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.close_checker == checker_tgid)
+                )
+                .order_by(Shops.title)
+            )
+            shops = shops.scalars().all()
 
+            result = {}
+            counter = 0
+            for shop in shops:
+                # Проходимся по всем магазинам и собираем вечерний отчет каждого
+                report = await session.execute(
+                    select(Reports)
+                    .where(
+                        (Reports.report_date == datetime.date.today())
+                        & (Reports.shop_tgid == shop.tgid)
+                    )
+                )
+                report = report.scalar()
+                if report:
+                    # Если есть вечерний отчет
+                    photo_list = []
+                    photos = await session.execute(  # Получаем фото вечернего отчета
+                        select(Photos)
+                        .where(
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.action == 'close')
+                            & (Photos.p_date == datetime.date.today())
+                        )
+                    )
+                    photos = photos.scalars().all()
 
+                    for photo in photos:
+                        photo_list.append(photo.photo_tgid)  # Добавляем эти фото в список
+
+                    report_seller = await session.get(Sellers,
+                                                      report.seller_tgid)  # Находим сотрудника который закрывался
+                    result.update(
+                        {
+                            counter: {
+                                'shop_name': shop.title,
+                                'seller_name': f'{report_seller.last_name} {report_seller.first_name}',
+                                'rto': report.rto,
+                                'ckp': report.ckp,
+                                'check': report.check,
+                                'dcart': report.dcart,
+                                'p_rto': report.p_rto,
+                                'p_ckp': report.p_ckp,
+                                'p_check': report.p_check,
+                                'photos': photo_list,
+                            }
+                        }
+                    )
+                    counter += 1
+        return result
+
+    @staticmethod
+    async def checker_report_who_not_send(
+            checker_tgid: int
+    ):
+        """Возвращает тех, кто ещё не скинул отчет закрытия за ткущий день"""
+        async with session_maker() as session:
+            shops = await session.execute(
+                select(Shops)
+                .where(Shops.close_checker == checker_tgid)
+                .order_by(Shops.title)
+            )
+            shops = shops.scalars().all()
+
+            close_report_or_not = True
+            without_report = []
+            for shop in shops:
+                report = await session.execute(
+                    select(Reports)
+                    .where(
+                        (Reports.report_date == datetime.date.today())
+                        & (Reports.shop_tgid == shop.tgid)
+                    )
+                )
+                report = report.scalar()
+                if report is None:
+                    close_report_or_not = False
+                    without_report.append(shop.title)
+
+            res = {
+                'all_not_close_report': (
+                    (shop_name,) for shop_name in without_report  # Список ещё не отправивших отчёт закрытия
+                ),
+                'close_report_or_not': close_report_or_not  #  Если все отправили отчёт закрытия то True
+            }
+            return res
 
 
 

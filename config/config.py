@@ -27,7 +27,8 @@ def load_config() -> Config:
                       db_name=env('DB_NAME'),
                       db_user=env('DB_USER'),
                       db_password=env('DB_PASSWORD'),
-                      db_url=env('DB_URL')
+                      db_url=env('DB_URL'),
+                      db_port=env('DB_PORT')
                   ),
                   redis_db=Redis_DB(
                       db_host=env('REDIS_HOST'),

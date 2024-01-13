@@ -1,6 +1,7 @@
 import logging
 
 from aiogram.types import CallbackQuery, Message
+from aiogram.utils.media_group import MediaGroupBuilder
 
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
@@ -14,23 +15,55 @@ from database.requests.seller_requests import SellerRequests
 
 async def checker_command(m: Message, widget: MessageInput, manager: DialogManager):
     logging.info(f'Продавец | Ввёл команду проверяющего {m.text} id={m.from_user.id} username={m.from_user.username}')
+
+    # потом все надо зарефакторить
+
     if m.text == '/open':
         data = await SellerRequests.checker_all_photo_open(int(m.from_user.id))
-    else:
+    elif m.text == '/rotate':
         data = await SellerRequests.checker_all_photo_rotate(int(m.from_user.id))
+    elif m.text == '/close':
+        all_data = await SellerRequests.checker_reports(int(m.from_user.id))
+        keys = all_data.keys()
+        close_data = await SellerRequests.checker_report_who_not_send(m.from_user.id)
 
-    for photo in data['all_photo']:
-        await m.answer_photo(photo=photo[0], caption=photo[1])
-
-    if data['all_make_action'] is True:
-        if m.text == '/open':
-            await m.answer('Все магазины закрепленные за вами открыты!')
-        elif m.text == '/rotate':
-            await m.answer('Все магазины закрепленные за вами сделали ротации!')
+    if m.text == '/open' or m.text == '/rotate':
+        for photo in data['all_photo']:
+            await m.answer_photo(photo=photo[0], caption=photo[1])
     else:
-        text = 'Ещё не открылись:\n' if m.text == '/open' else 'Ещё не сделали ротации:\n'
-        for shop_name in data['who_not_do']:
-            text += f'{shop_name[0]}\n'
+        for key in keys:
+            text = ''
+            text += f'Магазин - {all_data[key]["shop_name"]}\n'
+            text += f'Сотрудник - {all_data[key]["seller_name"]}\n'
+            text += f'РТО - {all_data[key]["rto"]} / {all_data[key]["p_rto"]}\n'
+            text += f'ЦКП - {all_data[key]["ckp"]} / {all_data[key]["p_ckp"]}\n'
+            text += f'Чеки - {all_data[key]["check"]} / {all_data[key]["p_check"]}\n'
+            text += f'Дисконт. карты - {all_data[key]["dcart"]}\n'
+
+            media = MediaGroupBuilder()
+            for photo in all_data[key]['photos']:
+                media.add_photo(photo)
+
+            await m.answer(text)
+            await m.answer_media_group(media.build())
+
+    if m.text == '/open' or m.text == '/rotate':
+        if data['all_make_action'] is True:
+            if m.text == '/open':
+                await m.answer('Все магазины закрепленные за вами открыты!')
+            elif m.text == '/rotate':
+                await m.answer('Все магазины закрепленные за вами сделали ротации!')
+        elif data['all_make_action'] is False:
+            text = 'Ещё не открылись:\n' if m.text == '/open' else 'Ещё не сделали ротации:\n'
+            for shop_name in data['who_not_do']:
+                text += f'{shop_name[0]}\n'
+            await m.answer(text)
+    elif m.text == '/close':
+        text = 'Все магазины закрепленные за вами закрыты!'
+        if close_data['close_report_or_not'] is False:
+            text = 'Ещё не закрылись:\n'
+            for shop_name in close_data['all_not_close_report']:
+                text += f'{shop_name[0]}\n'
         await m.answer(text)
 
 

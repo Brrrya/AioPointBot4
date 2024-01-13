@@ -10,6 +10,14 @@ from dialogs.supervisor_dialogs.change_checker_dialog import states
 from database.requests.supervisor_requests import SupervisorRequests
 
 
+async def change_close(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку изменить проверяющего закрытия id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+    ctx.dialog_data.update(checker_role='close')
+    await manager.switch_to(states.ChangeCheckerSupervisor.select_shop)
+
+
 async def change_open(c: CallbackQuery, widget: Button, manager: DialogManager):
     logging.info(f'СВ | Нажал кнопку изменить проверяющего открытие id={c.from_user.id} username={c.from_user.username}')
 

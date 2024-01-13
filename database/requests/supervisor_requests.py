@@ -251,16 +251,31 @@ class SupervisorRequests:
         async with session_maker() as session:
             shop_with_seller = await session.execute(
                 select(Shops)
-                .where(Shops.worker == seller_tgid)
+                .where(
+                    (Shops.worker == seller_tgid)
+                    | (Shops.open_checker == seller_tgid)
+                    | (Shops.rotate_checker == seller_tgid)
+                    | (Shops.close_checker == seller_tgid))
             )
-            shop_with_seller = shop_with_seller.scalar()
+            shop_with_seller = shop_with_seller.scalars().all()
 
             update_message = False
             shop_with_seller_tgid = None
             if shop_with_seller:
-                shop_with_seller.worker = None
-                update_message = True
-                shop_with_seller_tgid = shop_with_seller.tgid
+                for shop in shop_with_seller:
+                    if shop.worker == seller_tgid:
+                        shop.worker = None
+                        update_message = True
+                        shop_with_seller_tgid = shop.tgid
+
+                    if shop.open_checker == seller_tgid:
+                        shop.open_checker = None
+
+                    if shop.rotate_checker == seller_tgid:
+                        shop.rotate_checker = None
+
+                    if shop.close_checker == seller_tgid:
+                        shop.close_checker = None
 
             seller = await session.get(Sellers, seller_tgid)
             await session.delete(seller)
@@ -336,6 +351,8 @@ class SupervisorRequests:
                 shop.open_checker = seller_tgid
             elif role == 'rotate':
                 shop.rotate_checker = seller_tgid
+            elif role == 'close':
+                shop.close_checker = seller_tgid
 
             await session.commit()
 

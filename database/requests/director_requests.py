@@ -115,7 +115,7 @@ class DirectorRequests:
 
     @staticmethod
     async def appoint_supervisor(new_sv_tgid: int):
-        """Добавляет сотрудника к СВ убирает из продавцов"""
+        """Добавляет сотрудника к СВ убирает из продавцов и проверяющих"""
         async with session_maker() as session:
             seller = await session.get(
                 Sellers, new_sv_tgid
@@ -126,7 +126,8 @@ class DirectorRequests:
                 .where(
                     (Shops.worker == seller.tgid)
                     | (Shops.open_checker == seller.tgid)
-                    | (Shops.rotate_checker == seller.tgid))
+                    | (Shops.rotate_checker == seller.tgid)
+                    | (Shops.close_checker == seller.tgid))
             )
             shop_with_seller = shop_with_seller.scalars().all()
 
@@ -147,6 +148,9 @@ class DirectorRequests:
 
                     if shop.rotate_checker == seller.tgid:
                         shop.rotate_checker = None
+
+                    if shop.close_checker == seller.tgid:
+                        shop.close_checker = None
 
                 await session.flush()
 
@@ -247,7 +251,8 @@ class DirectorRequests:
                 .where(
                     (Shops.worker == seller.tgid)
                     | (Shops.open_checker == seller.tgid)
-                    | (Shops.rotate_checker == seller.tgid))
+                    | (Shops.rotate_checker == seller.tgid)
+                    | (Shops.close_checker == seller.tgid))
             )
             shop_with_seller = shop_with_seller.scalars().all()
 
@@ -267,6 +272,9 @@ class DirectorRequests:
 
                     if shop.rotate_checker == seller.tgid:
                         shop.rotate_checker = None
+
+                    if shop.close_checker == seller.tgid:
+                        shop.close_checker = None
 
                 await session.flush()
 

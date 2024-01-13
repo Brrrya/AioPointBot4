@@ -6,8 +6,8 @@ from sqlalchemy.orm import DeclarativeBase
 from config.config import load_config
 
 
-def link_create(db_name, db_user, db_pass, db_host) -> str:
-    db_link = f'postgresql+asyncpg://{db_user}:{db_pass}@{db_host}/{db_name}'
+def link_create(db_name, db_user, db_pass, db_host, db_port) -> str:
+    db_link = f'postgresql+asyncpg://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
     return db_link
 
 
@@ -18,7 +18,8 @@ engine = create_async_engine(
         config.database.db_name,
         config.database.db_user,
         config.database.db_password,
-        config.database.db_url
+        config.database.db_url,
+        config.database.db_port
     ),
     echo=False
 )

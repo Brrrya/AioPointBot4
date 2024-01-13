@@ -47,6 +47,7 @@ async def main() -> None:
     await bot.delete_webhook(drop_pending_updates=True)  # Пропускаем апдейты
     await dp.start_polling(bot)  # Запускам пуллинг бота
 
+
 async def prestart():
     # Создаем файлы логов и запускает логирование
     log_handler = RotatingFileHandler(filename='logs/bot_logs.log', maxBytes=64000000, backupCount=10)
@@ -66,7 +67,6 @@ async def prestart():
     # for name, logger in loggers_all.items():
     #     print(name, logger)
     # print('asd')
-
 
     await main()
 

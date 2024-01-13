@@ -64,6 +64,7 @@ class Shops(Base):
     rotate = Column(Boolean(), default=False, nullable=False)
     open_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
     rotate_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
+    close_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
 
     seller = relationship('Sellers', foreign_keys='Shops.worker')
     sv = relationship('Supervisors', back_populates='shops')
