@@ -42,5 +42,10 @@ async def close_reports(dialog_manager: DialogManager, **kwargs):
 
     ctx = dialog_manager.current_context()
 
-    result = await SupervisorRequests.close_report_for_dialog(ctx.start_data.get('dr_inspected_sv'))
-    return result
+    res = {
+        'all_not_close_report': (
+            (shop_name,) for shop_name in ctx.dialog_data.get('who_not_send_report')  # Список ещё не отправивших отчёт закрытия
+        ),
+        'close_report_or_not': False if ctx.dialog_data.get('who_not_send_report') else True  # Если все отправили отчёт закрытия то True
+    }
+    return res

@@ -102,7 +102,7 @@ async def close_reports():
             {
                 True: Const('Все магазины отправили вечерний отчет!'),
                 False: Multi(
-                    Const('Ещё не отправили отчёт:'),
+                    Const('Не отправили отчёт:'),
                     List(
                         Format('{item[0]}'),
                         items='all_not_close_report'

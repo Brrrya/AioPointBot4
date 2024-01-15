@@ -356,45 +356,10 @@ class SupervisorRequests:
 
             await session.commit()
 
-
     @staticmethod
-    async def close_report_for_dialog(sv_tgid: int):
-        """Возвращает тех, кто ещё не скинул отчет закрытия за ткущий день"""
-        async with session_maker() as session:
-            shops = await session.execute(
-                select(Shops)
-                .where(Shops.supervisor == sv_tgid)
-                .order_by(Shops.title)
-            )
-            shops = shops.scalars().all()
-
-            close_report_or_not = True
-            without_report = []
-            for shop in shops:
-                report = await session.execute(
-                    select(Reports)
-                    .where(
-                        (Reports.report_date == datetime.date.today())
-                        & (Reports.shop_tgid == shop.tgid)
-                    )
-                )
-                report = report.scalar()
-                if report is None:
-                    close_report_or_not = False
-                    without_report.append(shop.title)
-
-            res = {
-                'all_not_close_report': (
-                    (shop_name,) for shop_name in without_report  # Список ещё не отправивших отчёт закрытия
-                ),
-                'close_report_or_not': close_report_or_not  #  Если все отправили отчёт закрытия то True
-            }
-            return res
-
-
-
-    @staticmethod
-    async def take_all_close_report_data(sv_tgid: int):
+    async def take_all_close_report_data(sv_tgid: int, report_date: datetime.date | None = None):
+        if report_date is None:
+            report_date = datetime.datetime.today().date()
         """Возвращает вечерние отчеты тех кто их отправил"""
         async with session_maker() as session:
             # Получаем список магазинов СВ
@@ -408,13 +373,14 @@ class SupervisorRequests:
             shops = shops.scalars().all()
 
             result = {}
+            who_not_send_report = []
             counter = 0
             for shop in shops:
                 # Проходимся по всем магазинам и собираем вечерний отчет каждого
                 report = await session.execute(
                     select(Reports)
                     .where(
-                        (Reports.report_date == datetime.date.today())
+                        (Reports.report_date == report_date)
                         & (Reports.shop_tgid == shop.tgid)
                     )
                 )
@@ -427,7 +393,7 @@ class SupervisorRequests:
                         .where(
                             (Photos.shop_tgid == shop.tgid)
                             & (Photos.action == 'close')
-                            & (Photos.p_date == datetime.date.today())
+                            & (Photos.p_date == report_date)
                         )
                     )
                     photos = photos.scalars().all()
@@ -453,7 +419,13 @@ class SupervisorRequests:
                         }
                     )
                     counter += 1
-        return result
+                else:
+                    who_not_send_report.append(shop.title)
+        full_res = {
+            'reports': result,
+            'who_not_send': who_not_send_report
+        }
+        return full_res
 
 
 

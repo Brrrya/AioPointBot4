@@ -33,8 +33,16 @@ async def close_reports(dialog_manager: DialogManager, **kwargs):
     logging.info('Загружено окно <Supervisor.main_dialog.close_reports>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
 
-    result = await SupervisorRequests.close_report_for_dialog(dialog_manager.event.from_user.id)
-    return result
+    ctx = dialog_manager.current_context()
+
+    res = {
+        'all_not_close_report': (
+            (shop_name,) for shop_name in ctx.dialog_data.get('who_not_send_report')  # Список ещё не отправивших отчёт закрытия
+        ),
+        'close_report_or_not': False if ctx.dialog_data.get('who_not_send_report') else True  # Если все отправили отчёт закрытия то True
+    }
+
+    return res
 
 
 async def structure_changes(dialog_manager: DialogManager, **kwargs):
