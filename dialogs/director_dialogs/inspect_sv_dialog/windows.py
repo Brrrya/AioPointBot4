@@ -1,5 +1,8 @@
+import calendar
+from datetime import date, datetime
+
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Button, Cancel
+from aiogram_dialog.widgets.kbd import Button, Cancel, Calendar, CalendarConfig
 from aiogram_dialog.widgets.text import Format, Const, Case, Multi, List
 
 from dialogs.director_dialogs.inspect_sv_dialog import (
@@ -29,7 +32,8 @@ async def main_message():
             open_photo=selected.open_photos,
             rotate_photo=selected.rotate_photos,
             refresh_main_message=selected.refresh_main_message,
-            close_reports=selected.close_reports
+            close_reports=selected.close_reports,
+            close_reports_not_today=selected.close_reports_not_today
         ),
         Cancel(Const("❌ Отмена")),
         getter=getters.main_message,
@@ -100,5 +104,44 @@ async def close_reports():
         Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.close_reports,
         state=states.InspectSupervisorDirector.close_reports,
+    )
+
+
+async def close_reports_not_today():
+    return Window(
+        Const("За какой день показать отчеты?"),
+        Calendar(
+            id='calendar_for_change_plan_',
+            config=CalendarConfig(
+                min_date=date(date.today().year, date.today().month, 1),
+                max_date=date(date.today().year, date.today().month, date.today().day),
+            ),
+            on_click=selected.close_reports_not_today_show
+        ),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        getter=getters.close_reports_not_today,
+        state=states.InspectSupervisorDirector.close_reports_not_today
+    )
+
+
+async def close_reports_not_today_show():
+    return Window(
+        Case(
+            {
+                True: Const('Все магазины отправили вечерний отчет!'),
+                False: Multi(
+                    Const('Не отправили отчёт:'),
+                    List(
+                        Format('{item[0]}'),
+                        items='all_not_close_report'
+                    )
+                )
+            },
+            selector='close_report_or_not'
+        ),
+        Button(Const('🗄 Другая дата'), id='other_date_report_dr', on_click=selected.close_reports_not_today),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        getter=getters.close_reports,
+        state=states.InspectSupervisorDirector.close_reports_not_today_show,
     )
 

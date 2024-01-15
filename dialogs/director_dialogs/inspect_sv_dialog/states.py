@@ -7,3 +7,5 @@ class InspectSupervisorDirector(StatesGroup):
     open_photos = State()
     rotate_photo = State()
     close_reports = State()
+    close_reports_not_today = State()
+    close_reports_not_today_show = State()

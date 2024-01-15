@@ -58,3 +58,11 @@ async def checkers(dialog_manager: DialogManager, **kwargs):
 
     result = await SupervisorRequests.take_checkers_data(dialog_manager.event.from_user.id)
     return result
+
+
+async def close_reports_not_today(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Supervisor.main_dialog.close_reports_not_today>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+
+    return {}
+

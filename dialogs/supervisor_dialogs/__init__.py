@@ -16,6 +16,8 @@ async def all_supervisor_dialogs():
             await main_windows.structure_changes(),
             await main_windows.checkers(),
             await main_windows.close_reports(),
+            await main_windows.close_reports_not_today(),
+            await main_windows.close_reports_not_today_show(),
 
             on_process_result=main_windows.on_process_result,
         ),

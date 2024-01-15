@@ -46,6 +46,13 @@ async def close_reports(dialog_manager: DialogManager, **kwargs):
         'all_not_close_report': (
             (shop_name,) for shop_name in ctx.dialog_data.get('who_not_send_report')  # Список ещё не отправивших отчёт закрытия
         ),
-        'close_report_or_not': False if ctx.dialog_data.get('who_not_send_report') else True  # Если все отправили отчёт закрытия то True
+        'close_report_or_not': False if ctx.dialog_data.get('who_not_send_report') else True  # Если все отправили отчёт закрытия, то True
     }
     return res
+
+
+async def close_reports_not_today(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Director.inspect_sv.close_reports_not_today>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+
+    return {}

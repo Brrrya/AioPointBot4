@@ -9,7 +9,8 @@ def main_message_kb(
         rotate_photo,
         refresh_main_message,
         change_structure,
-        close_reports
+        close_reports,
+        close_reports_not_today
 ):
     return Group(
         Button(Const('🔄 Обновить'), id='sv_main_message_refresh', on_click=refresh_main_message),
@@ -18,6 +19,7 @@ def main_message_kb(
             Button(Const('📱 Фото ротаций'), id='sv_main_message_rotate', on_click=rotate_photo),
         ),
         Button(Const('📒 Отчеты закрытия'), id='close_reports', on_click=close_reports),
+        Button(Const('🗄 Отчеты закрытия за предыдущие дни'), id='dr_close_reports_for_other_day', on_click=close_reports_not_today),
         Button(Const('⚙️ Изменить структуру'), id='sv_main_message_change_structure', on_click=change_structure),
 
         id='shop_main_message_group',

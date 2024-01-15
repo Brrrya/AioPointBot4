@@ -12,8 +12,8 @@ class MainMessageSupervisor(StatesGroup):
 
     checkers = State()
 
-    # transfer_seller = State()
-    # transfer_shop = State()
+    close_reports_not_today = State()
+    close_reports_not_today_show = State()
 
     structure_changes = State()
 

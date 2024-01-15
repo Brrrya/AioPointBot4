@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from aiogram.types import CallbackQuery
@@ -69,4 +70,39 @@ async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager
     ctx.dialog_data.update(who_not_send_report=all_data.get('who_not_send'))
 
     await manager.switch_to(state=states.InspectSupervisorDirector.close_reports, show_mode=ShowMode.SEND)
+
+
+async def close_reports_not_today(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Директор | Инспекция | Нажал кнопку отчетов закрытия за другой день id={c.from_user.id} username={c.from_user.username}')
+
+    await manager.switch_to(state=states.InspectSupervisorDirector.close_reports_not_today)
+
+
+async def close_reports_not_today_show(c: CallbackQuery, widget, manager: DialogManager, select_date: datetime.date):
+    logging.info(f'Директор | Инспекция | Выбрал день для просмотра отчетов - {select_date} id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+
+    all_data = await SupervisorRequests.take_all_close_report_data(ctx.start_data.get('dr_inspected_sv'), select_date)
+    reports = all_data.get('reports')
+    keys = reports.keys()
+    for key in keys:
+        text = ''
+        text += f'Магазин - {reports[key]["shop_name"]}\n'
+        text += f'Сотрудник - {reports[key]["seller_name"]}\n'
+        text += f'РТО - {reports[key]["rto"]} / {reports[key]["p_rto"]}\n'
+        text += f'ЦКП - {reports[key]["ckp"]} / {reports[key]["p_ckp"]}\n'
+        text += f'Чеки - {reports[key]["check"]} / {reports[key]["p_check"]}\n'
+        text += f'Дисконт. карты - {reports[key]["dcart"]}\n'
+
+        media = MediaGroupBuilder()
+        for photo in reports[key]['photos']:
+            media.add_photo(photo)
+
+        await c.message.answer(text)
+        await c.message.answer_media_group(media.build())
+
+    ctx.dialog_data.update(who_not_send_report=all_data.get('who_not_send'))
+
+    await manager.switch_to(state=states.InspectSupervisorDirector.close_reports_not_today_show, show_mode=ShowMode.SEND)
 

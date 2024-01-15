@@ -45,6 +45,8 @@ async def all_director_dialogs():
             await inspect_sv_window.main_message(),
             await inspect_sv_window.open_photos(),
             await inspect_sv_window.rotate_photos(),
-            await inspect_sv_window.close_reports()
+            await inspect_sv_window.close_reports(),
+            await inspect_sv_window.close_reports_not_today(),
+            await inspect_sv_window.close_reports_not_today_show(),
         ),
     ]
