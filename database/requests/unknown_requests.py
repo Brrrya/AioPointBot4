@@ -16,10 +16,21 @@ class UnknownRequests:
                                                   .where(Registers.reg_code == register_code))
             user: Registers = register_user.scalar()
             if user:
-                session.add(
-                    Sellers(first_name=user.first_name, last_name=user.last_name,
-                            tgid=user_tgid, supervisor=user.supervisor, badge=user.badge)
+                old_user_ = await session.execute(
+                    select(Sellers)
+                    .where(Sellers.tgid == user_tgid)
                 )
+                old_user: Sellers = old_user_.scalar()
+                if old_user:
+                    old_user.first_name = user.first_name
+                    old_user.last_name = user.last_name
+                    old_user.supervisor = user.supervisor
+                    old_user.badge = user.badge
+                else:
+                    session.add(
+                        Sellers(first_name=user.first_name, last_name=user.last_name,
+                                tgid=user_tgid, supervisor=user.supervisor, badge=user.badge)
+                    )
                 await session.delete(user)
                 await session.commit()
                 return True

@@ -7,10 +7,36 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
+from database.requests.unknown_requests import UnknownRequests
 from dialogs.seller_dialogs.main_message_dialog import states as states_main_message
 from dialogs.seller_dialogs.close_shop_dialog import states as states_close_dialog
 
 from database.requests.seller_requests import SellerRequests
+
+
+async def register_command(m: Message, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Продавец | Ввёд команду /register id={m.from_user.id} username={m.from_user.username}')
+
+    await manager.switch_to(states_main_message.MainMessageUser.register_command)
+
+
+async def register_command_code(message: Message, widget: MessageInput, manager: DialogManager):
+    """Ловит введенный код регистрации после команды /register"""
+    logging.info(f'Продавец | Ввел код регистрации - {message.text} id={message.from_user.id} username={message.from_user.username}')
+    try:
+        if await UnknownRequests.select_register_user_by_reg_code(int(message.text), int(message.from_user.id)):
+            logging.info(f'Успешно зарегистрирован id={message.from_user.id} username={message.from_user.username}')
+            await message.answer("Вы успешно зарегистрировались!")
+            await manager.switch_to(states_main_message.MainMessageUser.plug)
+
+        else:
+            logging.info(f'Неверный код регистрации id={message.from_user.id} username={message.from_user.username}')
+            await message.answer("Регистрационный код не найден")
+            await manager.switch_to(states_main_message.MainMessageUser.register_command)
+    except ValueError:
+        logging.info(f'Неверный формат регистрационного кода id={message.from_user.id} username={message.from_user.username}')
+        await message.answer("Неверный формат регистрационного кода")
+        await manager.switch_to(states_main_message.MainMessageUser.register_command)
 
 
 async def checker_command(m: Message, widget: MessageInput, manager: DialogManager):
@@ -65,6 +91,11 @@ async def checker_command(m: Message, widget: MessageInput, manager: DialogManag
             for shop_name in close_data['all_not_close_report']:
                 text += f'{shop_name[0]}\n'
         await m.answer(text)
+
+
+async def to_plug(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'Продавец | Перешёл по кнопке в plug id={c.from_user.id} username={c.from_user.username}')
+    await manager.switch_to(states_main_message.MainMessageUser.plug)
 
 
 async def to_main_message(c: CallbackQuery, widget: Button, manager: DialogManager):

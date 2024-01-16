@@ -45,8 +45,8 @@ class Sellers(Base):
     first_name = Column(String(length=30), nullable=False)
     last_name = Column(String(length=30), nullable=False)
     tgid = Column(BigInteger, primary_key=True)
-    badge = Column(BigInteger, unique=True, nullable=False)
-    supervisor = Column(ForeignKey('supervisors.tgid'), nullable=False)
+    badge = Column(BigInteger, unique=True, nullable=True)
+    supervisor = Column(ForeignKey('supervisors.tgid'), nullable=True)
 
     sv = relationship('Supervisors', back_populates='sellers')
 

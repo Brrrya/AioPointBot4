@@ -7,6 +7,7 @@ from states.states import UnknownFSM
 
 from database.requests.unknown_requests import UnknownRequests
 
+
 async def register_command(message: Message, state: FSMContext) -> None:
     """Срабатывает на команду /register"""
     logging.info(f'Ввел команду /register id={message.from_user.id} username={message.from_user.username}')

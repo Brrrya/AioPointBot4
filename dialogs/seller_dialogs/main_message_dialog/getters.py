@@ -7,9 +7,14 @@ from aiogram_dialog import DialogManager
 
 from database.requests.seller_requests import SellerRequests
 
-
 async def plug(dialog_manager: DialogManager, **kwargs):
     logging.info(f'Загружено окно <Seller.main_dialog.Plug>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+    return {}
+
+
+async def register_command(dialog_manager: DialogManager, **kwargs):
+    logging.info(f'Загружено окно <Seller.main_dialog.register_command>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
     return {}
 

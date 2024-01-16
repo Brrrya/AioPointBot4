@@ -13,5 +13,7 @@ class MainMessageUser(StatesGroup):
     rotate_photo = State()
     rotate_photo_confirm = State()
 
+    register_command = State()
+
     update_plan_choice_day = State()
 

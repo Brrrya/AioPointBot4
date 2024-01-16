@@ -13,6 +13,7 @@ async def all_shop_dialogs():
             await main_windows.open_photo_confirm(),
             await main_windows.rotate_photo(),
             await main_windows.rotate_photo_confirm(),
+            await main_windows.register_command(),
 
             on_process_result=main_windows.on_process_result,
         ),

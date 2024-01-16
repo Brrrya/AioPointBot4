@@ -8,6 +8,7 @@ from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.media.static import ContentType
 from aiogram_dialog.widgets.text import Format, Const
 
+import commands.register
 from dialogs.seller_dialogs.main_message_dialog import (
     getters, keyboards, selected, states
 )
@@ -27,8 +28,19 @@ async def plug():
     return Window(
         Const("Вы не авторизированны ни на одном магазине"),
         MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close'})),
+        MessageInput(selected.register_command, content_types=ContentType.TEXT, filter=F.text == '/register'),
         getter=getters.plug,
         state=states.MainMessageUser.plug
+    )
+
+
+async def register_command():
+    return Window(
+        Const("Введите код регистрации"),
+        Button(Const('Назад'), on_click=selected.to_plug, id='pack_to_plug'),
+        MessageInput(selected.register_command_code, content_types=ContentType.TEXT),
+        getter=getters.register_command,
+        state=states.MainMessageUser.register_command
     )
 
 
