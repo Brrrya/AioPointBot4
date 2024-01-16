@@ -27,6 +27,7 @@ class DirectorRequests:
             sellers = await session.execute(
                 select(Sellers)
                 .order_by(Sellers.last_name)
+                .where(Sellers.badge != None)
             )
             sellers = sellers.scalars().all()
 
@@ -84,6 +85,7 @@ class DirectorRequests:
             sellers = await session.execute(
                 select(Sellers)
                 .order_by(Sellers.last_name)
+                .where(Sellers.badge != None)
             )
             sellers = sellers.scalars().all()
 
@@ -278,7 +280,9 @@ class DirectorRequests:
 
                 await session.flush()
 
-            await session.delete(seller)
+            # await session.delete(seller)
+            seller.badge = None
+            seller.supervisor = None
             await session.commit()
 
             return res

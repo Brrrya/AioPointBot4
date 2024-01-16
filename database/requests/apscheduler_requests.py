@@ -146,6 +146,7 @@ class APScgedulerRequests:
 
             sellers = await session.execute(
                 select(Sellers)
+                .where(Sellers.badge != None)
             )
             sellers = sellers.scalars().all()
             res_seller = []

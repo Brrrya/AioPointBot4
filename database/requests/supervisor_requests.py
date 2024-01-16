@@ -247,7 +247,7 @@ class SupervisorRequests:
 
     @staticmethod
     async def delete_seller(seller_tgid: int):
-        """Удаляет сотрудника из БД"""
+        """Удаляет у сотрудника СВ и бейдж"""
         async with session_maker() as session:
             shop_with_seller = await session.execute(
                 select(Shops)
@@ -278,7 +278,9 @@ class SupervisorRequests:
                         shop.close_checker = None
 
             seller = await session.get(Sellers, seller_tgid)
-            await session.delete(seller)
+            # await session.delete(seller)
+            seller.badge = None
+            seller.supervisor = None
             await session.commit()
 
         return {
