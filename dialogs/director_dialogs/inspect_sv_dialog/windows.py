@@ -110,14 +110,7 @@ async def close_reports():
 async def close_reports_not_today():
     return Window(
         Const("За какой день показать отчеты?"),
-        Calendar(
-            id='calendar_for_change_plan_',
-            config=CalendarConfig(
-                min_date=date(date.today().year, date.today().month, 1),
-                max_date=date(date.today().year, date.today().month, date.today().day),
-            ),
-            on_click=selected.close_reports_not_today_show
-        ),
+        keyboards.calendar_for_reports(selected.close_reports_not_today_show),
         Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.close_reports_not_today,
         state=states.InspectSupervisorDirector.close_reports_not_today

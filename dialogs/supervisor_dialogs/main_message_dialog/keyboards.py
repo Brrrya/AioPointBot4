@@ -1,6 +1,7 @@
 import operator
+from datetime import date
 
-from aiogram_dialog.widgets.kbd import Group, Button, Row, ScrollingGroup, Select
+from aiogram_dialog.widgets.kbd import Group, Button, Row, ScrollingGroup, Select, Calendar, CalendarConfig
 from aiogram_dialog.widgets.text import Const, Format
 
 
@@ -39,4 +40,15 @@ def structure_changes_kb(
 
     )
 
+
+def calendar_for_reports(on_click):
+    cal = Calendar(
+        id='calendar_for_change_plan_',
+        config=CalendarConfig(
+            min_date=date(date.today().year, date.today().month, 1),
+            max_date=date(date.today().year, date.today().month, date.today().day),
+        ),
+        on_click=on_click
+    )
+    return cal
 
