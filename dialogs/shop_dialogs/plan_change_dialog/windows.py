@@ -17,14 +17,7 @@ from dialogs.shop_dialogs.plan_change_dialog import (
 async def take_date_for_change():
     return Window(
         Const('За какую дату изменить план?'),
-        Calendar(
-            id='calendar_for_change_plan_',
-            config=CalendarConfig(
-                min_date=date(date.today().year, date.today().month, 1),
-                max_date=date(date.today().year, date.today().month, calendar.monthrange(date.today().year, date.today().month)[1]),
-            ),
-            on_click=selected.take_date_for_change
-        ),
+        keyboards.calendar_for_change_plan(selected.take_date_for_change),
         Cancel(Const('❌ Отмена')),
         getter=getters.take_date_for_change,
         state=states.MainMessageChangePlan.take_date_for_change
