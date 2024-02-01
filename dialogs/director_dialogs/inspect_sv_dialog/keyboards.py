@@ -28,10 +28,6 @@ def main_message_kb(
 def calendar_for_reports(on_click):
     cal = Calendar(
         id='calendar_for_change_plan_',
-        config=CalendarConfig(
-            min_date=date(date.today().year, date.today().month, 1),
-            max_date=date(date.today().year, date.today().month, date.today().day),
-        ),
         on_click=on_click
     )
     return cal
