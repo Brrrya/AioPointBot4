@@ -13,6 +13,7 @@ from aiogram_dialog import setup_dialogs
 from commands import register_user_commands
 from commands.bot_commands import all_commands
 from config.config import load_config
+from custom_items.custom_log_formatter import CustomFormatter
 from dialogs import register_all_dialogs
 from service import scheduler
 
@@ -51,10 +52,11 @@ async def main() -> None:
 async def prestart():
     # Создаем файлы логов и запускает логирование
     log_handler = RotatingFileHandler(filename='logs/bot_logs.log', maxBytes=64000000, backupCount=10)
-    log_handler.setFormatter(
-        Formatter("%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s")
-    )
+    formatter = CustomFormatter("%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s",
+                                datefmt='%Y-%m-%d %H:%M:%S %Z')
+    log_handler.setFormatter(formatter)
     log_handler.setLevel(logging.DEBUG)
+
 
     logging.basicConfig(level=logging.DEBUG, filemode='a',
                         format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s", )

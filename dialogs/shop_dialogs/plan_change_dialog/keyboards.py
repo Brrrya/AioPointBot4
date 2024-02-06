@@ -1,4 +1,4 @@
-from custom_widgets.customcalendar import CustomCalendar
+from custom_items.customcalendar import CustomCalendar
 
 
 def calendar_for_change_plan(on_click):

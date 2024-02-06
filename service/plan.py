@@ -7,16 +7,16 @@ import ezodf
 from database.requests.plan_requests import PlanRequests
 
 
-async def update_coefficients(
-        monday: int = 20,
-        tuesday: int = 25,
-        wednesday: int = 25,
-        thursday: int = 28,
-        friday: int = 30,
-        saturday: int = 35,
-        sunday: int = 25
-):
+async def update_coefficients():
     """Обновляем коэффициенты под каждый месяц, так как разная их длина епта"""
+
+    monday: int = 20
+    tuesday: int = 25
+    wednesday: int = 25
+    thursday: int = 28
+    friday: int = 30
+    saturday: int = 35
+    sunday: int = 25
 
     # Получаем текущую дату и определяем количество дней в месяце
     now = datetime.datetime.now()

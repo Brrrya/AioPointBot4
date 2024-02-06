@@ -84,9 +84,6 @@ async def update_all_plans(bot: Bot, setups: setup_dialogs):
     """Обновляет коеффициенты и все планы магазинов в первый день месяца"""
     all_shop_data = await APScgedulerRequests.take_all_shop()
 
-    # Сперва обновляем коеффициенты
-    await update_coefficients()
-
     # Отпарвляем старые планы и обновляем их
     for shop in all_shop_data['all_shops']:
         # формируем старый план для каждого магазина и отправляем его ему
