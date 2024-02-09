@@ -1,7 +1,7 @@
 import logging
 
 from aiogram.types import Message
-from aiogram_dialog import DialogManager
+from aiogram_dialog import DialogManager, StartMode
 
 from database.requests.unknown_requests import UnknownRequests
 from dialogs.seller_dialogs.main_message_dialog.states import MainMessageUser as UserMainMessage
@@ -17,18 +17,18 @@ async def start(message: Message, dialog_manager: DialogManager):
     logging.info(f'Ввел команду /start id={message.from_user.id} username={message.from_user.username}')
     res = await UnknownRequests.user_first_auth(message.from_user.id)
     if res == 'shop':
-        await dialog_manager.start(ShopMainMessage.main_message)
+        await dialog_manager.start(ShopMainMessage.main_message, mode=StartMode.RESET_STACK)
     elif res == 'seller':
         # Проверяет если продавец авторизирован на магазине, выводит основное окно, иначе заглушку
         auth_or_not = await UnknownRequests.user_check_auth(message.from_user.id)
         if auth_or_not is True:
-            await dialog_manager.start(UserMainMessage.main_message)
+            await dialog_manager.start(UserMainMessage.main_message, mode=StartMode.RESET_STACK)
         else:
-            await dialog_manager.start(UserMainMessage.plug)
+            await dialog_manager.start(UserMainMessage.plug, mode=StartMode.RESET_STACK)
     elif res == 'supervisor':
-        await dialog_manager.start(SupervisorMainMessage.main_message)
+        await dialog_manager.start(SupervisorMainMessage.main_message, mode=StartMode.RESET_STACK)
     elif res == 'director':
-        await dialog_manager.start(DirectorMainMessage.main_message)
+        await dialog_manager.start(DirectorMainMessage.main_message, mode=StartMode.RESET_STACK)
 
 
     # elif res == 'admin':
