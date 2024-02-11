@@ -76,7 +76,7 @@ class DirectorRequests:
                 for shop in shops
             ]
 
-            return res
+        return res
 
     @staticmethod
     async def select_all_workers():
@@ -94,7 +94,7 @@ class DirectorRequests:
                 for seller in sellers
             ]
 
-            return res
+        return res
 
 
     @staticmethod
@@ -112,7 +112,7 @@ class DirectorRequests:
                 'badge': seller.badge
             }
 
-            return res
+        return res
 
 
     @staticmethod
@@ -183,7 +183,7 @@ class DirectorRequests:
                 for supervisor in sv
             ]
 
-            return res
+        return res
 
 
     @staticmethod
@@ -215,12 +215,12 @@ class DirectorRequests:
                 for seller in sv.sellers:
                     sellers_count += 1
 
-            return {
-                'some_thing': some_thing,
-                'shops_count': shops_count,
-                'seller_count': sellers_count,
-                'sv_name': f'{sv.last_name} {sv.first_name}'
-            }
+        return {
+            'some_thing': some_thing,
+            'shops_count': shops_count,
+            'seller_count': sellers_count,
+            'sv_name': f'{sv.last_name} {sv.first_name}'
+        }
 
 
     @staticmethod
@@ -285,7 +285,7 @@ class DirectorRequests:
             seller.supervisor = None
             await session.commit()
 
-            return res
+        return res
 
 
     @staticmethod
@@ -305,17 +305,17 @@ class DirectorRequests:
             else:
                 old_sv = await session.get(Supervisors, old_sv_tgid)
 
-            return {
-                'old_sv_data': {
-                    'full_name': f'{old_sv.last_name} {old_sv.first_name}'
-                },
-                'new_sv_data': {
-                    'full_name': f'{new_sv.last_name} {new_sv.first_name}'
-                },
-                'seller_data': {
-                    'full_name': f'{seller.last_name} {seller.first_name}' if all_or_not is True else None
-                }
+        return {
+            'old_sv_data': {
+                'full_name': f'{old_sv.last_name} {old_sv.first_name}'
+            },
+            'new_sv_data': {
+                'full_name': f'{new_sv.last_name} {new_sv.first_name}'
+            },
+            'seller_data': {
+                'full_name': f'{seller.last_name} {seller.first_name}' if all_or_not is True else None
             }
+        }
 
 
     @staticmethod
@@ -363,17 +363,17 @@ class DirectorRequests:
             else:
                 old_sv = await session.get(Supervisors, old_sv_tgid)
 
-            return {
-                'old_sv_data': {
-                    'full_name': f'{old_sv.last_name} {old_sv.first_name}'
-                },
-                'new_sv_data': {
-                    'full_name': f'{new_sv.last_name} {new_sv.first_name}'
-                },
-                'shop_data': {
-                    'full_name': shop.title if all_or_not is True else None
-                }
+        return {
+            'old_sv_data': {
+                'full_name': f'{old_sv.last_name} {old_sv.first_name}'
+            },
+            'new_sv_data': {
+                'full_name': f'{new_sv.last_name} {new_sv.first_name}'
+            },
+            'shop_data': {
+                'full_name': shop.title if all_or_not is True else None
             }
+        }
 
     @staticmethod
     async def transfer_shops(

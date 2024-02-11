@@ -24,7 +24,7 @@ class SellerRequests:
                 'open_or_not': '❌ Закрыт' if data.state is False else '✅ Открыт',
                 'rotate_or_not': '❌ Не сделаны' if data.rotate is False else '✅ Сделаны'
             }
-            return res
+        return res
 
 
     @staticmethod
@@ -124,7 +124,7 @@ class SellerRequests:
                     (i[0], i[1]) for i in who_not_do
                 )
             }
-            return res
+        return res
 
 
     @staticmethod
@@ -171,7 +171,7 @@ class SellerRequests:
                     (i[0], i[1]) for i in who_not_do
                 )
             }
-            return res
+        return res
 
     @staticmethod
     async def checker_reports(
@@ -272,7 +272,7 @@ class SellerRequests:
                 ),
                 'close_report_or_not': close_report_or_not  #  Если все отправили отчёт закрытия то True
             }
-            return res
+        return res
 
 
 

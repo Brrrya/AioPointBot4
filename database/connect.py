@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
 from config.config import load_config
@@ -26,7 +26,7 @@ engine = create_async_engine(
 
 logging.info('Engine was created')
 
-session_maker = async_sessionmaker(engine)
+session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 logging.info('Session was created')
 
 

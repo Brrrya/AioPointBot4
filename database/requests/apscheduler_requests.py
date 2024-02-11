@@ -49,7 +49,7 @@ class APScgedulerRequests:
                 'sv': res_for_sv,
                 'checker': res_for_checker
             }
-            return res
+        return res
 
     @staticmethod
     async def who_not_close_shops():
@@ -72,7 +72,7 @@ class APScgedulerRequests:
                 res[sv.tgid] = (
                     (shop_name,) for shop_name in sv_res
                 )
-            return res
+        return res
 
     @staticmethod
     async def who_not_make_rotate():
@@ -116,7 +116,7 @@ class APScgedulerRequests:
                 'sv': res_for_sv,
                 'checker': res_for_checker
             }
-            return res
+        return res
 
     @staticmethod
     async def reset_all_everyday():

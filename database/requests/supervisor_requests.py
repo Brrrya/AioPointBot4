@@ -59,7 +59,7 @@ class SupervisorRequests:
                     if photo:
                         res.append((photo.photo_tgid, shop.title))
 
-            return res
+        return res
 
     @staticmethod
     async def take_all_open_shops(sv_tgid: int):
@@ -79,12 +79,12 @@ class SupervisorRequests:
                     open_or_not = False
                     close_shop.append(shop.title)
 
-            return{
-                'all_not_open': (
-                    (shop,) for shop in close_shop
-                ),
-                'open_or_not': open_or_not
-            }
+        return{
+            'all_not_open': (
+                (shop,) for shop in close_shop
+            ),
+            'open_or_not': open_or_not
+        }
 
     @staticmethod
     async def take_all_rotate_shops(sv_tgid: int):
@@ -104,12 +104,12 @@ class SupervisorRequests:
                     rotate_or_not = False
                     not_rotate_shop.append(shop.title)
 
-            return{
-                'all_not_rotate': (
-                    (shop,) for shop in not_rotate_shop
-                ),
-                'rotate_or_not': rotate_or_not
-            }
+        return{
+            'all_not_rotate': (
+                (shop,) for shop in not_rotate_shop
+            ),
+            'rotate_or_not': rotate_or_not
+        }
 
     @staticmethod
     async def take_all_sellers(sv_tgid: int):
@@ -137,11 +137,11 @@ class SupervisorRequests:
                 .order_by(Supervisors.last_name)
             )
             supervisors = supervisors.scalars().all()
-            return {
-                'supervisors': (
-                    (f'{supervisor.last_name} {supervisor.first_name}', supervisor.tgid) for supervisor in supervisors
-                )
-            }
+        return {
+            'supervisors': (
+                (f'{supervisor.last_name} {supervisor.first_name}', supervisor.tgid) for supervisor in supervisors
+            )
+        }
     @staticmethod
     async def take_data_for_seller_transfer(sv_tgid: int, seller_tgid: int | None):
         """Возвращает информацию о выбранных управляющем и продавце"""
@@ -150,10 +150,10 @@ class SupervisorRequests:
                 seller = await session.get(Sellers, seller_tgid)
             sv = await session.get(Supervisors, sv_tgid)
 
-            return {
-                'sv_name': f'{sv.last_name} {sv.first_name}',
-                'seller_name': f'{seller.last_name} {seller.first_name}' if seller_tgid else None
-            }
+        return {
+            'sv_name': f'{sv.last_name} {sv.first_name}',
+            'seller_name': f'{seller.last_name} {seller.first_name}' if seller_tgid else None
+        }
 
 
     @staticmethod
@@ -225,10 +225,10 @@ class SupervisorRequests:
                 shop = await session.get(Shops, shop_tgid)
             sv = await session.get(Supervisors, sv_tgid)
 
-            return {
-                'sv_name': f'{sv.last_name} {sv.first_name}',
-                'shop_title': shop.title if shop_tgid else None
-            }
+        return {
+            'sv_name': f'{sv.last_name} {sv.first_name}',
+            'shop_title': shop.title if shop_tgid else None
+        }
 
     @staticmethod
     async def take_data_about_seller_by_tgid(seller_tgid: int):
@@ -239,11 +239,11 @@ class SupervisorRequests:
                 .where(Sellers.tgid == seller_tgid)
             )
             seller = seller.scalar()
-            return {
-                'full_name': f"{seller.last_name} {seller.first_name}",
-                'tgid': seller.tgid,
-                'sv': seller.supervisor
-            }
+        return {
+            'full_name': f"{seller.last_name} {seller.first_name}",
+            'tgid': seller.tgid,
+            'sv': seller.supervisor
+        }
 
     @staticmethod
     async def delete_seller(seller_tgid: int):
@@ -326,7 +326,7 @@ class SupervisorRequests:
                     (checker[0], checker[1], checker[2]) for checker in checker_data
                 )
             }
-            return res
+        return res
 
 
     @staticmethod
@@ -335,9 +335,9 @@ class SupervisorRequests:
         async with session_maker() as session:
             shop = await session.get(Shops, shop_tgid)
 
-            return {
-                'shop_title': shop.title
-            }
+        return {
+            'shop_title': shop.title
+        }
 
     @staticmethod
     async def update_checker(

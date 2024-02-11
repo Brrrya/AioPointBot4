@@ -30,7 +30,7 @@ class ShopRequests:
                 'open_or_not': '❌ Закрыт' if shop.state is False else '✅ Открыт',
                 'rotate_or_not': '❌ Не сделаны' if shop.rotate is False else '✅ Сделаны'
             }
-            return res
+        return res
 
     @staticmethod
     async def worker_authorization_on_shop(worker_badge: int, shop_tgid: int):
