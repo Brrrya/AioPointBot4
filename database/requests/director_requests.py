@@ -58,7 +58,7 @@ class DirectorRequests:
                         'rotate_shop': sv_rotate_shop_count
                     }
 
-            return res
+        return res
 
 
     @staticmethod
