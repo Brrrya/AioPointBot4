@@ -61,7 +61,6 @@ async def fridges_off_photos(dialog_manager: DialogManager, **kwargs):
     return res
 
 
-
 async def close_reports(dialog_manager: DialogManager, **kwargs):
     logging.info('Загружено окно <Supervisor.main_dialog.close_reports>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')

@@ -48,5 +48,7 @@ async def all_director_dialogs():
             await inspect_sv_window.close_reports(),
             await inspect_sv_window.close_reports_not_today(),
             await inspect_sv_window.close_reports_not_today_show(),
+            await inspect_sv_window.fridges_on_photos(),
+            await inspect_sv_window.fridges_off_photos()
         ),
     ]
