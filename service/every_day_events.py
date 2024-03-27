@@ -79,6 +79,8 @@ async def reset_all_shops(setups: setup_dialogs, bot: Bot):
         except:
             pass
 
+        #branch test
+
 
 async def update_all_plans(bot: Bot, setups: setup_dialogs):
     """Обновляет коеффициенты и все планы магазинов в первый день месяца"""
