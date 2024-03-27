@@ -19,6 +19,7 @@ async def main_message():
         Format("Управляющий - {supervisor}"),
         Format("Магазин - {open_or_not}"),
         Format("Ротации - {rotate_or_not}"),
+        Format("Холодильники - {fridges_or_not}"),
         keyboards.main_message_kb(
             auth=selected.go_to_authorization,
             register=selected.go_to_registration,
