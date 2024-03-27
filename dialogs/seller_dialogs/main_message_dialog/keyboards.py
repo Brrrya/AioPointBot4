@@ -10,8 +10,8 @@ def main_message_kb(open_shop, close_shop, rotate_shop, on_fridges, off_fridges)
             Button(Const('📱 Ротации'), on_click=rotate_shop, id='rotate_shop'),
             ),
         Row(
-            Button(Const('📱 Вкл. холодильник'), on_click=on_fridges, id='on_fridges_shop'),
-            Button(Const('🔑 Выкл. холодильник'), on_click=off_fridges, id='off_fridges_shop'),
+            Button(Const('⚡️ Вкл. холодильники'), on_click=on_fridges, id='on_fridges_shop'),
+            Button(Const('⭕️ Выкл. холодильники'), on_click=off_fridges, id='off_fridges_shop'),
         ),
         Row(
             Button(Const('🔒 Закрыть'), on_click=close_shop, id='close_shop'),

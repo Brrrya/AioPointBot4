@@ -29,7 +29,7 @@ class ShopRequests:
                 'supervisor_tgid': shop.supervisor,
                 'open_or_not': '❌ Закрыт' if shop.state is False else '✅ Открыт',
                 'rotate_or_not': '❌ Не сделаны' if shop.rotate is False else '✅ Сделаны',
-                'fridges_or_not': '❌ Выключены' if shop.fridges_state is False else '✅ Включены'
+                'fridges_or_not': '⭕️ Выключены' if shop.fridges_state is False else '⚡️ Включены'
             }
         return res
 

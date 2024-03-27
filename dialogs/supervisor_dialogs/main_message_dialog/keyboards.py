@@ -22,8 +22,8 @@ def main_message_kb(
             Button(Const('📱 Фото ротаций'), id='sv_main_message_rotate', on_click=rotate_photo),
         ),
         Row(
-            Button(Const('🔐 Фото вкл ХО'), id='sv_main_message_fridges_on', on_click=fridges_on),
-            Button(Const('📱 Фото выкл ХО'), id='sv_main_message_fridges_off', on_click=fridges_off),
+            Button(Const('⚡️ Фото вкл ХО'), id='sv_main_message_fridges_on', on_click=fridges_on),
+            Button(Const('⭕️ Фото выкл ХО'), id='sv_main_message_fridges_off', on_click=fridges_off),
         ),
 
         Button(Const('📒 Отчеты закрытия'), id='close_reports', on_click=close_reports),

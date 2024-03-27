@@ -23,7 +23,7 @@ class SellerRequests:
                 'supervisor': f"{supervisor.first_name} {supervisor.last_name}",
                 'open_or_not': '❌ Закрыт' if data.state is False else '✅ Открыт',
                 'rotate_or_not': '❌ Не сделаны' if data.rotate is False else '✅ Сделаны',
-                'fridges_or_not': '❌ Выключены' if data.fridges_state is False else '✅ Включены'
+                'fridges_or_not': '⭕️ Выключены' if data.fridges_state is False else '⚡️ Включены'
             }
 
         return res

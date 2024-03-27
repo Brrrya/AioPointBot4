@@ -18,9 +18,10 @@ async def main_message(dialog_manager: DialogManager, **kwargs):
 
 
     for sv in data['sv_data']:
-        text += f'{sv}\n'
-        text += f'Открыто {data["sv_data"][sv]["open_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
-        text += f'Ротации {data["sv_data"][sv]["rotate_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
+        text += f'👤 {sv}\n'
+        text += f'Открыто - {data["sv_data"][sv]["open_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
+        text += f'Ротации - {data["sv_data"][sv]["rotate_shop"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
+        text += f'ХО включено - {data["sv_data"][sv]["fridges_on"]} из {data["sv_data"][sv]["all_shop_count"]}\n'
         text += '\n'
 
     return {'main_message_text': text}

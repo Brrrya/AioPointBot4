@@ -40,6 +40,7 @@ class DirectorRequests:
             for sv in sv_data:
                 sv_open_shop_count = 0
                 sv_rotate_shop_count = 0
+                sv_fridges_on_count = 0
                 sv_shop_count = 0
 
                 for shop in sv.shops:
@@ -48,6 +49,8 @@ class DirectorRequests:
                         sv_open_shop_count += 1
                     if shop.rotate is True:
                         sv_rotate_shop_count += 1
+                    if shop.fridges_state is True:
+                        sv_fridges_on_count += 1
 
                     sv_shop_count += 1
 
@@ -55,7 +58,8 @@ class DirectorRequests:
                     {
                         'all_shop_count': sv_shop_count,
                         'open_shop': sv_open_shop_count,
-                        'rotate_shop': sv_rotate_shop_count
+                        'rotate_shop': sv_rotate_shop_count,
+                        'fridges_on': sv_fridges_on_count
                     }
 
         return res

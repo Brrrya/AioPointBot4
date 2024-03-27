@@ -36,4 +36,4 @@ async def register_command_check_reg_code(message: Message, state: FSMContext) -
 async def my_state(message: Message, state: FSMContext) -> None:
     """Отладочная функция"""
     print(await state.get_state())
-    await message.answer('Test answer')
+    await message.answer('Answer in consol')

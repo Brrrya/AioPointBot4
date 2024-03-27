@@ -25,7 +25,7 @@ class SupervisorRequests:
                      '❌ отсутствует' if shop.worker is None else f'✅ {shop.seller.first_name} {shop.seller.last_name}',
                      "❌ закрыт" if shop.state is False else '✅ открыт',
                      "❌ не сделаны" if shop.rotate is False else '✅ сделаны',
-                     "❌ выключены" if shop.fridges_state is False else '✅ включены')
+                     "⭕️ выключены" if shop.fridges_state is False else '⚡️ включены')
                     for shop in supervisor.shops
                 ),
                 'no_shops': False if supervisor.shops else True
