@@ -19,13 +19,13 @@ class SupervisorRequests:
             )
             supervisor = supervisor.scalar()
 
-
             result: dict = {
                 'shops_data': (
                     (shop.title,
                      '❌ отсутствует' if shop.worker is None else f'✅ {shop.seller.first_name} {shop.seller.last_name}',
                      "❌ закрыт" if shop.state is False else '✅ открыт',
-                     "❌ не сделаны" if shop.rotate is False else '✅ сделаны')
+                     "❌ не сделаны" if shop.rotate is False else '✅ сделаны',
+                     "❌ выключены" if shop.fridges_state is False else '✅ включены')
                     for shop in supervisor.shops
                 ),
                 'no_shops': False if supervisor.shops else True
@@ -428,6 +428,80 @@ class SupervisorRequests:
             'who_not_send': who_not_send_report
         }
         return full_res
+
+    @staticmethod
+    async def take_fridges_photos(sv_tgid: int, photos_action: bool, photos_date: datetime.date | None = None):
+        """
+        :param sv_tgid:
+        :param photos_action: True == fridges_on, False == fridges_off
+        :param photos_date:
+        :return:
+        """
+        if photos_date is None:
+            photos_date = datetime.datetime.today().date()
+        """Возвращает фото холодильников"""
+        async with session_maker() as session:
+            # Получаем список магазинов СВ
+            shops = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.supervisor == sv_tgid)
+                )
+                .order_by(Shops.title)
+            )
+            shops = shops.scalars().all()
+
+            photos_actions_text = 'fridges_on' if photos_action is True else 'fridges_off'
+
+            result = {}
+            who_not_do = []
+            counter = 0
+            for shop in shops:
+                if shop.fridges_state is photos_action:
+
+                    photos = await session.execute(  # Получаем фото холодильников
+                        select(Photos)
+                        .where(
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.action == photos_actions_text)
+                            & (
+                                (Photos.p_date == photos_date)
+                                |
+                                (Photos.p_date == (photos_date - datetime.timedelta(days=1)))
+
+                            )
+                        )
+                    )
+                    photos = photos.scalars().all()
+
+                    photo_list_previous_day = []
+                    photo_list_current_day = []
+
+                    if photos:
+                        for photo in photos:
+                            if photo.p_date == photos_date:
+                                photo_list_current_day.append(photo.photo_tgid)  # Добавляем эти фото в список
+                            else:
+                                photo_list_previous_day.append(photo.photo_tgid)
+
+                    result.update(
+                        {
+                            counter: {
+                                'shop_name': shop.title,
+                                'photos': photo_list_current_day if photo_list_current_day else photo_list_previous_day,
+                            }
+                        }
+                    )
+                    counter += 1
+
+                else:
+                    who_not_do.append(shop.title)
+        full_res = {
+            'reports': result,
+            'who_not_send': who_not_do
+        }
+        return full_res
+
 
 
 

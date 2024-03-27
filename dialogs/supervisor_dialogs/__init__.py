@@ -18,6 +18,8 @@ async def all_supervisor_dialogs():
             await main_windows.close_reports(),
             await main_windows.close_reports_not_today(),
             await main_windows.close_reports_not_today_show(),
+            await main_windows.fridges_on_photos(),
+            await main_windows.fridges_off_photos(),
 
             on_process_result=main_windows.on_process_result,
         ),

@@ -32,6 +32,7 @@ async def main_message():
                             Format(' Сотрудник - {item[1]}'),
                             Format(' Магазин - {item[2]}'),
                             Format(' Ротации - {item[3]}'),
+                            Format(' Состояние ХО - {item[4]}'),
                             Const(' ')
                         ),
                         items='shops_data',
@@ -46,7 +47,9 @@ async def main_message():
             refresh_main_message=selected.refresh_main_message,
             change_structure=selected.change_structure,
             close_reports=selected.close_reports,
-            close_reports_not_today=selected.close_reports_not_today
+            close_reports_not_today=selected.close_reports_not_today,
+            fridges_on=selected.fridge_on_photos,
+            fridges_off=selected.fridge_off_photos,
         ),
 
         getter=getters.main_message,
@@ -95,6 +98,50 @@ async def rotate_photos():
         Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
         getter=getters.rotate_photos,
         state=states.MainMessageSupervisor.rotate_photos
+    )
+
+
+async def fridges_on_photos():
+    return Window(
+        Case(
+            {
+                True: Const('Все холодильники включены!'),
+                False: Multi(
+                    Const('Не включили ХО ещё:'),
+                    List(
+                        Format('{item[0]}'),
+                        items='all_not_fridge_on'
+                    )
+                )
+            },
+            selector='fridge_on_or_off'
+        ),
+        Button(Const('🔄 Обновить'), id='take_fridge_on_photos_sv', on_click=selected.fridge_on_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        getter=getters.fridges_on_photos,
+        state=states.MainMessageSupervisor.fridge_on_photos
+    )
+
+
+async def fridges_off_photos():
+    return Window(
+        Case(
+            {
+                True: Const('Все холодильники выключены!'),
+                False: Multi(
+                    Const('Не выключили ХО ещё:'),
+                    List(
+                        Format('{item[0]}'),
+                        items='all_not_fridge_off'
+                    )
+                )
+            },
+            selector='fridge_off_or_on'
+        ),
+        Button(Const('🔄 Обновить'), id='take_fridge_off_photos_sv', on_click=selected.fridge_off_photos),
+        Button(Const('⬅️ Назад'), id='back_to_main_message_sv', on_click=selected.back_to_main_message),
+        getter=getters.fridges_off_photos,
+        state=states.MainMessageSupervisor.fridge_off_photos
     )
 
 

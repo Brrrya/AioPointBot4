@@ -50,6 +50,56 @@ async def rotate_photos(c: CallbackQuery, widget: Button, manager: DialogManager
     await manager.switch_to(state=states_main_message.MainMessageSupervisor.rotate_photos, show_mode=ShowMode.SEND)
 
 
+async def fridge_on_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку получения фото вкл ХО id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+
+    all_data = await SupervisorRequests.take_fridges_photos(int(c.from_user.id), photos_action=True)
+    reports = all_data.get('reports')
+    keys = reports.keys()
+    for key in keys:
+        text = reports[key]["shop_name"]
+
+        media = MediaGroupBuilder()
+        for photo in reports[key]['photos']:
+            media.add_photo(photo)
+
+        await c.message.answer(text)
+        await c.message.answer_media_group(media.build())
+
+    ctx.dialog_data.update(who_not_fridge_on=all_data.get('who_not_send'))
+
+    await manager.switch_to(state=states_main_message.MainMessageSupervisor.fridge_on_photos, show_mode=ShowMode.SEND)
+
+
+async def fridge_off_photos(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку получения фото выкл ХО id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+
+    all_data = await SupervisorRequests.take_fridges_photos(int(c.from_user.id), photos_action=False)
+    reports = all_data.get('reports')
+    keys = reports.keys()
+    for key in keys:
+        text = reports[key]["shop_name"]
+
+        media = MediaGroupBuilder()
+        for photo in reports[key]['photos']:
+            media.add_photo(photo)
+
+        await c.message.answer(text)
+
+        if reports[key]['photos']:
+            await c.message.answer_media_group(media.build())
+        else:
+            await c.message.answer_photo('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/800px-Image_not_available.png?20210219185637')
+
+    ctx.dialog_data.update(who_not_fridge_off=all_data.get('who_not_send'))
+
+    await manager.switch_to(state=states_main_message.MainMessageSupervisor.fridge_off_photos, show_mode=ShowMode.SEND)
+
+
 async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager):
     logging.info(f'СВ | Нажал кнопку получения отчетов закрытия id={c.from_user.id} username={c.from_user.username}')
 

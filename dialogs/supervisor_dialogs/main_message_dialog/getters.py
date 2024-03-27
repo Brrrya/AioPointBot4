@@ -29,6 +29,39 @@ async def rotate_photos(dialog_manager: DialogManager, **kwargs):
     return result
 
 
+async def fridges_on_photos(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Supervisor.main_dialog.fridges_on_photos>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+
+    ctx = dialog_manager.current_context()
+
+    res = {
+        'all_not_fridge_on': (
+            (shop_name,) for shop_name in ctx.dialog_data.get('who_not_fridge_on')  # Список ещё не отправивших фото вкл ХО
+        ),
+        'fridge_on_or_off': False if ctx.dialog_data.get('who_not_fridge_on') else True  # Если все отправили фото вкл ХО то True
+    }
+
+    return res
+
+
+async def fridges_off_photos(dialog_manager: DialogManager, **kwargs):
+    logging.info('Загружено окно <Supervisor.main_dialog.fridges_off_photos>'
+                 f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')
+
+    ctx = dialog_manager.current_context()
+
+    res = {
+        'all_not_fridge_off': (
+            (shop_name,) for shop_name in ctx.dialog_data.get('who_not_fridge_off')  # Список ещё не отправивших фото вкл ХО
+        ),
+        'fridge_off_or_on': False if ctx.dialog_data.get('who_not_fridge_off') else True  # Если все отправили фото вкл ХО то True
+    }
+
+    return res
+
+
+
 async def close_reports(dialog_manager: DialogManager, **kwargs):
     logging.info('Загружено окно <Supervisor.main_dialog.close_reports>'
                  f' id={dialog_manager.event.from_user.id} username={dialog_manager.event.from_user.username}')

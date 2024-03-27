@@ -8,6 +8,9 @@ class MainMessageSupervisor(StatesGroup):
     open_photos = State()
     rotate_photos = State()
 
+    fridge_on_photos = State()
+    fridge_off_photos = State()
+
     close_reports = State()
 
     checkers = State()
