@@ -65,6 +65,7 @@ class Shops(Base):
     open_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
     rotate_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
     close_checker = Column(ForeignKey('sellers.tgid'), nullable=True)
+    fridges_state = Column(Boolean(), default=False, nullable=False)
 
     seller = relationship('Sellers', foreign_keys='Shops.worker')
     sv = relationship('Supervisors', back_populates='shops')

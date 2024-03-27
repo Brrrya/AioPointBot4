@@ -22,15 +22,17 @@ class SellerRequests:
                 'worker': f"✅ {worker.first_name} {worker.last_name}" if worker else "❌ Отсутствует",
                 'supervisor': f"{supervisor.first_name} {supervisor.last_name}",
                 'open_or_not': '❌ Закрыт' if data.state is False else '✅ Открыт',
-                'rotate_or_not': '❌ Не сделаны' if data.rotate is False else '✅ Сделаны'
+                'rotate_or_not': '❌ Не сделаны' if data.rotate is False else '✅ Сделаны',
+                'fridges_or_not': '❌ Выключены' if data.fridges_state is False else '✅ Включены'
             }
+
         return res
 
 
     @staticmethod
     async def insert_photo(seller_tgid: int, action: str, photos_tgid: list[str]):
         """Вставляет фото в БД с текущей датой
-        Из действий open, rotate, close"""
+        Из действий open, rotate, close, fridges_on, fridges_off"""
         async with session_maker() as session:
             photo_list = []
             shop = await session.execute(select(Shops).where(Shops.worker == seller_tgid))
@@ -47,6 +49,10 @@ class SellerRequests:
                 shop.rotate = False
                 shop.state = False
                 shop.worker = None
+            elif action == 'fridges_on':
+                shop.fridges_state = True
+            elif action == 'fridges_off':
+                shop.fridges_state = False
             await session.commit()
 
     @staticmethod

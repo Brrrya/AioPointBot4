@@ -17,3 +17,5 @@ class MainMessageUser(StatesGroup):
 
     update_plan_choice_day = State()
 
+    fridges_on_photos = State()
+    fridges_off_photos = State()

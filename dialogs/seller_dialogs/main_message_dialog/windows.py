@@ -51,11 +51,14 @@ async def main_message():
         Format("Управляющий - {supervisor}"),
         Format("Магазин - {open_or_not}"),
         Format("Ротации - {rotate_or_not}"),
+        Format("Холодильники - {fridges_or_not}"),
         MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close'})),
         keyboards.main_message_kb(
             open_shop=selected.open_button,
             rotate_shop=selected.rotate_button,
             close_shop=selected.close_button,
+            on_fridges=selected.on_fridges_button,
+            off_fridges=selected.off_fridges_button
         ),
         getter=getters.main_message,
         state=states.MainMessageUser.main_message,
@@ -103,5 +106,41 @@ async def rotate_photo_confirm():
         Back(Const('⬅️ Нет')),
         getter=getters.rotate_photo_confirm,
         state=states.MainMessageUser.rotate_photo_confirm
+    )
+
+
+async def fridges_on_take_photo():
+    return Window(
+        Const('Отправьте фотографии включенных холодильников'),
+        DynamicMedia(selector="media"),
+
+        keyboards.take_photos_on_fridges_shop(on_delete=selected.on_delete_fridges_photo_on,
+                                              send_report=selected.send_report_fridges_on_photo,
+                                              go_back=selected.to_main_message
+                                              ),
+
+        MessageInput(content_types=[ContentType.PHOTO], func=selected.input_photo_fridges_on),
+
+
+        getter=getters.take_photos_on,
+        state=states.MainMessageUser.fridges_on_photos
+    )
+
+
+async def fridges_off_take_photo():
+    return Window(
+        Const('Отправьте фотографии выключенных холодильников'),
+        DynamicMedia(selector="media"),
+
+        keyboards.take_photos_on_fridges_shop(on_delete=selected.on_delete_fridges_photo_off,
+                                              send_report=selected.send_report_fridges_off_photo,
+                                              go_back=selected.to_main_message
+                                              ),
+
+        MessageInput(content_types=[ContentType.PHOTO], func=selected.input_photo_fridges_off),
+
+
+        getter=getters.take_photos_off,
+        state=states.MainMessageUser.fridges_off_photos
     )
 

@@ -14,6 +14,8 @@ async def all_shop_dialogs():
             await main_windows.rotate_photo(),
             await main_windows.rotate_photo_confirm(),
             await main_windows.register_command(),
+            await main_windows.fridges_on_take_photo(),
+            await main_windows.fridges_off_take_photo(),
 
             on_process_result=main_windows.on_process_result,
         ),

@@ -4,6 +4,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 
 from aiogram_dialog import DialogManager
+from aiogram_dialog.widgets.common import ManagedScroll
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.input import MessageInput
 
@@ -154,4 +155,89 @@ async def close_button(c: CallbackQuery, widget: MessageInput, manager: DialogMa
 
     await manager.start(states_close_dialog.MainMessageUserClose.close_take_rto,
                         data={'shop_tgid': ctx.dialog_data.get('shop_tgid')})
+
+
+async def on_fridges_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Продавец | Нажал кнопку включения ХО id={c.from_user.id} username={c.from_user.username}')
+    await manager.switch_to(states_main_message.MainMessageUser.fridges_on_photos)
+
+
+async def off_fridges_button(c: CallbackQuery, widget: MessageInput, manager: DialogManager):
+    logging.info(f'Продавец | Нажал кнопку выключения ХО id={c.from_user.id} username={c.from_user.username}')
+    await manager.switch_to(states_main_message.MainMessageUser.fridges_off_photos)
+
+
+async def on_delete_fridges_photo_on(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Удалил фото включенных ХО id={callback.from_user.id} username={callback.from_user.username}')
+
+    scroll: ManagedScroll = dialog_manager.find("pages")
+    media_number = await scroll.get_page()
+    photos = dialog_manager.dialog_data.get("photos_on", [])
+    del photos[media_number]
+    if media_number > 0:
+        await scroll.set_page(media_number - 1)
+
+
+async def on_delete_fridges_photo_off(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Удалил фото выключенных ХО id={callback.from_user.id} username={callback.from_user.username}')
+
+    scroll: ManagedScroll = dialog_manager.find("pages")
+    media_number = await scroll.get_page()
+    photos = dialog_manager.dialog_data.get("photos_off", [])
+    del photos[media_number]
+    if media_number > 0:
+        await scroll.set_page(media_number - 1)
+
+
+async def input_photo_fridges_on(message: Message, widget: MessageInput, dialog_manager: DialogManager):
+    logging.info(f'Вставил фотографию включенных ХО id={message.from_user.id} username={message.from_user.username}')
+
+    dialog_manager.dialog_data.setdefault("photos_on", []).append(
+        (message.photo[-1].file_id, message.photo[-1].file_unique_id),
+    )
+
+
+async def input_photo_fridges_off(message: Message, widget: MessageInput, dialog_manager: DialogManager):
+    logging.info(f'Вставил фотографию выключенных ХО id={message.from_user.id} username={message.from_user.username}')
+
+    dialog_manager.dialog_data.setdefault("photos_off", []).append(
+        (message.photo[-1].file_id, message.photo[-1].file_unique_id),
+    )
+
+
+async def send_report_fridges_on_photo(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Отправил фотографии включенных ХО id={callback.from_user.id} username={callback.from_user.username}')
+
+    ctx = dialog_manager.current_context()
+    photos = ctx.dialog_data.get('photos_on')
+    photos_to_send = []
+    for photo in photos:
+        photos_to_send.append(photo[0])
+
+    dialog_manager.dialog_data.setdefault("photos_on", []).clear()
+
+    await SellerRequests.insert_photo(callback.from_user.id, 'fridges_on', photos_to_send)
+    shop = await SellerRequests.take_main_window_info(callback.from_user.id)
+    await dialog_manager.bg(shop['shop_tgid'], shop['shop_tgid']).update(data=dialog_manager.start_data)
+    await callback.message.answer('Сохранено!')
+    await dialog_manager.switch_to(states_main_message.MainMessageUser.main_message)
+
+
+async def send_report_fridges_off_photo(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+    logging.info(f'Отправил фотографии выкл ХО id={callback.from_user.id} username={callback.from_user.username}')
+
+    ctx = dialog_manager.current_context()
+    photos = ctx.dialog_data.get('photos_off')
+    photos_to_send = []
+    for photo in photos:
+        photos_to_send.append(photo[0])
+
+    dialog_manager.dialog_data.setdefault("photos_off", []).clear()
+
+    await SellerRequests.insert_photo(callback.from_user.id, 'fridges_off', photos_to_send)
+    shop = await SellerRequests.take_main_window_info(callback.from_user.id)
+    await dialog_manager.bg(shop['shop_tgid'], shop['shop_tgid']).update(data=dialog_manager.start_data)
+    await callback.message.answer('Сохранено!')
+    await dialog_manager.switch_to(states_main_message.MainMessageUser.main_message)
+
 
