@@ -358,6 +358,8 @@ class SupervisorRequests:
                 shop.rotate_checker = seller_tgid
             elif role == 'close':
                 shop.close_checker = seller_tgid
+            elif role == 'fridges':
+                shop.fridges_checker = seller_tgid
 
             await session.commit()
 

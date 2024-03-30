@@ -34,6 +34,14 @@ async def change_rotate(c: CallbackQuery, widget: Button, manager: DialogManager
     await manager.switch_to(states.ChangeCheckerSupervisor.select_shop)
 
 
+async def change_on_fridges(c: CallbackQuery, widget: Button, manager: DialogManager):
+    logging.info(f'СВ | Нажал кнопку изменить проверяющего Вкл/Выкл ХО id={c.from_user.id} username={c.from_user.username}')
+
+    ctx = manager.current_context()
+    ctx.dialog_data.update(checker_role='fridges')
+    await manager.switch_to(states.ChangeCheckerSupervisor.select_shop)
+
+
 async def select_shop_checker(c: CallbackQuery, widget: Button, manager: DialogManager, item_id: str):
     logging.info(f'СВ | Выбрал магазин для изменения проверяющего - {item_id} id={c.from_user.id} username={c.from_user.username}')
 

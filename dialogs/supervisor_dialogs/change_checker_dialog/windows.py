@@ -17,7 +17,10 @@ async def select_role_checker():
         Row(
             Button(Const('🔐 Открытие'), id='change_open_checker', on_click=selected.change_open),
             Button(Const('📱 Ротации'), id='change_rotate_checker', on_click=selected.change_rotate),
+        ),
+        Row(
             Button(Const('📒 Закрытия'), id='change_close_checker', on_click=selected.change_close),
+            Button(Const('⚡️ Вкл/Выкл ХО'), id='change_fridges_checker', on_click=selected.change_on_fridges),
         ),
         Cancel(Const('❌ Отмена')),
         getter=getters.select_role_checker,
