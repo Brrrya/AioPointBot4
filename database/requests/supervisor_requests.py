@@ -277,6 +277,9 @@ class SupervisorRequests:
                     if shop.close_checker == seller_tgid:
                         shop.close_checker = None
 
+                    if shop.firdges_checker == seller_tgid:
+                        shop.fridges_checker = None
+
             seller = await session.get(Sellers, seller_tgid)
             # await session.delete(seller)
             seller.badge = None

@@ -158,6 +158,9 @@ class DirectorRequests:
                     if shop.close_checker == seller.tgid:
                         shop.close_checker = None
 
+                    if shop.fridges_checker == seller.tgid:
+                        shop.fridges_checker = None
+
                 await session.flush()
 
             session.add(Supervisors(
@@ -281,6 +284,9 @@ class DirectorRequests:
 
                     if shop.close_checker == seller.tgid:
                         shop.close_checker = None
+
+                    if shop.fridges_checker == seller.tgid:
+                        shop.fridges_checker = None
 
                 await session.flush()
 
