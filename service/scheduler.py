@@ -23,9 +23,10 @@ async def create_tasks(bot: Bot, setups: setup_dialogs):
                       day='01', hour='00', minute='09')  # Обновление коефов
     scheduler.add_job(every_day_events.update_all_plans, trigger='cron',
                       day='01', hour='00', minute='10', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
-
-
-    # await update_coefficients()
+    scheduler.add_job(every_day_events.who_not_turn_on_fridges, trigger='cron',
+                      hour='11', minute='30', kwargs={'bot': bot})  # предупреждение о не включивших ХО
+    scheduler.add_job(every_day_events.who_not_turn_off_fridges, trigger='cron',
+                      hour='19', minute='30', kwargs={'bot': bot})  # предупреждение о не выключивших ХО
 
     scheduler.start()
 

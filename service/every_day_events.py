@@ -96,6 +96,39 @@ async def update_all_plans(bot: Bot, setups: setup_dialogs):
         await PlanRequests.update_plan(1000000, 100000, 1000, shop[1])
 
 
+async def who_not_turn_on_fridges(bot: Bot):
+    """Рассылает предупреждение всем управляющим и проверяющим о не включивших ХО магазинах"""
+    data = await APScgedulerRequests.turn_fridges(action=False)
+
+    for sv in data['sv']:
+        text = 'Не включили ХО ещё:\n'
+        for shop in data['sv'][sv]:
+            text += f'{shop[0]}\n'
+        await bot.send_message(sv, str(text))
+
+    for checker in data['checker']:
+        text = 'Не включили ХО ещё:\n'
+        for shop in data['checker'][checker]:
+            text += shop + '\n'
+        await bot.send_message(checker, str(text))
+
+
+async def who_not_turn_off_fridges(bot: Bot):
+    """Рассылает предупреждение всем управляющим и проверяющим о не выключивших ХО магазинах"""
+    data = await APScgedulerRequests.turn_fridges(action=True)
+
+    for sv in data['sv']:
+        text = 'Не выключили ХО ещё:\n'
+        for shop in data['sv'][sv]:
+            text += f'{shop[0]}\n'
+        await bot.send_message(sv, str(text))
+
+    for checker in data['checker']:
+        text = 'Не выключили ХО ещё:\n'
+        for shop in data['checker'][checker]:
+            text += shop + '\n'
+        await bot.send_message(checker, str(text))
+
 # if __name__ == '__main__':
 #     asyncio.run(not_open_shop_warning())
 

@@ -186,5 +186,68 @@ class APScgedulerRequests:
             }
         return res
 
+
+    @staticmethod
+    async def turn_fridges(action: bool):
+        """action True - Вкл ХО, action False - Выкл ХО"""
+        """Собирает список тех, кто ещё не Вкл/Выкл ХО для управляющего и проверяюшего"""
+        async with session_maker() as session:
+            sv_all = await session.execute(
+                select(Supervisors)
+                .options(selectinload(Supervisors.shops))
+            )
+            sv_all = sv_all.scalars().all()
+
+            res_for_sv = {}
+            for sv in sv_all:
+                sv_res = []
+                for shop in sv.shops:
+                    if action is True:
+                        if shop.fridges_state is True:
+                            sv_res.append(shop.title)
+                    else:
+                        if shop.fridges_state is False:
+                            sv_res.append(shop.title)
+
+                res_for_sv[sv.tgid] = (
+                    (shop_name,) for shop_name in sv_res
+                )
+
+            if action is True:
+                all_shop = await session.execute(
+                    select(Shops)
+                    .where(
+                        (Shops.fridges_checker != None)
+                        & (Shops.fridges_state == True)
+                    )
+                    .order_by(Shops.title)
+                )
+            else:
+                all_shop = await session.execute(
+                    select(Shops)
+                    .where(
+                        (Shops.fridges_checker != None)
+                        & (Shops.fridges_state == False)
+                    )
+                    .order_by(Shops.title)
+                )
+            all_shop = all_shop.scalars().all()
+
+            res_for_checker = {}
+            for shop in all_shop:
+                keys = res_for_checker.keys()
+                if shop.fridges_checker in keys:
+                    res_for_checker[shop.fridges_checker].append(shop.title)
+                else:
+                    res_for_checker[shop.fridges_checker] = [shop.title]
+
+            res = {
+                'sv': res_for_sv,
+                'checker': res_for_checker
+            }
+            return res
+
+
+
 if __name__ == '__main__':
     asyncio.run(APScgedulerRequests.not_open_shop_warning())
