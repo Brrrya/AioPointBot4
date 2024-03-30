@@ -27,7 +27,7 @@ async def on_process_result(data: Data, result: dict, manager: DialogManager, **
 async def plug():
     return Window(
         Const("Вы не авторизированны ни на одном магазине"),
-        MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close' '/off', '/on'})),
+        MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close', '/off', '/on'})),
         MessageInput(selected.register_command, content_types=ContentType.TEXT, filter=F.text == '/register'),
         getter=getters.plug,
         state=states.MainMessageUser.plug
