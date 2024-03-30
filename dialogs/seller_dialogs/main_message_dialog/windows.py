@@ -52,7 +52,7 @@ async def main_message():
         Format("Магазин - {open_or_not}"),
         Format("Ротации - {rotate_or_not}"),
         Format("Холодильники - {fridges_or_not}"),
-        MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close'})),
+        MessageInput(selected.checker_command, content_types=ContentType.TEXT, filter=F.text.in_({'/open', '/rotate', '/close', '/off', '/on'})),
         keyboards.main_message_kb(
             open_shop=selected.open_button,
             rotate_shop=selected.rotate_button,

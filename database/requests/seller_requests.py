@@ -280,6 +280,79 @@ class SellerRequests:
             }
         return res
 
+    @staticmethod
+    async def checker_all_photo_on_fridges(checker_id: int, photos_action: bool, photos_date: datetime.date | None = None):
+        """
+        :param checker_id:
+        :param photos_action: True == fridges_on, False == fridges_off
+        :param photos_date:
+        :return:
+        """
+        if photos_date is None:
+            photos_date = datetime.datetime.today().date()
+        """Возвращает фото холодильников"""
+        async with session_maker() as session:
+            # Получаем список магазинов где назначен проверяющим ХО
+            shops = await session.execute(
+                select(Shops)
+                .where(
+                    (Shops.fridges_checker == checker_id)
+                )
+                .order_by(Shops.title)
+            )
+            shops = shops.scalars().all()
+
+            photos_actions_text = 'fridges_on' if photos_action is True else 'fridges_off'
+
+            result = {}
+            who_not_do = []
+            counter = 0
+            for shop in shops:
+                if shop.fridges_state is photos_action:
+
+                    photos = await session.execute(  # Получаем фото холодильников
+                        select(Photos)
+                        .where(
+                            (Photos.shop_tgid == shop.tgid)
+                            & (Photos.action == photos_actions_text)
+                            & (
+                                (Photos.p_date == photos_date)
+                                |
+                                (Photos.p_date == (photos_date - datetime.timedelta(days=1)))
+
+                            )
+                        )
+                    )
+                    photos = photos.scalars().all()
+
+                    photo_list_previous_day = []
+                    photo_list_current_day = []
+
+                    if photos:
+                        for photo in photos:
+                            if photo.p_date == photos_date:
+                                photo_list_current_day.append(photo.photo_tgid)  # Добавляем эти фото в список
+                            else:
+                                photo_list_previous_day.append(photo.photo_tgid)
+
+                    result.update(
+                        {
+                            counter: {
+                                'shop_name': shop.title,
+                                'photos': photo_list_current_day if photo_list_current_day else photo_list_previous_day,
+                            }
+                        }
+                    )
+                    counter += 1
+
+                else:
+                    who_not_do.append(shop.title)
+        full_res = {
+            'reports': result,
+            'who_not_send': who_not_do
+        }
+        return full_res
+
 
 
 # async def test():

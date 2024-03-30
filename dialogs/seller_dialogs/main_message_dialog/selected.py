@@ -53,11 +53,19 @@ async def checker_command(m: Message, widget: MessageInput, manager: DialogManag
         all_data = await SellerRequests.checker_reports(int(m.from_user.id))
         keys = all_data.keys()
         close_data = await SellerRequests.checker_report_who_not_send(m.from_user.id)
+    elif m.text == '/on':
+        all_data = await SellerRequests.checker_all_photo_on_fridges(int(m.from_user.id), photos_action=True)
+        reports = all_data.get('reports')
+        keys = reports.keys()
+    elif m.text == '/off':
+        all_data = await SellerRequests.checker_all_photo_on_fridges(int(m.from_user.id), photos_action=False)
+        reports = all_data.get('reports')
+        keys = reports.keys()
 
     if m.text == '/open' or m.text == '/rotate':
         for photo in data['all_photo']:
             await m.answer_photo(photo=photo[0], caption=photo[1])
-    else:
+    elif m.text == '/close':
         for key in keys:
             text = ''
             text += f'Магазин - {all_data[key]["shop_name"]}\n'
@@ -73,6 +81,22 @@ async def checker_command(m: Message, widget: MessageInput, manager: DialogManag
 
             await m.answer(text)
             await m.answer_media_group(media.build())
+    elif m.text == '/on' or m.text == '/off':
+        for key in keys:
+            text = reports[key]["shop_name"]
+
+            media = MediaGroupBuilder()
+            for photo in reports[key]['photos']:
+                media.add_photo(photo)
+
+            await m.answer(text)
+
+            if reports[key]['photos']:
+                await m.answer_media_group(media.build())
+            else:
+                await m.answer_photo(
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/800px-Image_not_available.png?20210219185637')
+
 
     if m.text == '/open' or m.text == '/rotate':
         if data['all_make_action'] is True:
@@ -91,6 +115,20 @@ async def checker_command(m: Message, widget: MessageInput, manager: DialogManag
             text = 'Ещё не закрылись:\n'
             for shop_name in close_data['all_not_close_report']:
                 text += f'{shop_name[0]}\n'
+        await m.answer(text)
+    elif m.text == '/on':
+        text = 'Все магазины закрепленные за вами включили ХО!'
+        if all_data['who_not_send']:
+            text = 'Ещё не отправили фото вкл. ХО:\n'
+            for shop_name in all_data['who_not_send']:
+                text += shop_name + '\n'
+        await m.answer(text)
+    elif m.text == '/off':
+        text = 'Все магазины закрепленные за вами выключили ХО!'
+        if all_data['who_not_send']:
+            text = 'Ещё не отправили фото выкл. ХО:\n'
+            for shop_name in all_data['who_not_send']:
+                text += shop_name + '\n'
         await m.answer(text)
 
 
