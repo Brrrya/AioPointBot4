@@ -20,13 +20,13 @@ async def create_tasks(bot: Bot, setups: setup_dialogs):
     scheduler.add_job(every_day_events.reset_all_shops, trigger='cron',
                       hour='00', minute='05', kwargs={'setups': setups, 'bot': bot})  # обнуление всех магазинов
     scheduler.add_job(plan.update_coefficients, trigger='cron',
-                      day='01', hour='00', minute='09')  # Обновление коефов
+                      day='01', hour='00', minute='15')  # Обновление коефов
     scheduler.add_job(every_day_events.update_all_plans, trigger='cron',
-                      day='01', hour='00', minute='10', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
+                      day='01', hour='00', minute='17', kwargs={'setups': setups, 'bot': bot})  # Обновление планов
     scheduler.add_job(every_day_events.who_not_turn_on_fridges, trigger='cron',
-                      hour='11', minute='30', kwargs={'bot': bot})  # предупреждение о не включивших ХО
+                      hour='11', minute='10', kwargs={'bot': bot})  # предупреждение о не включивших ХО
     scheduler.add_job(every_day_events.who_not_turn_off_fridges, trigger='cron',
-                      hour='19', minute='30', kwargs={'bot': bot})  # предупреждение о не выключивших ХО
+                      hour='19', minute='10', kwargs={'bot': bot})  # предупреждение о не выключивших ХО
 
     scheduler.start()
 
