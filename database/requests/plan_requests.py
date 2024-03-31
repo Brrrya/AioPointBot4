@@ -154,8 +154,9 @@ class PlanRequests:
                     insert(Coefs)
                     .values(coef=coef, full_coef=full_coeff)
                 )
-
+            print('Check')
             await session.commit()
+
 
     @staticmethod
     async def data_for_that_day(

@@ -21,7 +21,7 @@ engine = create_async_engine(
         config.database.db_url,
         config.database.db_port
     ),
-    echo=False
+    echo=True
 )
 
 logging.info('Engine was created')
