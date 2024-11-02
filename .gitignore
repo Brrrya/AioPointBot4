@@ -10,6 +10,7 @@ __pycache__/
 # Логи
 *.log
 
+.vs
 
 -A
 # C extensions
