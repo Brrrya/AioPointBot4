@@ -17,15 +17,15 @@ async def take_rto(m: Message, widget: MessageInput, manager: DialogManager):
 
     ctx = manager.current_context()
     ctx.dialog_data.update(rto=m.text)
-    await manager.switch_to(states.MainMessageUpdatePlan.take_ckp)
-
-
-async def take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Магазин | Ввел план по ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
-
-    ctx = manager.current_context()
-    ctx.dialog_data.update(ckp=m.text)
     await manager.switch_to(states.MainMessageUpdatePlan.take_check)
+
+
+# async def take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
+#     logging.info(f'Магазин | Ввел план по ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
+#
+#     ctx = manager.current_context()
+#     ctx.dialog_data.update(ckp=m.text)
+#     await manager.switch_to(states.MainMessageUpdatePlan.take_check)
 
 
 async def take_check(m: Message, widget: MessageInput, manager: DialogManager):
@@ -41,9 +41,8 @@ async def confirm(call: CallbackQuery, widget: Button, manager: DialogManager):
 
     ctx = manager.current_context()
 
-    point_name = await PlanRequests.update_plan(
+    await PlanRequests.update_plan(
         rto=int(ctx.dialog_data.get('rto')),
-        ckp=int(ctx.dialog_data.get('ckp')),
         check=int(ctx.dialog_data.get('check')),
         shop_tgid=int(call.from_user.id),
     )

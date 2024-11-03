@@ -24,9 +24,9 @@ async def take_date_for_change(m: Message, widget, manager: DialogManager, selec
     ctx.dialog_data.update(
         date_for_change=str(select_date),
         rto_old_data=data['rto_old_data'],
-        ckp_old_data=data['ckp_old_data'],
+        # ckp_old_data=data['ckp_old_data'],
         check_old_data=data['check_old_data'],
-        dcart_old_data=data['dcart_old_data'],
+        # dcart_old_data=data['dcart_old_data'],
     )
     await manager.switch_to(states.MainMessageChangePlan.take_rto)
 
@@ -36,15 +36,15 @@ async def change_take_rto(m: Message, widget, manager: DialogManager):
 
     ctx = manager.current_context()
     ctx.dialog_data.update(rto_new_data=m.text)
-    await manager.switch_to(states.MainMessageChangePlan.take_ckp)
-
-
-async def change_take_ckp(m: Message, widget, manager: DialogManager):
-    logging.info(f'Магазин | Ввел новый данные ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
-
-    ctx = manager.current_context()
-    ctx.dialog_data.update(ckp_new_data=m.text)
     await manager.switch_to(states.MainMessageChangePlan.take_check)
+
+
+# async def change_take_ckp(m: Message, widget, manager: DialogManager):
+#     logging.info(f'Магазин | Ввел новый данные ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
+#
+#     ctx = manager.current_context()
+#     ctx.dialog_data.update(ckp_new_data=m.text)
+#     await manager.switch_to(states.MainMessageChangePlan.take_check)
 
 
 async def change_take_check(m: Message, widget, manager: DialogManager):
@@ -52,15 +52,15 @@ async def change_take_check(m: Message, widget, manager: DialogManager):
 
     ctx = manager.current_context()
     ctx.dialog_data.update(check_new_data=m.text)
-    await manager.switch_to(states.MainMessageChangePlan.take_dcart)
-
-
-async def change_take_dcart(m: Message, widget, manager: DialogManager):
-    logging.info(f'Магазин | Ввел новый данные дисконтных карт - {m.text} id={m.from_user.id} username={m.from_user.username}')
-
-    ctx = manager.current_context()
-    ctx.dialog_data.update(dcart_new_data=m.text)
     await manager.switch_to(states.MainMessageChangePlan.confirm)
+
+
+# async def change_take_dcart(m: Message, widget, manager: DialogManager):
+#     logging.info(f'Магазин | Ввел новый данные дисконтных карт - {m.text} id={m.from_user.id} username={m.from_user.username}')
+#
+#     ctx = manager.current_context()
+#     ctx.dialog_data.update(dcart_new_data=m.text)
+#     await manager.switch_to(states.MainMessageChangePlan.confirm)
 
 
 async def confirm(c: CallbackQuery, widget, manager: DialogManager):
@@ -70,9 +70,9 @@ async def confirm(c: CallbackQuery, widget, manager: DialogManager):
     await PlanRequests.change_data_in_plan(
         date_for_change=str(ctx.dialog_data.get('date_for_change')),
         rto_new_data=int(ctx.dialog_data.get('rto_new_data')),
-        ckp_new_data=int(ctx.dialog_data.get('ckp_new_data')),
+        # ckp_new_data=int(ctx.dialog_data.get('ckp_new_data')),
         check_new_data=int(ctx.dialog_data.get('check_new_data')),
-        dcart_new_data=int(ctx.dialog_data.get('dcart_new_data')),
+        # dcart_new_data=int(ctx.dialog_data.get('dcart_new_data')),
         shop_tgid=c.from_user.id
     )
     await c.message.answer(f'Данные за {ctx.dialog_data.get("date_for_change")} обновлены!')

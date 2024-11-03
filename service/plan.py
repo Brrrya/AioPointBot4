@@ -66,27 +66,27 @@ async def create_plan(
     sheet["A1"].set_value("Дата")
     sheet["B1"].set_value("План РТО")
     sheet["C1"].set_value("Факт РТО")
-    sheet["D1"].set_value("План ЦКП")
-    sheet["E1"].set_value("Факт ЦКП")
-    sheet["F1"].set_value("План чеков")
-    sheet["G1"].set_value("Факт чеков")
-    sheet["H1"].set_value("Факт дисконт карт")
+    # sheet["D1"].set_value("План ЦКП")
+    # sheet["E1"].set_value("Факт ЦКП")
+    sheet["D1"].set_value("План чеков")
+    sheet["E1"].set_value("Факт чеков")
+    # sheet["H1"].set_value("Факт дисконт карт")
 
     checks_all = 0
     RTO_all = 0
-    CKP_all = 0
+    # CKP_all = 0
     count = 2
 
     sum_plan_rto = None
-    sum_plan_ckp = None
+    # sum_plan_ckp = None
     sum_plan_check = None
 
     for p_data in data['shop_plan']:
 
         if sum_plan_check is None:
-            sum_plan_rto = p_data[8]
-            sum_plan_ckp = p_data[9]
-            sum_plan_check = p_data[10]
+            sum_plan_rto = p_data[5]
+            # sum_plan_ckp = p_data[9]
+            sum_plan_check = p_data[6]
 
         sheet[f"A{count}"].set_value(p_data[0])
         sheet[f"B{count}"].set_value(p_data[1])
@@ -104,15 +104,15 @@ async def create_plan(
             sheet[f"G{count}"].set_value(p_data[6])
         except:
             sheet[f"G{count}"].set_value(0)
-        try:
-            sheet[f"H{count}"].set_value(p_data[7])
-        except:
-            sheet[f"H{count}"].set_value(0)
+        # try:
+        #     sheet[f"H{count}"].set_value(p_data[7])
+        # except:
+        #     sheet[f"H{count}"].set_value(0)
 
         count += 1
         RTO_all += p_data[2] if p_data[2] is not None else 0
-        CKP_all += p_data[4] if p_data[4] is not None else 0
-        checks_all += p_data[6] if p_data[6] is not None else 0
+        # CKP_all += p_data[4] if p_data[4] is not None else 0
+        checks_all += p_data[4] if p_data[4] is not None else 0
 
     sheet["K5"].set_value("Общий план РТО")
     sheet["J5"].set_value(sum_plan_rto)
@@ -134,15 +134,15 @@ async def create_plan(
     except:
         sheet["J11"].set_value(0)
 
-    sheet["K13"].set_value("Общий план ЦКП")
-    sheet["J13"].set_value(sum_plan_ckp)
-    sheet["K14"].set_value("Общий факт ЦКП")
-    sheet["J14"].set_value(CKP_all)
-    sheet["K15"].set_value("Процент выполнения")
-    try:
-        sheet["J15"].set_value(100 * (CKP_all / sum_plan_ckp))
-    except:
-        sheet["J15"].set_value(0)
+    # sheet["K13"].set_value("Общий план ЦКП")
+    # sheet["J13"].set_value(sum_plan_ckp)
+    # sheet["K14"].set_value("Общий факт ЦКП")
+    # sheet["J14"].set_value(CKP_all)
+    # sheet["K15"].set_value("Процент выполнения")
+    # try:
+    #     sheet["J15"].set_value(100 * (CKP_all / sum_plan_ckp))
+    # except:
+    #     sheet["J15"].set_value(0)
 
     doc.save()
 

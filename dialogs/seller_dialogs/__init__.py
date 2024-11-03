@@ -21,9 +21,9 @@ async def all_shop_dialogs():
         ),
         Dialog(
             await close_shop_window.close_take_rto(),
-            await close_shop_window.close_take_ckp(),
+            # await close_shop_window.close_take_ckp(),
             await close_shop_window.close_take_check(),
-            await close_shop_window.close_take_dcart(),
+            # await close_shop_window.close_take_dcart(),
             await close_shop_window.close_take_photos(),
 
         ),

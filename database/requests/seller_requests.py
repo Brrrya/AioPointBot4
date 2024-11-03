@@ -57,15 +57,15 @@ class SellerRequests:
 
     @staticmethod
     async def save_report(
-            rto: int,
-            ckp: int,
-            check: int,
-            dcart: int,
-            p_rto: int,
-            p_ckp: int,
-            p_check: int,
+            rto: int | None,
+            check: int | None,
+            p_rto: int | None,
+            p_check: int | None,
             shop_tgid: int,
-            seller_tgid: int
+            seller_tgid: int,
+            ckp: int | None = None,
+            p_ckp: int | None = None,
+            dcart: int | None = None,
     ):
         """Сохраняет вечерний отчет в БД"""
         async with session_maker() as session:

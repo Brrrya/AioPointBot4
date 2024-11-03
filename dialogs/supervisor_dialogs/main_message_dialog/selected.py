@@ -113,9 +113,9 @@ async def close_reports(c: CallbackQuery, widget: Button, manager: DialogManager
         text += f'Магазин - {reports[key]["shop_name"]}\n'
         text += f'Сотрудник - {reports[key]["seller_name"]}\n'
         text += f'РТО - {reports[key]["rto"]} / {reports[key]["p_rto"]}\n'
-        text += f'ЦКП - {reports[key]["ckp"]} / {reports[key]["p_ckp"]}\n'
+        # text += f'ЦКП - {reports[key]["ckp"]} / {reports[key]["p_ckp"]}\n'
         text += f'Чеки - {reports[key]["check"]} / {reports[key]["p_check"]}\n'
-        text += f'Дисконт. карты - {reports[key]["dcart"]}\n'
+        # text += f'Дисконт. карты - {reports[key]["dcart"]}\n'
 
         media = MediaGroupBuilder()
         for photo in reports[key]['photos']:
@@ -184,9 +184,9 @@ async def close_reports_not_today_show(c: CallbackQuery, widget, manager: Dialog
         text += f'Магазин - {reports[key]["shop_name"]}\n'
         text += f'Сотрудник - {reports[key]["seller_name"]}\n'
         text += f'РТО - {reports[key]["rto"]} / {reports[key]["p_rto"]}\n'
-        text += f'ЦКП - {reports[key]["ckp"]} / {reports[key]["p_ckp"]}\n'
+        # text += f'ЦКП - {reports[key]["ckp"]} / {reports[key]["p_ckp"]}\n'
         text += f'Чеки - {reports[key]["check"]} / {reports[key]["p_check"]}\n'
-        text += f'Дисконт. карты - {reports[key]["dcart"]}\n'
+        # text += f'Дисконт. карты - {reports[key]["dcart"]}\n'
 
         media = MediaGroupBuilder()
         for photo in reports[key]['photos']:

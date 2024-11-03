@@ -13,7 +13,6 @@ from dialogs.shop_dialogs.plan_update_dialog import (
 async def update_plan_take_rto():
     return Window(
         Format('РТО - '),
-        Format('ЦКП - '),
         Format('Чеки - '),
         Const(' '),
         Const('Введите план РТО на месяц'),
@@ -24,25 +23,24 @@ async def update_plan_take_rto():
     )
 
 
-async def update_plan_take_ckp():
-    return Window(
-        Format('РТО - {rto}'),
-        Format('ЦКП - '),
-        Format('Чеки - '),
-        Const(' '),
-        Const('Введите план ЦКП на месяц'),
-        Back(Const("⬅️ Назад")),
-        Cancel(Const('❌ Отмена')),
-        MessageInput(selected.take_ckp, filter=lambda message: message.text.isdigit()),
-        getter=getters.take_ckp,
-        state=states.MainMessageUpdatePlan.take_ckp
-    )
+# async def update_plan_take_ckp():
+#     return Window(
+#         Format('РТО - {rto}'),
+#         Format('ЦКП - '),
+#         Format('Чеки - '),
+#         Const(' '),
+#         Const('Введите план ЦКП на месяц'),
+#         Back(Const("⬅️ Назад")),
+#         Cancel(Const('❌ Отмена')),
+#         MessageInput(selected.take_ckp, filter=lambda message: message.text.isdigit()),
+#         getter=getters.take_ckp,
+#         state=states.MainMessageUpdatePlan.take_ckp
+#     )
 
 
 async def update_plan_take_check():
     return Window(
         Format('РТО - {rto}'),
-        Format('ЦКП - {ckp}'),
         Format('Чеки - '),
         Const(' '),
         Const('Введите план чеков на месяц'),
@@ -57,7 +55,6 @@ async def update_plan_take_check():
 async def update_plan_confirm():
     return Window(
         Format('РТО - {rto}'),
-        Format('ЦКП - {ckp}'),
         Format('Чеки - {check}'),
         Const(' '),
         Const('Данные верны?'),

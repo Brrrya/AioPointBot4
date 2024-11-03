@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import Bot
 from aiogram.types import FSInputFile
 from aiogram_dialog import StartMode
@@ -83,17 +85,20 @@ async def reset_all_shops(setups: setup_dialogs, bot: Bot):
 
 async def update_all_plans(bot: Bot, setups: setup_dialogs):
     """Обновляет коеффициенты и все планы магазинов в первый день месяца"""
+    logging.info("Every month update plan start")
     all_shop_data = await APScgedulerRequests.take_all_shop()
 
     # Отпарвляем старые планы и обновляем их
     for shop in all_shop_data['all_shops']:
+        logging.info(f"Now updating: {shop[1]}")
         # формируем старый план для каждого магазина и отправляем его ему
         await create_plan(shop[1])
         await bot.send_document(document=FSInputFile(path=f"service/plans/{shop[0]}.ods"), chat_id=shop[1])
         await setups.bg(bot=bot, chat_id=shop[1], user_id=shop[1]).done()
         await setups.bg(bot=bot, chat_id=shop[1], user_id=shop[1]).start(MainMessageShop.main_message)
         # Обновляем план в БД для каждого магазина
-        await PlanRequests.update_plan(1000000, 100000, 1000, shop[1])
+        await PlanRequests.update_plan(1000000, 1000, shop[1])
+    logging.info("Every month update plan end")
 
 
 async def who_not_turn_on_fridges(bot: Bot):

@@ -17,15 +17,15 @@ async def close_take_rto(m: Message, widget: MessageInput, manager: DialogManage
 
     ctx = manager.current_context()
     ctx.dialog_data.update(close_rto=m.text)
-    await manager.switch_to(MainMessageUserClose.close_take_ckp)
-
-
-async def close_take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Ввел выручку ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
-
-    ctx = manager.current_context()
-    ctx.dialog_data.update(close_ckp=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_check)
+
+
+# async def close_take_ckp(m: Message, widget: MessageInput, manager: DialogManager):
+#     logging.info(f'Ввел выручку ЦКП - {m.text} id={m.from_user.id} username={m.from_user.username}')
+#
+#     ctx = manager.current_context()
+#     ctx.dialog_data.update(close_ckp=m.text)
+#     await manager.switch_to(MainMessageUserClose.close_take_check)
 
 
 async def close_take_check(m: Message, widget: MessageInput, manager: DialogManager):
@@ -33,15 +33,15 @@ async def close_take_check(m: Message, widget: MessageInput, manager: DialogMana
 
     ctx = manager.current_context()
     ctx.dialog_data.update(close_check=m.text)
-    await manager.switch_to(MainMessageUserClose.close_take_dcart)
-
-
-async def close_take_dcart(m: Message, widget: MessageInput, manager: DialogManager):
-    logging.info(f'Ввел количество дисконт. карт - {m.text} id={m.from_user.id} username={m.from_user.username}')
-
-    ctx = manager.current_context()
-    ctx.dialog_data.update(close_dcart=m.text)
     await manager.switch_to(MainMessageUserClose.close_take_photos)
+
+
+# async def close_take_dcart(m: Message, widget: MessageInput, manager: DialogManager):
+#     logging.info(f'Ввел количество дисконт. карт - {m.text} id={m.from_user.id} username={m.from_user.username}')
+#
+#     ctx = manager.current_context()
+#     ctx.dialog_data.update(close_dcart=m.text)
+#     await manager.switch_to(MainMessageUserClose.close_take_photos)
 
 
 async def on_delete_close_photo(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager):
@@ -77,11 +77,11 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
 
     await SellerRequests.save_report(
         rto=int(ctx.dialog_data.get('close_rto')),
-        ckp=int(ctx.dialog_data.get('close_ckp')),
+        # ckp=int(ctx.dialog_data.get('close_ckp')),
         check=int(ctx.dialog_data.get('close_check')),
-        dcart=int(ctx.dialog_data.get('close_dcart')),
+        # dcart=int(ctx.dialog_data.get('close_dcart')),
         p_rto=int(ctx.dialog_data.get('rto_plan')),
-        p_ckp=int(ctx.dialog_data.get('ckp_plan')),
+        # p_ckp=int(ctx.dialog_data.get('ckp_plan')),
         p_check=int(ctx.dialog_data.get('check_plan')),
         shop_tgid=int(shop['shop_tgid']),
         seller_tgid=int(callback.from_user.id)
@@ -90,9 +90,7 @@ async def send_report_close_photo(callback: CallbackQuery, widget: Button, dialo
     await PlanRequests.change_data_in_plan(
         date_for_change=str(datetime.date.today()),
         rto_new_data=int(ctx.dialog_data.get('close_rto')),
-        ckp_new_data=int(ctx.dialog_data.get('close_ckp')),
         check_new_data=int(ctx.dialog_data.get('close_check')),
-        dcart_new_data=int(ctx.dialog_data.get('close_dcart')),
         shop_tgid=int(shop['shop_tgid'])
     )
 

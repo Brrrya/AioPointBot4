@@ -22,16 +22,16 @@ async def all_shop_dialogs():
         ),
         Dialog(
             await new_plan_windows.update_plan_take_rto(),
-            await new_plan_windows.update_plan_take_ckp(),
+            # await new_plan_windows.update_plan_take_ckp(),
             await new_plan_windows.update_plan_take_check(),
             await new_plan_windows.update_plan_confirm(),
         ),
         Dialog(
             await change_plan_windows.take_date_for_change(),
             await change_plan_windows.change_take_rto(),
-            await change_plan_windows.change_take_ckp(),
+            # await change_plan_windows.change_take_ckp(),
             await change_plan_windows.change_take_check(),
-            await change_plan_windows.change_take_dcart(),
+            # await change_plan_windows.change_take_dcart(),
             await change_plan_windows.confirm()
         ),
     ]
